@@ -1,77 +1,122 @@
 import CardPreview from '../components/CardPreview';
+import Controls from '../components/Controls';
 import LocationsDisplay from '../components/LocationsDisplay';
+import PlayerStatuses from '../components/PlayerStatus';
 import { useGame } from '../engine/GameContext';
-import { PlayerColor } from '../engine/gameTypes';
+
+const scrollRowStyle: React.CSSProperties = {
+  display: 'flex',
+  flexWrap: 'nowrap',
+  overflowX: 'auto',
+  overflowY: 'hidden',
+  gap: '8px',
+  padding: '4px',
+  border: '1px solid #ddd',
+  borderRadius: '4px',
+  height: '200px',
+};
 
 function Game() {
-  const { game, endTurn, drawCard, addToMeadow, visitLocation } = useGame();
+  const {
+    game,
+    toggleCardDiscarding,
+    toggleCardPlaying,
+  } = useGame();
+
   const currentPlayer = game.players[game.turn];
+  const isDiscarding = currentPlayer.discarding;
+  const isPlaying = currentPlayer.playing;
 
   return (
     <div style={{ padding: '16px', fontFamily: 'sans-serif' }}>
-      <h1 style={{ textAlign: 'center' }}>MY TURN</h1>
-
-      {/* Locations display */}
-      <LocationsDisplay game={game} visitLocation={visitLocation} />
-
-      {/* Overlay: Player status panel */}
-      <div style={{ position: 'absolute', top: 16, right: 16, background: '#fff', border: '1px solid #ccc', borderRadius: '8px', padding: '12px' }}>
-        {(['Red', 'Blue'] as PlayerColor[]).map((color) => {
-          const player = game.players[color];
-          return (
-            <div key={color} style={{ marginBottom: '12px' }}>
-              <strong>{color} - {player.name || 'Username'}</strong>
-              <div>Workers: {player.workers.workersLeft} / {player.workers.maxWorkers}</div>
-              <div>Hand: {player.hand.length} / 8</div>
-              <div>City: {player.city.length} / 15</div>
-              {Object.entries(player.resources)
-                .filter(([key, val]) => (
-                  val.valueOf() > 0
-                ))
-                .map(([res, amt]) => (
-                  <div key={res}>{res}: {amt}</div>
-                ))}
-            </div>
-          );
-        })}
-      </div>
+      <LocationsDisplay />
+      <Controls />
+      <PlayerStatuses />
 
       {/* Meadow */}
       <section>
-        <h2>Meadow</h2>
-        <div style={{ display: 'flex', gap: '8px', overflowX: 'auto' }}>
-          {game.meadow.map((card, index) => (
-            <CardPreview key={index} card={card} />
-          ))}
+        <h4>Meadow</h4>
+        <div style={scrollRowStyle}>
+          {Array.from({ length: 8 }).map((_, index) => {
+            const card = game.meadow[index] ?? null;
+
+            return (
+              <CardPreview
+                key={index}
+                card={card}
+                onClick={() => {
+                  if (isDiscarding && card) {
+                    toggleCardDiscarding(game.turn, "meadow", index);
+                  } else if (isPlaying && card) {
+                    toggleCardPlaying(game.turn, "meadow", index);
+                  }
+                }}
+              />
+            )
+          })}
         </div>
       </section>
 
       {/* My City */}
       <section>
-        <h2>My City</h2>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-          {currentPlayer.city.map((card, index) => (
-            <CardPreview key={index} card={card} />
-          ))}
+        <h4>My City</h4>
+        <div style={scrollRowStyle}>
+          {Array.from({ length: 15 }).map((_, index) => {
+            const card = currentPlayer.city[index] ?? null;
+
+            return (
+              <CardPreview
+                key={index}
+                card={card}
+                onClick={() => {
+                  if (isDiscarding && card) {
+                    toggleCardDiscarding(game.turn, "city", index);
+                  }
+                }}
+              />
+            )
+          })}
         </div>
       </section>
 
       {/* Hand */}
       <section>
-        <h2>Hand</h2>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-          {currentPlayer.hand.map((card, index) => (
-            <CardPreview key={index} card={card} />
-          ))}
+        <h4>Hand</h4>
+        <div style={scrollRowStyle}>
+          {Array.from({ length: 8 }).map((_, index) => {
+            const card = currentPlayer.hand[index] ?? null;
+
+            return (
+              <CardPreview
+                key={index}
+                card={card}
+                onClick={() => {
+                  if (isDiscarding && card) {
+                    toggleCardDiscarding(game.turn, "hand", index);
+                  } else if (isPlaying && card) {
+                    toggleCardPlaying(game.turn, "hand", index);
+                  }
+                }}
+              />
+            )
+          })}
         </div>
       </section>
 
-      {/* Controls */}
-      <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'center', gap: '12px' }}>
-        <button onClick={() => drawCard(game.turn)}>Draw Card</button>
-        <button onClick={() => endTurn()}>End Turn</button>
-        <button onClick={() => addToMeadow()}>Add To Meadow</button>
-      </div>
+      {/* Discard Pile */}
+      <section>
+        <h4>Discard Pile</h4>
+        <div style={scrollRowStyle}>
+          {game.discard.map((card, index) => {
+            return (
+              <CardPreview
+                key={index}
+                card={card}
+              />
+            )
+          })}
+        </div>
+      </section>
     </div>
   );
 }

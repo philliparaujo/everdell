@@ -3,15 +3,15 @@ export type EffectType = "Tan" | "Green" | "Red" | "Blue" | "Purple";
 
 export type Season = "Winter" | "Spring" | "Summer" | "Autumn";
 
-export type Resources = {
-  twigs: number;
-  resin: number;
-  pebbles: number;
-  berries: number;
-  coins: number;
-  cards: number;
-  wildcard: number;
-};
+export type ResourceType =
+  | "twigs"
+  | "resin"
+  | "pebbles"
+  | "berries"
+  | "coins"
+  | "cards"
+  | "wildcard";
+export type Resources = Record<ResourceType, number>;
 
 export type Workers = {
   workersLeft: number;
@@ -28,7 +28,6 @@ export type Card = {
   description: string;
 
   imageKey: string;
-  imagePath: string;
 
   occupied: Boolean | null;
   constructionRequirement: string | null;
@@ -38,6 +37,9 @@ export type Card = {
   workers: Record<PlayerColor, number>;
 
   storage: Resources | null;
+
+  discarding: Boolean;
+  playing: Boolean;
 };
 
 export type Location = {
@@ -56,6 +58,9 @@ export type Player = {
   resources: Resources;
   workers: Workers;
   season: Season;
+
+  discarding: Boolean;
+  playing: Boolean;
 };
 
 export type GameState = {
@@ -91,4 +96,7 @@ export const defaultPlayer: Player = {
   resources: defaultResources,
   workers: defaultWorkers,
   season: "Winter",
+
+  discarding: false,
+  playing: false,
 };

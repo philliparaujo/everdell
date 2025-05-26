@@ -7,6 +7,40 @@ export function endTurn(state: GameState): GameState {
   };
 }
 
+export function setDiscarding(
+  state: GameState,
+  playerColor: PlayerColor,
+  discarding: Boolean
+): GameState {
+  const players = { ...state.players };
+  players[playerColor] = {
+    ...players[playerColor],
+    discarding: discarding,
+  };
+
+  return {
+    ...state,
+    players,
+  };
+}
+
+export function setPlaying(
+  state: GameState,
+  playerColor: PlayerColor,
+  playing: Boolean
+): GameState {
+  const players = { ...state.players };
+  players[playerColor] = {
+    ...players[playerColor],
+    playing: playing,
+  };
+
+  return {
+    ...state,
+    players,
+  };
+}
+
 export function drawCard(
   state: GameState,
   playerColor: PlayerColor
@@ -14,6 +48,9 @@ export function drawCard(
   const deck: Card[] = [...state.deck];
 
   if (deck.length === 0) {
+    return state;
+  }
+  if (state.players[playerColor].hand.length >= 8) {
     return state;
   }
 
@@ -35,40 +72,189 @@ export function drawCard(
   };
 }
 
-export function discardCard(
+export function toggleCardDiscarding(
   state: GameState,
   playerColor: PlayerColor,
-  cardName: string
+  location: "hand" | "city" | "meadow",
+  index: number
 ): GameState {
-  const hand = [...state.players[playerColor].hand];
-  const discard = [...state.discard];
+  const newState: GameState = {
+    ...state,
+    players: {
+      ...state.players,
+      [playerColor]: {
+        ...state.players[playerColor],
+        hand: [...state.players[playerColor].hand],
+        city: [...state.players[playerColor].city],
+      },
+    },
+    meadow: [...state.meadow],
+  };
 
-  const index = hand.findIndex((card) => card.name === cardName);
+  let cardToToggle: Card | undefined;
 
-  if (index === -1) {
-    return state;
+  if (location === "hand") {
+    cardToToggle = newState.players[playerColor].hand[index];
+    if (cardToToggle) {
+      newState.players[playerColor].hand[index] = {
+        ...cardToToggle,
+        discarding: !cardToToggle.discarding,
+      };
+    }
+  } else if (location === "city") {
+    cardToToggle = newState.players[playerColor].city[index];
+    if (cardToToggle) {
+      newState.players[playerColor].city[index] = {
+        ...cardToToggle,
+        discarding: !cardToToggle.discarding,
+      };
+    }
+  } else if (location === "meadow") {
+    cardToToggle = newState.meadow[index];
+    if (cardToToggle) {
+      newState.meadow[index] = {
+        ...cardToToggle,
+        discarding: !cardToToggle.discarding,
+      };
+    }
   }
 
-  const [removedCard] = hand.splice(index, 1);
-  discard.push(removedCard);
+  return newState;
+}
+
+export function toggleCardPlaying(
+  state: GameState,
+  playerColor: PlayerColor,
+  location: "hand" | "meadow",
+  index: number
+): GameState {
+  const newState: GameState = {
+    ...state,
+    players: {
+      ...state.players,
+      [playerColor]: {
+        ...state.players[playerColor],
+        hand: [...state.players[playerColor].hand],
+        city: [...state.players[playerColor].city],
+      },
+    },
+    meadow: [...state.meadow],
+  };
+
+  let cardToToggle: Card | undefined;
+
+  if (location === "hand") {
+    cardToToggle = newState.players[playerColor].hand[index];
+    if (cardToToggle) {
+      newState.players[playerColor].hand[index] = {
+        ...cardToToggle,
+        playing: !cardToToggle.playing,
+      };
+    }
+  } else if (location === "meadow") {
+    cardToToggle = newState.meadow[index];
+    if (cardToToggle) {
+      newState.meadow[index] = {
+        ...cardToToggle,
+        playing: !cardToToggle.playing,
+      };
+    }
+  }
+
+  return newState;
+}
+
+export function discardSelectedCards(
+  state: GameState,
+  playerColor: PlayerColor
+): GameState {
+  const player = state.players[playerColor];
+
+  const [handKeep, handDiscard] = partition(
+    player.hand,
+    (card) => !card.discarding
+  );
+  const [cityKeep, cityDiscard] = partition(
+    player.city,
+    (card) => !card.discarding
+  );
+  const [meadowKeep, meadowDiscard] = partition(
+    state.meadow,
+    (card) => !card.discarding
+  );
+
+  const discard = [
+    ...state.discard,
+    ...handDiscard,
+    ...cityDiscard,
+    ...meadowDiscard,
+  ];
 
   return {
     ...state,
     players: {
       ...state.players,
       [playerColor]: {
-        ...state.players[playerColor],
-        hand: hand,
+        ...player,
+        hand: handKeep,
+        city: cityKeep,
       },
     },
-    discard,
+    discard: discard.map((card) => ({
+      ...card,
+      discarding: false,
+    })),
+    meadow: meadowKeep,
   };
+}
+
+export function playSelectedCards(
+  state: GameState,
+  playerColor: PlayerColor
+): GameState {
+  const player = state.players[playerColor];
+
+  const [handKeep, handPlay] = partition(player.hand, (card) => !card.playing);
+  const [meadowKeep, meadowPlay] = partition(
+    state.meadow,
+    (card) => !card.playing
+  );
+
+  const city = [...player.city, ...handPlay, ...meadowPlay];
+
+  return {
+    ...state,
+    players: {
+      ...state.players,
+      [playerColor]: {
+        ...player,
+        hand: handKeep,
+        city: city.map((card) => ({
+          ...card,
+          playing: false,
+        })),
+      },
+    },
+    meadow: meadowKeep,
+  };
+}
+
+function partition<T>(arr: T[], predicate: (item: T) => boolean): [T[], T[]] {
+  const keep: T[] = [];
+  const discard: T[] = [];
+  for (const item of arr) {
+    (predicate(item) ? keep : discard).push(item);
+  }
+  return [keep, discard];
 }
 
 export function addToMeadow(state: GameState): GameState {
   const deck: Card[] = [...state.deck];
 
   if (deck.length === 0) {
+    return state;
+  }
+  if (state.meadow.length >= 8) {
     return state;
   }
 
@@ -131,20 +317,38 @@ export function visitLocation(
   return addResourcesToPlayer(newState, playerColor, location.resources);
 }
 
-function addResourcesToPlayer(
+export function addResourcesToPlayer(
   state: GameState,
   playerColor: PlayerColor,
   resources: Resources
 ): GameState {
-  const newState = { ...state };
-  const playerResources = newState.players[playerColor].resources;
+  const player = state.players[playerColor];
+  const updatedResources: Resources = { ...player.resources };
+
+  let updatedState = { ...state };
 
   for (const key in resources) {
-    if (resources.hasOwnProperty(key)) {
+    if (Object.prototype.hasOwnProperty.call(resources, key)) {
       const typedKey = key as keyof Resources;
-      playerResources[typedKey] += resources[typedKey];
+
+      if (typedKey === "cards") {
+        for (let i = 0; i < resources.cards; i++) {
+          updatedState = drawCard(updatedState, playerColor);
+        }
+      } else {
+        updatedResources[typedKey] += resources[typedKey];
+      }
     }
   }
 
-  return newState;
+  return {
+    ...updatedState,
+    players: {
+      ...state.players,
+      [playerColor]: {
+        ...updatedState.players[playerColor],
+        resources: updatedResources,
+      },
+    },
+  };
 }
