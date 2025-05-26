@@ -2,6 +2,8 @@ import { useGame } from "../engine/GameContext";
 import { defaultResources, PlayerColor, ResourceType } from "../engine/gameTypes";
 import { ResourceIcon } from "./ResourceIcon";
 
+export const resourceList: ResourceType[] = Object.entries(defaultResources).map(([key]) => key) as ResourceType[];
+
 function ResourceDisplay({ playerColor, resource }: { playerColor: PlayerColor, resource: ResourceType }) {
   const {
     addResourcesToPlayer
@@ -41,15 +43,11 @@ function ResourceDisplay({ playerColor, resource }: { playerColor: PlayerColor, 
 }
 
 function ResourceBank({ playerColor }: { playerColor: PlayerColor }) {
-  const {
-    game
-  } = useGame();
-
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-      {Object.entries(game.players[playerColor].resources)
-        .filter(([key, val]) => key !== "cards")
-        .map(([key, val], _) => (
+      {resourceList
+        .filter((key) => key !== "cards")
+        .map((key) => (
           <ResourceDisplay key={key} playerColor={playerColor} resource={key as ResourceType} />
         ))}
     </div>

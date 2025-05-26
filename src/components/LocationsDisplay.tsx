@@ -13,7 +13,7 @@ function LocationDisplay({ location, index }: { location: Location, index: numbe
       key={index}
       style={{
         width: '100px',
-        height: '100px',
+        height: '80px',
         background: '#DCBA9E',
         padding: '4px',
         borderRadius: '8px',

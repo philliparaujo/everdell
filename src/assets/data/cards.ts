@@ -63,7 +63,7 @@ export const rawCards: Omit<Card, "discarding" | "playing">[] = [
       cards: 0,
       wildcard: 0,
     },
-    value: 0,
+    value: 2,
     cardType: "Critter",
     effectType: "Purple",
     unique: true,
@@ -151,7 +151,7 @@ export const rawCards: Omit<Card, "discarding" | "playing">[] = [
     description:
       "At game end, worth 1 point for each Common Construction in your city.:contentReference[oaicite:3]{index=3}",
 
-    occupied: null,
+    occupied: false,
     activeDestinations: null,
     maxDestinations: null,
     storage: null,
@@ -172,14 +172,14 @@ export const rawCards: Omit<Card, "discarding" | "playing">[] = [
     effectType: "Red",
     unique: true,
     constructionRequirement: null,
-    workers: { Red: 0, Blue: 2 },
+    workers: { Red: 1, Blue: 0 },
     imageKey: "cemetery",
     description:
       "When you place a worker here, reveal 4 cards from the draw pile or discard pile and play 1 of them for free. Discard the others. (Your worker stays here permanently; Cemetery can only have 2 workers, and the second spot is unlocked by having an Undertaker in your city.):contentReference[oaicite:4]{index=4}",
 
-    occupied: null,
-    activeDestinations: null,
-    maxDestinations: null,
+    occupied: false,
+    activeDestinations: 0,
+    maxDestinations: 2,
     storage: null,
   },
   {
@@ -198,15 +198,23 @@ export const rawCards: Omit<Card, "discarding" | "playing">[] = [
     effectType: "Red",
     unique: true,
     constructionRequirement: null,
-    workers: { Red: 0, Blue: 1 },
+    workers: { Red: 0, Blue: 0 },
     imageKey: "chapel",
     description:
       "When you place a worker here, place 1 point token on the Chapel. Draw 2 cards for every 1 point token on the Chapel.:contentReference[oaicite:5]{index=5}",
 
-    occupied: null,
-    activeDestinations: null,
-    maxDestinations: null,
-    storage: null,
+    occupied: false,
+    activeDestinations: 0,
+    maxDestinations: 1,
+    storage: {
+      twigs: 0,
+      resin: 0,
+      pebbles: 0,
+      berries: 0,
+      coins: 0,
+      cards: 0,
+      wildcard: 0,
+    },
   },
   {
     name: "Chip Sweep",
@@ -219,11 +227,11 @@ export const rawCards: Omit<Card, "discarding" | "playing">[] = [
       cards: 0,
       wildcard: 0,
     },
-    value: 1,
+    value: 2,
     cardType: "Critter",
     effectType: "Green",
     unique: false,
-    constructionRequirement: "Clock Tower",
+    constructionRequirement: "Resin Refinery",
     workers: { Red: 0, Blue: 0 },
     imageKey: "chipsweep",
     description:
@@ -255,10 +263,18 @@ export const rawCards: Omit<Card, "discarding" | "playing">[] = [
     description:
       "When you play the Clock Tower, place 3 point tokens on it. Before you bring back your workers during a Prepare for Season action, remove 1 point token from the Clock Tower and activate one occupied basic or Forest location where you have a worker. (Any point tokens left on the Clock Tower at game’s end count towards your score.):contentReference[oaicite:7]{index=7}",
 
-    occupied: null,
+    occupied: false,
     activeDestinations: null,
     maxDestinations: null,
-    storage: null,
+    storage: {
+      twigs: 0,
+      resin: 0,
+      pebbles: 0,
+      berries: 0,
+      coins: 3,
+      cards: 0,
+      wildcard: 0,
+    },
   },
   {
     name: "Courthouse",
@@ -281,7 +297,7 @@ export const rawCards: Omit<Card, "discarding" | "playing">[] = [
     description:
       "Gain 1 twig, 1 resin, or 1 pebble every time you play a Construction into your city. (You do not gain a resource when playing this Courthouse.):contentReference[oaicite:8]{index=8}",
 
-    occupied: null,
+    occupied: false,
     activeDestinations: null,
     maxDestinations: null,
     storage: null,
@@ -307,7 +323,7 @@ export const rawCards: Omit<Card, "discarding" | "playing">[] = [
     description:
       "When you play a Construction, you may discard this Crane from your city to decrease the cost of the played Construction by 3 of any resource. You do not gain the 3 resources. (Cannot be combined with other card-playing abilities.):contentReference[oaicite:9]{index=9}",
 
-    occupied: null,
+    occupied: false,
     activeDestinations: null,
     maxDestinations: null,
     storage: null,
@@ -323,11 +339,11 @@ export const rawCards: Omit<Card, "discarding" | "playing">[] = [
       cards: 0,
       wildcard: 0,
     },
-    value: 1,
+    value: 4,
     cardType: "Critter",
     effectType: "Green",
     unique: true,
-    constructionRequirement: null,
+    constructionRequirement: "University",
     workers: { Red: 0, Blue: 0 },
     imageKey: "doctor",
     description:
@@ -359,7 +375,7 @@ export const rawCards: Omit<Card, "discarding" | "playing">[] = [
     description:
       "When you are playing a Construction or a Critter, you may place a Critter from your city beneath this Dungeon to decrease the cost of the played card by 3 of any resource. (The Critter under the Dungeon is no longer part of your city and is not worth any points.):contentReference[oaicite:11]{index=11}:contentReference[oaicite:12]{index=12}",
 
-    occupied: null,
+    occupied: false,
     activeDestinations: null,
     maxDestinations: null,
     storage: null,
@@ -385,7 +401,7 @@ export const rawCards: Omit<Card, "discarding" | "playing">[] = [
     description:
       "At game end, worth 1 point for each purple Prosperity card in your city, including this Ever Tree. (Ever Tree can grant 1 of any Critter for free.):contentReference[oaicite:13]{index=13}",
 
-    occupied: null,
+    occupied: false,
     activeDestinations: null,
     maxDestinations: null,
     storage: null,
@@ -401,7 +417,7 @@ export const rawCards: Omit<Card, "discarding" | "playing">[] = [
       cards: 0,
       wildcard: 0,
     },
-    value: 2,
+    value: 3,
     cardType: "Construction",
     effectType: "Green",
     unique: false,
@@ -411,7 +427,7 @@ export const rawCards: Omit<Card, "discarding" | "playing">[] = [
     description:
       "When played and during Production, draw 2 cards.:contentReference[oaicite:14]{index=14}",
 
-    occupied: null,
+    occupied: false,
     activeDestinations: null,
     maxDestinations: null,
     storage: null,
@@ -437,7 +453,7 @@ export const rawCards: Omit<Card, "discarding" | "playing">[] = [
     description:
       "When played and during Production, gain 1 berry.:contentReference[oaicite:15]{index=15}",
 
-    occupied: null,
+    occupied: false,
     activeDestinations: null,
     maxDestinations: null,
     storage: null,
@@ -457,7 +473,7 @@ export const rawCards: Omit<Card, "discarding" | "playing">[] = [
     cardType: "Critter",
     effectType: "Tan",
     unique: true,
-    constructionRequirement: null,
+    constructionRequirement: "Fairgrounds",
     workers: { Red: 0, Blue: 0 },
     imageKey: "fool",
     description:
@@ -489,7 +505,7 @@ export const rawCards: Omit<Card, "discarding" | "playing">[] = [
     description:
       "When played and during Production, gain 1 berry, or gain 2 berries if you have a Farm in your city (not 2 per Farm).:contentReference[oaicite:18]{index=18}",
 
-    occupied: null,
+    occupied: false,
     activeDestinations: null,
     maxDestinations: null,
     storage: null,
@@ -509,7 +525,7 @@ export const rawCards: Omit<Card, "discarding" | "playing">[] = [
     cardType: "Critter",
     effectType: "Blue",
     unique: false,
-    constructionRequirement: null,
+    constructionRequirement: "Clock Tower",
     workers: { Red: 0, Blue: 0 },
     imageKey: "historian",
     description:
@@ -531,11 +547,11 @@ export const rawCards: Omit<Card, "discarding" | "playing">[] = [
       cards: 0,
       wildcard: 0,
     },
-    value: 0,
+    value: 2,
     cardType: "Critter",
     effectType: "Green",
     unique: false,
-    constructionRequirement: null,
+    constructionRequirement: "Farm",
     workers: { Red: 0, Blue: 0 },
     imageKey: "husband",
     description:
@@ -562,14 +578,14 @@ export const rawCards: Omit<Card, "discarding" | "playing">[] = [
     effectType: "Red",
     unique: false,
     constructionRequirement: null,
-    workers: { Red: 1, Blue: 0 },
+    workers: { Red: 0, Blue: 0 },
     imageKey: "inn",
     description:
       "When you place a worker here, play a Critter or Construction from the Meadow for 3 fewer resources of your choice. (You gain 1 point token if an opponent visits your Inn.):contentReference[oaicite:21]{index=21}",
 
-    occupied: null,
-    activeDestinations: null,
-    maxDestinations: null,
+    occupied: false,
+    activeDestinations: 0,
+    maxDestinations: 1,
     storage: null,
   },
   {
@@ -635,7 +651,7 @@ export const rawCards: Omit<Card, "discarding" | "playing">[] = [
       cards: 0,
       wildcard: 0,
     },
-    value: 0,
+    value: 4,
     cardType: "Critter",
     effectType: "Purple",
     unique: true,
@@ -666,14 +682,14 @@ export const rawCards: Omit<Card, "discarding" | "playing">[] = [
     effectType: "Red",
     unique: false,
     constructionRequirement: null,
-    workers: { Red: 0, Blue: 1 },
+    workers: { Red: 0, Blue: 0 },
     imageKey: "lookout",
     description:
       "When you place a worker here, copy any 1 basic or Forest location, even if it is occupied by one of your workers.:contentReference[oaicite:25]{index=25}",
 
-    occupied: null,
-    activeDestinations: null,
-    maxDestinations: null,
+    occupied: false,
+    activeDestinations: 0,
+    maxDestinations: 1,
     storage: null,
   },
   {
@@ -687,7 +703,7 @@ export const rawCards: Omit<Card, "discarding" | "playing">[] = [
       cards: 0,
       wildcard: 0,
     },
-    value: 1,
+    value: 2,
     cardType: "Construction",
     effectType: "Green",
     unique: false,
@@ -697,7 +713,7 @@ export const rawCards: Omit<Card, "discarding" | "playing">[] = [
     description:
       "When played and during Production, gain 1 pebble.:contentReference[oaicite:26]{index=26}",
 
-    occupied: null,
+    occupied: false,
     activeDestinations: null,
     maxDestinations: null,
     storage: null,
@@ -713,7 +729,7 @@ export const rawCards: Omit<Card, "discarding" | "playing">[] = [
       cards: 0,
       wildcard: 0,
     },
-    value: 2,
+    value: 1,
     cardType: "Critter",
     effectType: "Green",
     unique: false,
@@ -739,19 +755,19 @@ export const rawCards: Omit<Card, "discarding" | "playing">[] = [
       cards: 0,
       wildcard: 0,
     },
-    value: 2,
+    value: 1,
     cardType: "Construction",
     effectType: "Red",
     unique: true,
     constructionRequirement: null,
-    workers: { Red: 0, Blue: 2 },
+    workers: { Red: 0, Blue: 0 },
     imageKey: "monastery",
     description:
       "When you place a worker here, give 2 of any resources to an opponent and then gain 4 points. (Worker stays here permanently. Monastery can only have 2 workers, and the second spot is unlocked by having a Monk in your city.):contentReference[oaicite:28]{index=28}",
 
-    occupied: null,
-    activeDestinations: null,
-    maxDestinations: null,
+    occupied: false,
+    activeDestinations: 0,
+    maxDestinations: 1,
     storage: null,
   },
   {
@@ -765,7 +781,7 @@ export const rawCards: Omit<Card, "discarding" | "playing">[] = [
       cards: 0,
       wildcard: 0,
     },
-    value: 1,
+    value: 0,
     cardType: "Critter",
     effectType: "Green",
     unique: true,
@@ -801,7 +817,7 @@ export const rawCards: Omit<Card, "discarding" | "playing">[] = [
     description:
       "At game end, worth 1 point for each Unique Construction in your city, including this Palace.:contentReference[oaicite:30]{index=30}",
 
-    occupied: null,
+    occupied: false,
     activeDestinations: null,
     maxDestinations: null,
     storage: null,
@@ -821,7 +837,7 @@ export const rawCards: Omit<Card, "discarding" | "playing">[] = [
     cardType: "Critter",
     effectType: "Green",
     unique: false,
-    constructionRequirement: null,
+    constructionRequirement: "Ruins",
     workers: { Red: 0, Blue: 0 },
     imageKey: "peddler",
     description:
@@ -843,7 +859,7 @@ export const rawCards: Omit<Card, "discarding" | "playing">[] = [
       cards: 0,
       wildcard: 0,
     },
-    value: 1,
+    value: 0,
     cardType: "Critter",
     effectType: "Tan",
     unique: false,
@@ -874,14 +890,14 @@ export const rawCards: Omit<Card, "discarding" | "playing">[] = [
     effectType: "Red",
     unique: false,
     constructionRequirement: null,
-    workers: { Red: 1, Blue: 0 },
+    workers: { Red: 0, Blue: 0 },
     imageKey: "postoffice",
     description:
       "When you place a worker here, give an opponent 2 cards from your hand and then discard any number of cards from your hand. Draw back up to your hand limit. You gain 1 point token if an opponent visits your Post Office.:contentReference[oaicite:33]{index=33}",
 
-    occupied: null,
-    activeDestinations: null,
-    maxDestinations: null,
+    occupied: false,
+    activeDestinations: 0,
+    maxDestinations: 1,
     storage: null,
   },
   {
@@ -895,19 +911,19 @@ export const rawCards: Omit<Card, "discarding" | "playing">[] = [
       cards: 0,
       wildcard: 0,
     },
-    value: 0,
+    value: 4,
     cardType: "Critter",
     effectType: "Red",
     unique: true,
     constructionRequirement: "Palace",
-    workers: { Red: 1, Blue: 0 },
+    workers: { Red: 0, Blue: 0 },
     imageKey: "queen",
     description:
       "When you place a worker here, you may play any card from your hand or the Meadow cards worth up to 3 points for free. (Uses base point value of the card, not bonus points.):contentReference[oaicite:34]{index=34}",
 
     occupied: null,
-    activeDestinations: null,
-    maxDestinations: null,
+    activeDestinations: 0,
+    maxDestinations: 1,
     storage: null,
   },
   {
@@ -921,11 +937,11 @@ export const rawCards: Omit<Card, "discarding" | "playing">[] = [
       cards: 0,
       wildcard: 0,
     },
-    value: 2,
+    value: 1,
     cardType: "Critter",
     effectType: "Tan",
     unique: true,
-    constructionRequirement: "Lookout",
+    constructionRequirement: "Dungeon",
     workers: { Red: 0, Blue: 0 },
     imageKey: "ranger",
     description:
@@ -957,7 +973,7 @@ export const rawCards: Omit<Card, "discarding" | "playing">[] = [
     description:
       "When played and during Production, gain 1 resin.:contentReference[oaicite:36]{index=36}",
 
-    occupied: null,
+    occupied: false,
     activeDestinations: null,
     maxDestinations: null,
     storage: null,
@@ -983,7 +999,7 @@ export const rawCards: Omit<Card, "discarding" | "playing">[] = [
     description:
       "When played, discard a Construction from your city and place this card in that spot. Then gain back that Construction’s listed cost in resources, and draw 2 cards.:contentReference[oaicite:37]{index=37}",
 
-    occupied: null,
+    occupied: false,
     activeDestinations: null,
     maxDestinations: null,
     storage: null,
@@ -999,7 +1015,7 @@ export const rawCards: Omit<Card, "discarding" | "playing">[] = [
       cards: 0,
       wildcard: 0,
     },
-    value: 0,
+    value: 2,
     cardType: "Construction",
     effectType: "Purple",
     unique: true,
@@ -1009,7 +1025,7 @@ export const rawCards: Omit<Card, "discarding" | "playing">[] = [
     description:
       "At game end, worth 1 point for each Common Critter in your city.:contentReference[oaicite:38]{index=38}",
 
-    occupied: null,
+    occupied: false,
     activeDestinations: null,
     maxDestinations: null,
     storage: null,
@@ -1025,7 +1041,7 @@ export const rawCards: Omit<Card, "discarding" | "playing">[] = [
       cards: 0,
       wildcard: 0,
     },
-    value: 2,
+    value: 1,
     cardType: "Critter",
     effectType: "Tan",
     unique: true,
@@ -1077,20 +1093,28 @@ export const rawCards: Omit<Card, "discarding" | "playing">[] = [
       cards: 0,
       wildcard: 0,
     },
-    value: 1,
+    value: 2,
     cardType: "Construction",
     effectType: "Blue",
     unique: false,
     constructionRequirement: null,
-    workers: { Red: 0, Blue: 1 },
+    workers: { Red: 0, Blue: 0 },
     imageKey: "storehouse",
     description:
       "When played and during Production, take from the supply and place either 3 twigs, 2 resin, 1 pebble, or 2 berries on this card. (Also works as a location to place a worker and take all of the resources on the card.):contentReference[oaicite:41]{index=41}:contentReference[oaicite:42]{index=42}",
 
-    occupied: null,
-    activeDestinations: null,
-    maxDestinations: null,
-    storage: null,
+    occupied: false,
+    activeDestinations: 0,
+    maxDestinations: 1,
+    storage: {
+      twigs: 0,
+      resin: 0,
+      pebbles: 0,
+      berries: 0,
+      coins: 0,
+      cards: 0,
+      wildcard: 0,
+    },
   },
   {
     name: "Teacher",
@@ -1103,11 +1127,11 @@ export const rawCards: Omit<Card, "discarding" | "playing">[] = [
       cards: 0,
       wildcard: 0,
     },
-    value: 1,
+    value: 2,
     cardType: "Critter",
     effectType: "Green",
     unique: false,
-    constructionRequirement: "University",
+    constructionRequirement: "School",
     workers: { Red: 0, Blue: 0 },
     imageKey: "teacher",
     description:
@@ -1139,7 +1163,7 @@ export const rawCards: Omit<Card, "discarding" | "playing">[] = [
     description:
       "At game end, worth 1 point for each Unique Critter in your city.:contentReference[oaicite:44]{index=44}",
 
-    occupied: null,
+    occupied: false,
     activeDestinations: null,
     maxDestinations: null,
     storage: null,
@@ -1155,7 +1179,7 @@ export const rawCards: Omit<Card, "discarding" | "playing">[] = [
       cards: 0,
       wildcard: 0,
     },
-    value: 2,
+    value: 1,
     cardType: "Construction",
     effectType: "Green",
     unique: false,
@@ -1165,7 +1189,33 @@ export const rawCards: Omit<Card, "discarding" | "playing">[] = [
     description:
       "When played and during Production, gain 2 twigs.:contentReference[oaicite:45]{index=45}",
 
-    occupied: null,
+    occupied: false,
+    activeDestinations: null,
+    maxDestinations: null,
+    storage: null,
+  },
+  {
+    name: "Undertaker",
+    cost: {
+      twigs: 0,
+      resin: 0,
+      pebbles: 0,
+      berries: 2,
+      coins: 0,
+      cards: 0,
+      wildcard: 0,
+    },
+    value: 1,
+    cardType: "Critter",
+    effectType: "Tan",
+    unique: true,
+    constructionRequirement: "Cemetery",
+    workers: { Red: 0, Blue: 0 },
+    imageKey: "undertaker",
+    description:
+      "Discard 3 cards from the Meadow, replenish, then draw 1 card from the Meadow. Unlocks second Cemetery.",
+
+    occupied: false,
     activeDestinations: null,
     maxDestinations: null,
     storage: null,
@@ -1186,14 +1236,14 @@ export const rawCards: Omit<Card, "discarding" | "playing">[] = [
     effectType: "Red",
     unique: true,
     constructionRequirement: null,
-    workers: { Red: 1, Blue: 0 },
+    workers: { Red: 0, Blue: 0 },
     imageKey: "university",
     description:
       "When you place a worker here, discard 1 Construction or Critter from your city and receive back its listed cost in resources, then gain 1 of any resource and 1 point. (If you discard a card with a permanent worker on it, place that worker on the University permanently.):contentReference[oaicite:46]{index=46}",
 
-    occupied: null,
-    activeDestinations: null,
-    maxDestinations: null,
+    occupied: false,
+    activeDestinations: 0,
+    maxDestinations: 1,
     storage: null,
   },
   {
@@ -1207,11 +1257,11 @@ export const rawCards: Omit<Card, "discarding" | "playing">[] = [
       cards: 0,
       wildcard: 0,
     },
-    value: 0,
+    value: 1,
     cardType: "Critter",
     effectType: "Tan",
     unique: false,
-    constructionRequirement: null,
+    constructionRequirement: "Lookout",
     workers: { Red: 0, Blue: 0 },
     imageKey: "wanderer",
     description:
@@ -1233,11 +1283,11 @@ export const rawCards: Omit<Card, "discarding" | "playing">[] = [
       cards: 0,
       wildcard: 0,
     },
-    value: 0,
+    value: 2,
     cardType: "Critter",
     effectType: "Purple",
     unique: false,
-    constructionRequirement: null,
+    constructionRequirement: "Farm",
     workers: { Red: 0, Blue: 0 },
     imageKey: "wife",
     description:
@@ -1263,7 +1313,7 @@ export const rawCards: Omit<Card, "discarding" | "playing">[] = [
     cardType: "Critter",
     effectType: "Green",
     unique: false,
-    constructionRequirement: null,
+    constructionRequirement: "Sotrehouse",
     workers: { Red: 0, Blue: 0 },
     imageKey: "woodcarver",
     description:

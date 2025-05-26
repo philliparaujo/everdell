@@ -13,7 +13,7 @@ const scrollRowStyle: React.CSSProperties = {
   padding: '4px',
   border: '1px solid #ddd',
   borderRadius: '4px',
-  height: '200px',
+  height: '100%',
 };
 
 function Game() {
@@ -44,6 +44,7 @@ function Game() {
               <CardPreview
                 key={index}
                 card={card}
+                placedDown={false}
                 onClick={() => {
                   if (isDiscarding && card) {
                     toggleCardDiscarding(game.turn, "meadow", index);
@@ -68,6 +69,7 @@ function Game() {
               <CardPreview
                 key={index}
                 card={card}
+                placedDown={true}
                 onClick={() => {
                   if (isDiscarding && card) {
                     toggleCardDiscarding(game.turn, "city", index);
@@ -90,6 +92,7 @@ function Game() {
               <CardPreview
                 key={index}
                 card={card}
+                placedDown={false}
                 onClick={() => {
                   if (isDiscarding && card) {
                     toggleCardDiscarding(game.turn, "hand", index);
@@ -112,6 +115,7 @@ function Game() {
               <CardPreview
                 key={index}
                 card={card}
+                placedDown={false}
               />
             )
           })}

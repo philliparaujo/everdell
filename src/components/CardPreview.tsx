@@ -1,35 +1,86 @@
-import { Card } from "../engine/gameTypes";
+import { useState } from "react";
+import { Card, ResourceType } from "../engine/gameTypes";
+import CardInspect from "./CardInspect";
+import { ResourceIcon, WorkerIcon } from "./ResourceIcon";
 
-function CardPreview({ card, onClick }: { card: Card | null, onClick?: () => void }) {
+function CardPreview({ card, onClick, placedDown }: { card: Card | null, onClick?: () => void, placedDown: Boolean }) {
+  const [inspecting, setInspecting] = useState(false);
   const borderStyle = card?.discarding ? '2px solid red' : (card?.playing ? '2px solid green' : '2px solid #ccc');
+
+  const storable = card && (card.storage || card.maxDestinations != null) && placedDown;
 
   return (
     <div
       style={{
         width: '100px',
-        height: '170px',
+        height: storable ? '210px' : '170px',
         background: '#fff',
         border: borderStyle,
         padding: '4px',
         borderRadius: '4px',
         textAlign: 'center',
-        cursor: onClick ? 'pointer' : 'default',
+        cursor: card && onClick ? 'pointer' : 'default',
         flex: '0 0 auto',
+        display: 'flex',
+        flexDirection: 'column',
       }}
       onClick={onClick}
+      onContextMenu={(e) => {
+        e.preventDefault();
+        setInspecting(true);
+      }}
     >
       {card ? (
-        <img
-          src={require(`../assets/images/${card?.imageKey}.jpg`)}
-          alt={card?.name ?? "Empty card"}
-          style={{
-            width: '100%', height: '150px',
-            objectFit: 'cover', borderRadius: '4px'
-          }}
-        />
-      ) : <></>}
-      <strong style={{ fontSize: '12px' }}>{card?.name}</strong>
+        <>
+          <div>
+            <img
+              src={require(`../assets/images/${card.imageKey}.jpg`)}
+              alt={card.name}
+              style={{
+                width: '100%',
+                height: '150px',
+                objectFit: 'cover',
+                borderRadius: '4px',
+              }}
+              draggable={false}
+            />
+            <strong style={{ fontSize: '12px' }}>{card.name}</strong>
+          </div>
+
+          {storable &&
+            <div
+              style={{
+                background: '#DCBA9E',
+                flexGrow: 1,
+                display: 'flex',
+                flexWrap: 'wrap',
+                justifyContent: 'space-evenly',
+                alignItems: 'center',
+                padding: '4px',
+                borderRadius: '4px',
+              }}
+            >
+              {card.storage && Object.entries(card.storage)
+                .filter(([, val]) => val > 0)
+                .map(([key, val]) => (
+                  <div key={key} style={{ fontSize: '10px' }}>
+                    <ResourceIcon type={key as ResourceType} /> {val}
+                  </div>
+                ))}
+              {card.workers.Red > 0 && (
+                <div style={{ fontSize: '10px' }}><WorkerIcon playerColor={"Red"} /> {card.workers.Red}</div>
+              )}
+              {card.workers.Blue > 0 && (
+                <div style={{ fontSize: '10px' }}><WorkerIcon playerColor={"Blue"} /> {card.workers.Blue}</div>
+              )}
+            </div>
+          }
+
+          {inspecting && <CardInspect card={card} onClose={() => setInspecting(false)} />}
+        </>
+      ) : null}
     </div>
+
   );
 }
 
