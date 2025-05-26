@@ -172,7 +172,7 @@ export const rawCards: Omit<Card, "discarding" | "playing">[] = [
     effectType: "Red",
     unique: true,
     constructionRequirement: null,
-    workers: { Red: 1, Blue: 0 },
+    workers: { Red: 0, Blue: 0 },
     imageKey: "cemetery",
     description:
       "When you place a worker here, reveal 4 cards from the draw pile or discard pile and play 1 of them for free. Discard the others. (Your worker stays here permanently; Cemetery can only have 2 workers, and the second spot is unlocked by having an Undertaker in your city.):contentReference[oaicite:4]{index=4}",
@@ -767,7 +767,7 @@ export const rawCards: Omit<Card, "discarding" | "playing">[] = [
 
     occupied: false,
     activeDestinations: 0,
-    maxDestinations: 1,
+    maxDestinations: 2,
     storage: null,
   },
   {

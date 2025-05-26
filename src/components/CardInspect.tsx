@@ -1,6 +1,12 @@
-import { Card } from "../engine/gameTypes";
+import { useGame } from "../engine/GameContext";
+import { Card, PlayerColor } from "../engine/gameTypes";
 
-function CardInspect({ card, onClose }: { card: Card, onClose: () => void }) {
+function CardInspect({ card, index, cityColor, onClose, placedDown }: { card: Card, index: number, cityColor: PlayerColor | null, onClose: () => void, placedDown: Boolean }) {
+  const {
+    game,
+    visitCardInCity
+  } = useGame();
+
   return (
     <div
       style={{
@@ -44,7 +50,15 @@ function CardInspect({ card, onClose }: { card: Card, onClose: () => void }) {
           }}
         >
           <h2>{card.name}</h2>
-          <p><strong>Occupied:</strong> {card.occupied ? "Yes" : "No"}</p>
+          {card.value !== undefined && <p><strong>Base Points:</strong> {card.value}</p>}
+          {card.occupied !== null ? <p><strong>Occupied:</strong> {card.occupied ? "Yes" : "No"}</p> : <></>}
+
+          {placedDown && card.maxDestinations != null && cityColor !== null && (
+            <>
+              <button onClick={() => visitCardInCity(game.turn, cityColor, index, 1)}>{"Visit"}</button>
+              <button onClick={() => visitCardInCity(game.turn, cityColor, index, -1)}>{"Unvisit"}</button>
+            </>
+          )}
 
           {card.storage && (
             <div>
@@ -57,7 +71,7 @@ function CardInspect({ card, onClose }: { card: Card, onClose: () => void }) {
             </div>
           )}
 
-          {card.workers && (
+          {card.maxDestinations != null && card.workers && (
             <div>
               <strong>Workers on card:</strong>
               <ul>
@@ -67,8 +81,6 @@ function CardInspect({ card, onClose }: { card: Card, onClose: () => void }) {
               </ul>
             </div>
           )}
-
-          {card.value !== undefined && <p><strong>Base Points:</strong> {card.value}</p>}
         </div>
       </div>
     </div>

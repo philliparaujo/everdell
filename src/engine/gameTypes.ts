@@ -29,14 +29,15 @@ export type Card = {
 
   imageKey: string;
 
-  occupied: Boolean | null;
-  constructionRequirement: string | null;
+  occupied: Boolean | null; // Constructions can be occupied for free critters
+  constructionRequirement: string | null; // Critters can be played for free by occupying constructions
 
+  // Some cards can be visited by workers
   activeDestinations: number | null;
   maxDestinations: number | null;
   workers: Record<PlayerColor, number>;
 
-  storage: Resources | null;
+  storage: Resources | null; // Some cards can store resources or coins on them
 
   discarding: Boolean;
   playing: Boolean;

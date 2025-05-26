@@ -13,7 +13,7 @@ function LocationDisplay({ location, index }: { location: Location, index: numbe
       key={index}
       style={{
         width: '100px',
-        height: '80px',
+        height: '100px',
         background: '#DCBA9E',
         padding: '4px',
         borderRadius: '8px',
@@ -25,12 +25,17 @@ function LocationDisplay({ location, index }: { location: Location, index: numbe
       }}
     >
       <div>
-        <button onClick={() => visitLocation(game.turn, index)}>
+        <button onClick={() => visitLocation(game.turn, index, 1)}>
           Visit{location.exclusive ? ' (excl.)' : ''}
         </button>
       </div>
-
       <div>
+        <button onClick={() => visitLocation(game.turn, index, -1)}>
+          Unvisit
+        </button>
+      </div>
+
+      <div style={{ height: '25px', alignContent: 'center' }}>
         {location.workers.Red > 0 && (
           <span><WorkerIcon playerColor={"Red"} /> {location.workers.Red}</span>
         )}
@@ -38,8 +43,6 @@ function LocationDisplay({ location, index }: { location: Location, index: numbe
           <span><WorkerIcon playerColor={"Blue"} /> {location.workers.Blue}</span>
         )}
       </div>
-
-      <br />
 
       <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '2px' }}>
         {Object.entries(location.resources)

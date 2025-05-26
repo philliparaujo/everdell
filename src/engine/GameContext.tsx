@@ -64,7 +64,8 @@ const GameContext = createContext<{
   playSelectedCards: (playerColor: PlayerColor) => void;
   drawCard: (playerColor: PlayerColor) => void;
   addToMeadow: () => void;
-  visitLocation: (playerColor: PlayerColor, index: number) => void;
+  visitLocation: (playerColor: PlayerColor, index: number, workersVisiting: 1 | -1) => void;
+  visitCardInCity: (playerColor: PlayerColor, cityColor: PlayerColor, index: number, workersVisiting: 1 | -1) => void;
   addResourcesToPlayer: (playerColor: PlayerColor, resources: Resources) => void;
 }>({
   game: defaultState,
@@ -78,6 +79,7 @@ const GameContext = createContext<{
   drawCard: (playerColor) => { },
   addToMeadow: () => { },
   visitLocation: (playerColor, index) => { },
+  visitCardInCity: (playerColor, cityColor, index, workersVisiting) => { },
   addResourcesToPlayer: (playerColor, resources) => { },
 });
 
@@ -93,7 +95,8 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
   const playSelectedCards = (playerColor: PlayerColor) => setGame((prev) => Actions.playSelectedCards(prev, playerColor));
   const drawCard = (playerColor: PlayerColor) => setGame((prev) => Actions.drawCard(prev, playerColor))
   const addToMeadow = () => setGame((prev) => Actions.addToMeadow(prev));
-  const visitLocation = (playerColor: PlayerColor, index: number) => setGame((prev) => Actions.visitLocation(prev, playerColor, index));
+  const visitLocation = (playerColor: PlayerColor, index: number, workersVisiting: 1 | -1) => setGame((prev) => Actions.visitLocation(prev, playerColor, index, workersVisiting));
+  const visitCardInCity = (playerColor: PlayerColor, cityColor: PlayerColor, index: number, workersVisiting: 1 | -1) => setGame((prev) => Actions.visitCardinCity(prev, playerColor, cityColor, index, workersVisiting));
   const addResourcesToPlayer = (playerColor: PlayerColor, resources: Resources) => setGame((prev) => Actions.addResourcesToPlayer(prev, playerColor, resources));
 
   return (
@@ -109,6 +112,7 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
       drawCard,
       addToMeadow,
       visitLocation,
+      visitCardInCity,
       addResourcesToPlayer
     }}>
       {children}

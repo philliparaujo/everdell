@@ -1,4 +1,4 @@
-import { Card, GameState, PlayerColor, Resources } from "./gameTypes";
+import { Card, GameState, Player, PlayerColor, Resources } from "./gameTypes";
 
 export function endTurn(state: GameState): GameState {
   return {
@@ -273,31 +273,42 @@ export function addToMeadow(state: GameState): GameState {
 export function visitLocation(
   state: GameState,
   playerColor: PlayerColor,
-  index: number
+  index: number,
+  workersVisiting: 1 | -1
 ): GameState {
+  if (index >= state.locations.length) return state;
+
   const location = state.locations[index];
   const player = state.players[playerColor];
 
-  if (player.workers.workersLeft <= 0) return state;
-  if (index >= state.locations.length) return state;
-  if (
-    location.exclusive &&
-    (location.workers.Red > 0 || location.workers.Blue > 0)
-  )
-    return state;
+  if (workersVisiting >= 0) {
+    if (player.workers.workersLeft - workersVisiting < 0) return state;
+    if (
+      location.exclusive &&
+      (location.workers.Red > 0 || location.workers.Blue > 0)
+    )
+      return state;
+  } else {
+    if (
+      player.workers.workersLeft - workersVisiting >
+      player.workers.maxWorkers
+    )
+      return state;
+    if (location.workers[playerColor] <= 0) return state;
+  }
+
+  const updatedLocation = {
+    ...location,
+    workers: {
+      ...location.workers,
+      [playerColor]: location.workers[playerColor] + workersVisiting,
+    },
+  };
 
   const newState: GameState = {
     ...state,
     locations: state.locations.map((loc, i) =>
-      i === index
-        ? {
-            ...loc,
-            workers: {
-              ...loc.workers,
-              [playerColor]: loc.workers[playerColor] + 1,
-            },
-          }
-        : loc
+      i === index ? updatedLocation : loc
     ),
     players: {
       ...state.players,
@@ -305,7 +316,7 @@ export function visitLocation(
         ...player,
         workers: {
           ...player.workers,
-          workersLeft: player.workers.workersLeft - 1,
+          workersLeft: player.workers.workersLeft - workersVisiting,
         },
         resources: {
           ...player.resources,
@@ -314,7 +325,82 @@ export function visitLocation(
     },
   };
 
-  return addResourcesToPlayer(newState, playerColor, location.resources);
+  if (workersVisiting > 0) {
+    return addResourcesToPlayer(newState, playerColor, location.resources);
+  }
+
+  return newState;
+}
+
+export function visitCardinCity(
+  state: GameState,
+  playerColor: PlayerColor,
+  cityColor: PlayerColor,
+  index: number,
+  workersVisiting: 1 | -1
+): GameState {
+  if (index >= state.players[cityColor].city.length) return state;
+
+  const card = state.players[cityColor].city[index];
+  const player = state.players[playerColor];
+
+  if (workersVisiting > 0) {
+    if (player.workers.workersLeft - workersVisiting < 0) return state;
+    if (
+      card.maxDestinations === null ||
+      card.activeDestinations === null ||
+      card.activeDestinations >= card.maxDestinations
+    )
+      return state;
+  } else {
+    if (
+      player.workers.workersLeft - workersVisiting >
+      player.workers.maxWorkers
+    )
+      return state;
+    if (
+      card.activeDestinations === null ||
+      card.activeDestinations + workersVisiting < 0
+    )
+      return state;
+  }
+
+  const updatedCard: Card = {
+    ...card,
+    activeDestinations: card.activeDestinations + workersVisiting,
+    workers: {
+      ...card.workers,
+      [playerColor]: card.workers[playerColor] + workersVisiting,
+    },
+  };
+  const updatedCity = state.players[cityColor].city.map((c, i) =>
+    i === index ? updatedCard : c
+  );
+
+  const updatedPlayer: Player = {
+    ...player,
+    city: updatedCity,
+    workers: {
+      ...player.workers,
+      workersLeft: player.workers.workersLeft - workersVisiting,
+    },
+  };
+
+  const newState: GameState = {
+    ...state,
+    players: {
+      ...state.players,
+      [playerColor]: updatedPlayer,
+      ...(playerColor !== cityColor && {
+        [cityColor]: {
+          ...state.players[cityColor],
+          city: updatedCity,
+        },
+      }),
+    },
+  };
+
+  return newState;
 }
 
 export function addResourcesToPlayer(
@@ -338,6 +424,13 @@ export function addResourcesToPlayer(
       } else {
         updatedResources[typedKey] += resources[typedKey];
       }
+    }
+  }
+
+  for (const key in updatedResources) {
+    if (Object.prototype.hasOwnProperty.call(updatedResources, key)) {
+      const typedKey = key as keyof Resources;
+      updatedResources[typedKey] = Math.max(0, updatedResources[typedKey]);
     }
   }
 

@@ -43,8 +43,10 @@ function Game() {
             return (
               <CardPreview
                 key={index}
+                index={index}
                 card={card}
                 placedDown={false}
+                cityColor={null}
                 onClick={() => {
                   if (isDiscarding && card) {
                     toggleCardDiscarding(game.turn, "meadow", index);
@@ -68,8 +70,10 @@ function Game() {
             return (
               <CardPreview
                 key={index}
+                index={index}
                 card={card}
                 placedDown={true}
+                cityColor={game.turn}
                 onClick={() => {
                   if (isDiscarding && card) {
                     toggleCardDiscarding(game.turn, "city", index);
@@ -91,8 +95,10 @@ function Game() {
             return (
               <CardPreview
                 key={index}
+                index={index}
                 card={card}
                 placedDown={false}
+                cityColor={null}
                 onClick={() => {
                   if (isDiscarding && card) {
                     toggleCardDiscarding(game.turn, "hand", index);
@@ -114,8 +120,10 @@ function Game() {
             return (
               <CardPreview
                 key={index}
+                index={index}
                 card={card}
                 placedDown={false}
+                cityColor={null}
               />
             )
           })}

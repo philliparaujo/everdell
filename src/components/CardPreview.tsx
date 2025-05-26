@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { Card, ResourceType } from "../engine/gameTypes";
+import { Card, PlayerColor, ResourceType } from "../engine/gameTypes";
 import CardInspect from "./CardInspect";
 import { ResourceIcon, WorkerIcon } from "./ResourceIcon";
 
-function CardPreview({ card, onClick, placedDown }: { card: Card | null, onClick?: () => void, placedDown: Boolean }) {
+function CardPreview({ card, index, onClick, placedDown, cityColor }: { card: Card | null, index: number, onClick?: () => void, placedDown: Boolean, cityColor: PlayerColor | null }) {
   const [inspecting, setInspecting] = useState(false);
   const borderStyle = card?.discarding ? '2px solid red' : (card?.playing ? '2px solid green' : '2px solid #ccc');
 
@@ -76,7 +76,7 @@ function CardPreview({ card, onClick, placedDown }: { card: Card | null, onClick
             </div>
           }
 
-          {inspecting && <CardInspect card={card} onClose={() => setInspecting(false)} />}
+          {inspecting && <CardInspect card={card} index={index} cityColor={cityColor} onClose={() => setInspecting(false)} placedDown={placedDown} />}
         </>
       ) : null}
     </div>
