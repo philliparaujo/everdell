@@ -1,8 +1,9 @@
 import CardPreview from '../components/CardPreview';
-import Controls from '../components/Controls';
 import LocationsDisplay from '../components/LocationsDisplay';
 import PlayerStatuses from '../components/PlayerStatus';
+import { CustomResourceIcon, ResourceIcon } from '../components/ResourceIcon';
 import { useGame } from '../engine/GameContext';
+import whiteicon from "../assets/icons/whiteicon.png";
 
 const scrollRowStyle: React.CSSProperties = {
   display: 'flex',
@@ -24,14 +25,44 @@ function Game() {
   } = useGame();
 
   const currentPlayer = game.players[game.turn];
+
+  const oppositePlayerColor = game.turn === "Red" ? "Blue" : "Red";
+  const oppositePlayer = game.players[oppositePlayerColor];
+
   const isDiscarding = currentPlayer.discarding;
   const isPlaying = currentPlayer.playing;
 
   return (
     <div style={{ padding: '16px', fontFamily: 'sans-serif' }}>
       <LocationsDisplay />
-      <Controls />
       <PlayerStatuses />
+
+      {/* Hand */}
+      <section>
+        <h4>Hand</h4>
+        <div style={scrollRowStyle}>
+          {Array.from({ length: 8 }).map((_, index) => {
+            const card = currentPlayer.hand[index] ?? null;
+
+            return (
+              <CardPreview
+                key={index}
+                index={index}
+                card={card}
+                placedDown={false}
+                cityColor={null}
+                onClick={() => {
+                  if (isDiscarding && card) {
+                    toggleCardDiscarding(game.turn, "hand", index);
+                  } else if (isPlaying && card) {
+                    toggleCardPlaying(game.turn, "hand", index);
+                  }
+                }}
+              />
+            )
+          })}
+        </div>
+      </section>
 
       {/* Meadow */}
       <section>
@@ -62,7 +93,11 @@ function Game() {
 
       {/* My City */}
       <section>
-        <h4>My City</h4>
+        <h4>
+          My City (
+          <CustomResourceIcon path={whiteicon} /> {currentPlayer.city.reduce((acc, curr) => acc + curr.value, 0)}
+          )
+        </h4>
         <div style={scrollRowStyle}>
           {Array.from({ length: 15 }).map((_, index) => {
             const card = currentPlayer.city[index] ?? null;
@@ -85,25 +120,27 @@ function Game() {
         </div>
       </section>
 
-      {/* Hand */}
+      {/* Opposite City */}
       <section>
-        <h4>Hand</h4>
+        <h4>
+          Opposite City (
+          <CustomResourceIcon path={whiteicon} /> {oppositePlayer.city.reduce((acc, curr) => acc + curr.value, 0)}
+          )
+        </h4>
         <div style={scrollRowStyle}>
-          {Array.from({ length: 8 }).map((_, index) => {
-            const card = currentPlayer.hand[index] ?? null;
+          {Array.from({ length: 15 }).map((_, index) => {
+            const card = oppositePlayer.city[index] ?? null;
 
             return (
               <CardPreview
                 key={index}
                 index={index}
                 card={card}
-                placedDown={false}
-                cityColor={null}
+                placedDown={true}
+                cityColor={oppositePlayerColor}
                 onClick={() => {
                   if (isDiscarding && card) {
-                    toggleCardDiscarding(game.turn, "hand", index);
-                  } else if (isPlaying && card) {
-                    toggleCardPlaying(game.turn, "hand", index);
+                    toggleCardDiscarding(game.turn, "city", index);
                   }
                 }}
               />

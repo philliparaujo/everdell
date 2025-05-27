@@ -1,5 +1,6 @@
 import { useGame } from "../engine/GameContext";
 import { PlayerColor, ResourceType } from "../engine/gameTypes";
+import Controls from "./Controls";
 import ResourceBank from "./ResourceBank";
 import { ResourceIcon } from "./ResourceIcon";
 
@@ -12,6 +13,7 @@ function PlayerStatus({ playerColor }: { playerColor: PlayerColor }) {
   return (
     <div key={playerColor} style={{ marginBottom: '12px' }}>
       <strong>{playerColor} - {player.name || 'Username'}</strong>
+      <div>{player.season.toString()}</div>
       <div>Workers: {player.workers.workersLeft} / {player.workers.maxWorkers}</div>
       <div>Hand: {player.hand.length} / 8</div>
       <div>City: {player.city.length} / 15</div>
@@ -46,9 +48,12 @@ function PlayerStatuses() {
       gap: '40px',
     }}>
       <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start' }}>
+        <Controls />
+        <hr />
         <ResourceBank playerColor={game.turn} />
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+        <h5>MY TURN</h5>
         <PlayerStatus playerColor={"Red"} />
         <hr />
         <PlayerStatus playerColor={"Blue"} />

@@ -66,7 +66,10 @@ const GameContext = createContext<{
   addToMeadow: () => void;
   visitLocation: (playerColor: PlayerColor, index: number, workersVisiting: 1 | -1) => void;
   visitCardInCity: (playerColor: PlayerColor, cityColor: PlayerColor, index: number, workersVisiting: 1 | -1) => void;
+  toggleOccupiedCardInCity: (cityColor: PlayerColor, index: number, occupied: Boolean) => void;
+  addResourcesToCardInCity: (cityColor: PlayerColor, index: number, resources: Resources) => void;
   addResourcesToPlayer: (playerColor: PlayerColor, resources: Resources) => void;
+  harvest: (playerColor: PlayerColor) => void;
 }>({
   game: defaultState,
   endTurn: () => { },
@@ -80,7 +83,10 @@ const GameContext = createContext<{
   addToMeadow: () => { },
   visitLocation: (playerColor, index) => { },
   visitCardInCity: (playerColor, cityColor, index, workersVisiting) => { },
+  toggleOccupiedCardInCity: (cityColor, index, occupied) => { },
+  addResourcesToCardInCity: (cityColor, index, resoruces) => { },
   addResourcesToPlayer: (playerColor, resources) => { },
+  harvest: (playerColor) => { },
 });
 
 export const GameProvider = ({ children }: { children: ReactNode }) => {
@@ -96,8 +102,11 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
   const drawCard = (playerColor: PlayerColor) => setGame((prev) => Actions.drawCard(prev, playerColor))
   const addToMeadow = () => setGame((prev) => Actions.addToMeadow(prev));
   const visitLocation = (playerColor: PlayerColor, index: number, workersVisiting: 1 | -1) => setGame((prev) => Actions.visitLocation(prev, playerColor, index, workersVisiting));
-  const visitCardInCity = (playerColor: PlayerColor, cityColor: PlayerColor, index: number, workersVisiting: 1 | -1) => setGame((prev) => Actions.visitCardinCity(prev, playerColor, cityColor, index, workersVisiting));
+  const visitCardInCity = (playerColor: PlayerColor, cityColor: PlayerColor, index: number, workersVisiting: 1 | -1) => setGame((prev) => Actions.visitCardInCity(prev, playerColor, cityColor, index, workersVisiting));
+  const toggleOccupiedCardInCity = (cityColor: PlayerColor, index: number, occupied: Boolean) => setGame((prev) => Actions.toggleOccupiedCardInCity(prev, cityColor, index, occupied));
+  const addResourcesToCardInCity = (cityColor: PlayerColor, index: number, resources: Resources) => setGame((prev) => Actions.addResourcesToCardInCity(prev, cityColor, index, resources));
   const addResourcesToPlayer = (playerColor: PlayerColor, resources: Resources) => setGame((prev) => Actions.addResourcesToPlayer(prev, playerColor, resources));
+  const harvest = (playerColor: PlayerColor) => setGame((prev) => Actions.harvest(prev, playerColor));
 
   return (
     <GameContext.Provider value={{
@@ -113,7 +122,10 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
       addToMeadow,
       visitLocation,
       visitCardInCity,
-      addResourcesToPlayer
+      toggleOccupiedCardInCity,
+      addResourcesToCardInCity,
+      addResourcesToPlayer,
+      harvest
     }}>
       {children}
     </GameContext.Provider>

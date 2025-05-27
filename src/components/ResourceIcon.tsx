@@ -37,6 +37,16 @@ export function ResourceIcon({ type }: { type: ResourceType }) {
   )
 }
 
+export function CustomResourceIcon({ path }: { path: string }) {
+  return (
+    <img
+      src={path}
+      alt={path}
+      style={iconStyle}
+    />
+  )
+}
+
 export function WorkerIcon({ playerColor }: { playerColor: PlayerColor }) {
   return (
     <img

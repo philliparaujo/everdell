@@ -10,6 +10,7 @@ function Controls() {
     playSelectedCards,
     drawCard,
     addToMeadow,
+    harvest
   } = useGame();
 
   const currentPlayer = game.players[game.turn];
@@ -17,19 +18,31 @@ function Controls() {
   const isPlaying = currentPlayer.playing;
 
   return (
-    <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'center', gap: '12px' }}>
-      <button onClick={() => drawCard(game.turn)}>Draw Card</button>
-      <button onClick={() => {
-        if (isDiscarding) discardSelectedCards(game.turn);
-        setDiscarding(game.turn, !isDiscarding);
-      }}>{isDiscarding ? "Confirm discard" : "Discard cards"}</button>
-      <button onClick={() => {
-        if (isPlaying) playSelectedCards(game.turn);
-        setPlaying(game.turn, !isPlaying);
-      }}>{isPlaying ? "Confirm play" : "Play cards"}</button>
-      <button onClick={() => endTurn()}>End Turn</button>
-      <button onClick={() => addToMeadow()}>Add To Meadow</button>
-      <h5 style={{ textAlign: 'center' }}>MY TURN</h5>
+    <div style={{ marginTop: '16px', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '2px' }}>
+      <div>
+        <button onClick={() => drawCard(game.turn)}>Draw Card</button>
+      </div>
+      <div>
+        <button onClick={() => addToMeadow()}>Refill Meadow</button>
+      </div>
+      <div>
+        <button onClick={() => {
+          if (isPlaying) playSelectedCards(game.turn);
+          setPlaying(game.turn, !isPlaying);
+        }}>{isPlaying ? "Confirm play" : "Play cards"}</button>
+      </div>
+      <div>
+        <button onClick={() => {
+          if (isDiscarding) discardSelectedCards(game.turn);
+          setDiscarding(game.turn, !isDiscarding);
+        }}>{isDiscarding ? "Confirm discard" : "Discard cards"}</button>
+      </div>
+      <div>
+        <button style={{ background: 'yellow' }} onClick={() => endTurn()}>End Turn</button>
+      </div>
+      <div>
+        <button style={{ background: 'yellow' }} onClick={() => harvest(game.turn)}>Harvest</button>
+      </div>
     </div>
   );
 }

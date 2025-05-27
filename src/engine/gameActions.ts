@@ -1,4 +1,11 @@
-import { Card, GameState, Player, PlayerColor, Resources } from "./gameTypes";
+import {
+  Card,
+  GameState,
+  Player,
+  PlayerColor,
+  Resources,
+  Season,
+} from "./gameTypes";
 
 export function endTurn(state: GameState): GameState {
   return {
@@ -220,7 +227,13 @@ export function playSelectedCards(
     (card) => !card.playing
   );
 
-  const city = [...player.city, ...handPlay, ...meadowPlay];
+  const city = [...player.city, ...handPlay, ...meadowPlay]
+    .sort((a, b) => (a.name < b.name ? -1 : 1))
+    .sort((a, b) =>
+      a.effectType.toString() < b.effectType.toString() ? -1 : 1
+    );
+
+  if (city.length > 15) return state;
 
   return {
     ...state,
@@ -332,7 +345,7 @@ export function visitLocation(
   return newState;
 }
 
-export function visitCardinCity(
+export function visitCardInCity(
   state: GameState,
   playerColor: PlayerColor,
   cityColor: PlayerColor,
@@ -379,7 +392,7 @@ export function visitCardinCity(
 
   const updatedPlayer: Player = {
     ...player,
-    city: updatedCity,
+    ...(playerColor === cityColor && { city: updatedCity }),
     workers: {
       ...player.workers,
       workersLeft: player.workers.workersLeft - workersVisiting,
@@ -403,6 +416,80 @@ export function visitCardinCity(
   return newState;
 }
 
+export function addResourcesToCardInCity(
+  state: GameState,
+  cityColor: PlayerColor,
+  index: number,
+  resources: Resources
+): GameState {
+  if (index >= state.players[cityColor].city.length) return state;
+
+  const card = state.players[cityColor].city[index];
+  if (card.storage === null) return state;
+
+  const updatedStorage: Resources = { ...card.storage };
+
+  for (const key in resources) {
+    if (Object.prototype.hasOwnProperty.call(resources, key)) {
+      const typedKey = key as keyof Resources;
+      updatedStorage[typedKey] += resources[typedKey];
+      updatedStorage[typedKey] = Math.max(0, updatedStorage[typedKey]);
+    }
+  }
+
+  const updatedCard: Card = {
+    ...card,
+    storage: updatedStorage,
+  };
+
+  const updatedCity = state.players[cityColor].city.map((c, i) =>
+    i === index ? updatedCard : c
+  );
+
+  return {
+    ...state,
+    players: {
+      ...state.players,
+      [cityColor]: {
+        ...state.players[cityColor],
+        city: updatedCity,
+      },
+    },
+  };
+}
+
+export function toggleOccupiedCardInCity(
+  state: GameState,
+  cityColor: PlayerColor,
+  index: number,
+  occupied: Boolean
+): GameState {
+  if (index >= state.players[cityColor].city.length) return state;
+
+  const card = state.players[cityColor].city[index];
+  if (card.occupied === null) return state;
+
+  const updatedCard: Card = {
+    ...card,
+    occupied: occupied,
+  };
+
+  const updatedCity = state.players[cityColor].city.map((c, i) =>
+    i === index ? updatedCard : c
+  );
+
+  return {
+    ...state,
+    players: {
+      ...state.players,
+      [cityColor]: {
+        ...state.players[cityColor],
+        city: updatedCity,
+      },
+    },
+  };
+}
+
 export function addResourcesToPlayer(
   state: GameState,
   playerColor: PlayerColor,
@@ -423,14 +510,8 @@ export function addResourcesToPlayer(
         }
       } else {
         updatedResources[typedKey] += resources[typedKey];
+        updatedResources[typedKey] = Math.max(0, updatedResources[typedKey]);
       }
-    }
-  }
-
-  for (const key in updatedResources) {
-    if (Object.prototype.hasOwnProperty.call(updatedResources, key)) {
-      const typedKey = key as keyof Resources;
-      updatedResources[typedKey] = Math.max(0, updatedResources[typedKey]);
     }
   }
 
@@ -442,6 +523,44 @@ export function addResourcesToPlayer(
         ...updatedState.players[playerColor],
         resources: updatedResources,
       },
+    },
+  };
+}
+
+export function harvest(state: GameState, playerColor: PlayerColor): GameState {
+  const player = state.players[playerColor];
+  const { season } = player;
+
+  let newSeason: Season = season;
+  let additionalWorkers = 0;
+
+  if (season === "Winter") {
+    newSeason = "Spring";
+    additionalWorkers = 2;
+  } else if (season === "Spring") {
+    newSeason = "Summer";
+    additionalWorkers = 1;
+  } else if (season === "Summer") {
+    newSeason = "Autumn";
+    additionalWorkers = 1;
+  } else {
+    return state;
+  }
+
+  const updatedPlayer: Player = {
+    ...player,
+    season: newSeason,
+    workers: {
+      maxWorkers: player.workers.maxWorkers + additionalWorkers,
+      workersLeft: player.workers.workersLeft + additionalWorkers,
+    },
+  };
+
+  return {
+    ...state,
+    players: {
+      ...state.players,
+      [playerColor]: updatedPlayer,
     },
   };
 }

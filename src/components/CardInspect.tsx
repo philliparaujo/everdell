@@ -1,10 +1,13 @@
 import { useGame } from "../engine/GameContext";
-import { Card, PlayerColor } from "../engine/gameTypes";
+import { Card, defaultResources, PlayerColor, ResourceType } from "../engine/gameTypes";
+import { ResourceIcon } from "./ResourceIcon";
 
 function CardInspect({ card, index, cityColor, onClose, placedDown }: { card: Card, index: number, cityColor: PlayerColor | null, onClose: () => void, placedDown: Boolean }) {
   const {
     game,
-    visitCardInCity
+    visitCardInCity,
+    addResourcesToCardInCity,
+    toggleOccupiedCardInCity,
   } = useGame();
 
   return (
@@ -40,7 +43,7 @@ function CardInspect({ card, index, cityColor, onClose, placedDown }: { card: Ca
             width: 'auto',
             flexShrink: 0,
             borderRadius: '8px',
-            border: '2px solid black',
+            border: '1px solid black',
           }}
         />
 
@@ -51,7 +54,7 @@ function CardInspect({ card, index, cityColor, onClose, placedDown }: { card: Ca
         >
           <h2>{card.name}</h2>
           {card.value !== undefined && <p><strong>Base Points:</strong> {card.value}</p>}
-          {card.occupied !== null ? <p><strong>Occupied:</strong> {card.occupied ? "Yes" : "No"}</p> : <></>}
+          {placedDown && card.occupied !== null && cityColor ? <p><strong>Occupied:</strong> <button onClick={() => toggleOccupiedCardInCity(cityColor, index, !card.occupied)}>{card.occupied ? "Yes" : "No"}</button></p> : <></>}
 
           {placedDown && card.maxDestinations != null && cityColor !== null && (
             <>
@@ -60,18 +63,22 @@ function CardInspect({ card, index, cityColor, onClose, placedDown }: { card: Ca
             </>
           )}
 
-          {card.storage && (
+          {placedDown && card.storage && (
             <div>
               <strong>Stored Resources:</strong>
               <ul>
                 {Object.entries(card.storage).map(([key, val]) =>
-                  val > 0 ? <li key={key}>{key}: {val}</li> : null
+                  <li key={key}>
+                    <ResourceIcon type={key as ResourceType} /> {val}
+                    <button onClick={() => addResourcesToCardInCity(game.turn, index, { ...defaultResources, [key]: -1 })}>{"-"}</button>
+                    <button onClick={() => addResourcesToCardInCity(game.turn, index, { ...defaultResources, [key]: 1 })}>{"+"}</button>
+                  </li>
                 )}
               </ul>
             </div>
           )}
 
-          {card.maxDestinations != null && card.workers && (
+          {placedDown && card.maxDestinations != null && card.workers && (
             <div>
               <strong>Workers on card:</strong>
               <ul>
@@ -83,7 +90,7 @@ function CardInspect({ card, index, cityColor, onClose, placedDown }: { card: Ca
           )}
         </div>
       </div>
-    </div>
+    </div >
   );
 }
 
