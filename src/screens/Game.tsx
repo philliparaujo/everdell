@@ -161,6 +161,11 @@ function Game() {
                 card={card}
                 placedDown={false}
                 cityColor={null}
+                onClick={() => {
+                  if (isPlaying && card) {
+                    toggleCardPlaying(game.turn, "discard", index);
+                  }
+                }}
               />
             )
           })}

@@ -132,7 +132,7 @@ export function toggleCardDiscarding(
 export function toggleCardPlaying(
   state: GameState,
   playerColor: PlayerColor,
-  location: "hand" | "meadow",
+  location: "hand" | "meadow" | "discard",
   index: number
 ): GameState {
   const newState: GameState = {
@@ -146,6 +146,7 @@ export function toggleCardPlaying(
       },
     },
     meadow: [...state.meadow],
+    discard: [...state.discard],
   };
 
   let cardToToggle: Card | undefined;
@@ -162,6 +163,14 @@ export function toggleCardPlaying(
     cardToToggle = newState.meadow[index];
     if (cardToToggle) {
       newState.meadow[index] = {
+        ...cardToToggle,
+        playing: !cardToToggle.playing,
+      };
+    }
+  } else if (location === "discard") {
+    cardToToggle = newState.discard[index];
+    if (cardToToggle) {
+      newState.discard[index] = {
         ...cardToToggle,
         playing: !cardToToggle.playing,
       };
@@ -226,8 +235,12 @@ export function playSelectedCards(
     state.meadow,
     (card) => !card.playing
   );
+  const [discardKeep, discardPlay] = partition(
+    state.discard,
+    (card) => !card.playing
+  );
 
-  const city = [...player.city, ...handPlay, ...meadowPlay]
+  const city = [...player.city, ...handPlay, ...meadowPlay, ...discardPlay]
     .sort((a, b) => (a.name < b.name ? -1 : 1))
     .sort((a, b) =>
       a.effectType.toString() < b.effectType.toString() ? -1 : 1
@@ -249,6 +262,7 @@ export function playSelectedCards(
       },
     },
     meadow: meadowKeep,
+    discard: discardKeep,
   };
 }
 

@@ -105,4 +105,18 @@ export const locations: Location[] = [
     },
     workers: { Red: 0, Blue: 0 },
   },
+  // Discard 2 cards -> wildcard
+  {
+    exclusive: false,
+    resources: {
+      twigs: 0,
+      resin: 0,
+      pebbles: 0,
+      berries: 0,
+      coins: 0,
+      cards: 0,
+      wildcard: 0,
+    },
+    workers: { Red: 0, Blue: 0 },
+  },
 ];

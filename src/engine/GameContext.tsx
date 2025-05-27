@@ -59,7 +59,7 @@ const GameContext = createContext<{
   setDiscarding: (playerColor: PlayerColor, discarding: Boolean) => void;
   setPlaying: (playerColor: PlayerColor, playing: Boolean) => void;
   toggleCardDiscarding: (playerColor: PlayerColor, location: "hand" | "city" | "meadow", index: number) => void;
-  toggleCardPlaying: (playerColor: PlayerColor, location: "hand" | "meadow", index: number) => void;
+  toggleCardPlaying: (playerColor: PlayerColor, location: "hand" | "meadow" | "discard", index: number) => void;
   discardSelectedCards: (playerColor: PlayerColor) => void;
   playSelectedCards: (playerColor: PlayerColor) => void;
   drawCard: (playerColor: PlayerColor) => void;
@@ -96,7 +96,7 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
   const setDiscarding = (playerColor: PlayerColor, discarding: Boolean) => setGame((prev) => Actions.setDiscarding(prev, playerColor, discarding));
   const setPlaying = (playerColor: PlayerColor, playing: Boolean) => setGame((prev) => Actions.setPlaying(prev, playerColor, playing));
   const toggleCardDiscarding = (playerColor: PlayerColor, location: "hand" | "city" | "meadow", index: number) => setGame((prev) => Actions.toggleCardDiscarding(prev, playerColor, location, index));
-  const toggleCardPlaying = (playerColor: PlayerColor, location: "hand" | "meadow", index: number) => setGame((prev) => Actions.toggleCardPlaying(prev, playerColor, location, index));
+  const toggleCardPlaying = (playerColor: PlayerColor, location: "hand" | "meadow" | "discard", index: number) => setGame((prev) => Actions.toggleCardPlaying(prev, playerColor, location, index));
   const discardSelectedCards = (playerColor: PlayerColor) => setGame((prev) => Actions.discardSelectedCards(prev, playerColor));
   const playSelectedCards = (playerColor: PlayerColor) => setGame((prev) => Actions.playSelectedCards(prev, playerColor));
   const drawCard = (playerColor: PlayerColor) => setGame((prev) => Actions.drawCard(prev, playerColor))
