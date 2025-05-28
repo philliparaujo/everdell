@@ -49,6 +49,14 @@ export type Location = {
   workers: Record<PlayerColor, number>;
 };
 
+export type Event = {
+  name: string;
+  value: number;
+  effectTypeRequirement: EffectType;
+  effectTypeCount: number;
+  workers: Record<PlayerColor, number>;
+};
+
 export type PlayerColor = "Red" | "Blue";
 export type Player = {
   name: string;
@@ -70,6 +78,7 @@ export type GameState = {
   discard: Card[];
   meadow: Card[];
   locations: Location[];
+  events: Event[];
   turn: PlayerColor;
 };
 

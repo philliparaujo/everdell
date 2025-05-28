@@ -1,9 +1,10 @@
+import whitecoin from "../assets/icons/whitecoin.png";
 import CardPreview from '../components/CardPreview';
+import EventsDisplay from '../components/EventsDisplay';
 import LocationsDisplay from '../components/LocationsDisplay';
 import PlayerStatuses from '../components/PlayerStatus';
-import { CustomResourceIcon, ResourceIcon } from '../components/ResourceIcon';
+import { CustomResourceIcon } from '../components/ResourceIcon';
 import { useGame } from '../engine/GameContext';
-import whiteicon from "../assets/icons/whiteicon.png";
 
 const scrollRowStyle: React.CSSProperties = {
   display: 'flex',
@@ -35,6 +36,7 @@ function Game() {
   return (
     <div style={{ padding: '16px', fontFamily: 'sans-serif' }}>
       <LocationsDisplay />
+      <EventsDisplay />
       <PlayerStatuses />
 
       {/* Hand */}
@@ -95,7 +97,7 @@ function Game() {
       <section>
         <h4>
           My City (
-          <CustomResourceIcon path={whiteicon} /> {currentPlayer.city.reduce((acc, curr) => acc + curr.value, 0)}
+          <CustomResourceIcon path={whitecoin} /> {currentPlayer.city.reduce((acc, curr) => acc + curr.value, 0)}
           )
         </h4>
         <div style={scrollRowStyle}>
@@ -124,7 +126,7 @@ function Game() {
       <section>
         <h4>
           Opposite City (
-          <CustomResourceIcon path={whiteicon} /> {oppositePlayer.city.reduce((acc, curr) => acc + curr.value, 0)}
+          <CustomResourceIcon path={whitecoin} /> {oppositePlayer.city.reduce((acc, curr) => acc + curr.value, 0)}
           )
         </h4>
         <div style={scrollRowStyle}>

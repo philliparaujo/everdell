@@ -19,7 +19,7 @@ const resourceIcons: Record<ResourceType, string> = {
   wildcard: wildcard
 }
 
-const iconStyle: React.CSSProperties = {
+export const iconStyle: React.CSSProperties = {
   width: '16px',
   height: '16px',
   verticalAlign: 'middle',

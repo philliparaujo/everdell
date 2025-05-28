@@ -3,6 +3,7 @@ import { Card, defaultPlayer, GameState, PlayerColor, Resources } from './gameTy
 import * as Actions from "./gameActions"
 import { cardFrequencies, rawCards } from '../assets/data/cards';
 import { locations } from '../assets/data/locations';
+import { events } from '../assets/data/events';
 
 const cards: Card[] = rawCards.flatMap((card) => {
   const count = cardFrequencies[card.name] ?? 1;
@@ -48,6 +49,7 @@ export function setupGame(cards: Card[], firstPlayer: PlayerColor): GameState {
     discard: [],
     meadow: meadow,
     locations: locations,
+    events: events,
     turn: firstPlayer,
   };
 }
@@ -65,6 +67,7 @@ const GameContext = createContext<{
   drawCard: (playerColor: PlayerColor) => void;
   addToMeadow: () => void;
   visitLocation: (playerColor: PlayerColor, index: number, workersVisiting: 1 | -1) => void;
+  visitEvent: (playerColor: PlayerColor, index: number, workersVisiting: 1 | -1) => void;
   visitCardInCity: (playerColor: PlayerColor, cityColor: PlayerColor, index: number, workersVisiting: 1 | -1) => void;
   toggleOccupiedCardInCity: (cityColor: PlayerColor, index: number, occupied: Boolean) => void;
   addResourcesToCardInCity: (cityColor: PlayerColor, index: number, resources: Resources) => void;
@@ -81,7 +84,8 @@ const GameContext = createContext<{
   playSelectedCards: (playerColor) => { },
   drawCard: (playerColor) => { },
   addToMeadow: () => { },
-  visitLocation: (playerColor, index) => { },
+  visitLocation: (playerColor, index, workersVisiting) => { },
+  visitEvent: (playerColor, index, workersVisiting) => { },
   visitCardInCity: (playerColor, cityColor, index, workersVisiting) => { },
   toggleOccupiedCardInCity: (cityColor, index, occupied) => { },
   addResourcesToCardInCity: (cityColor, index, resoruces) => { },
@@ -102,6 +106,7 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
   const drawCard = (playerColor: PlayerColor) => setGame((prev) => Actions.drawCard(prev, playerColor))
   const addToMeadow = () => setGame((prev) => Actions.addToMeadow(prev));
   const visitLocation = (playerColor: PlayerColor, index: number, workersVisiting: 1 | -1) => setGame((prev) => Actions.visitLocation(prev, playerColor, index, workersVisiting));
+  const visitEvent = (playerColor: PlayerColor, index: number, workersVisiting: 1 | -1) => setGame((prev) => Actions.visitEvent(prev, playerColor, index, workersVisiting));
   const visitCardInCity = (playerColor: PlayerColor, cityColor: PlayerColor, index: number, workersVisiting: 1 | -1) => setGame((prev) => Actions.visitCardInCity(prev, playerColor, cityColor, index, workersVisiting));
   const toggleOccupiedCardInCity = (cityColor: PlayerColor, index: number, occupied: Boolean) => setGame((prev) => Actions.toggleOccupiedCardInCity(prev, cityColor, index, occupied));
   const addResourcesToCardInCity = (cityColor: PlayerColor, index: number, resources: Resources) => setGame((prev) => Actions.addResourcesToCardInCity(prev, cityColor, index, resources));
@@ -121,6 +126,7 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
       drawCard,
       addToMeadow,
       visitLocation,
+      visitEvent,
       visitCardInCity,
       toggleOccupiedCardInCity,
       addResourcesToCardInCity,

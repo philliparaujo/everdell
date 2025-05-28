@@ -1,5 +1,6 @@
 import {
   Card,
+  defaultResources,
   GameState,
   Player,
   PlayerColor,
@@ -354,6 +355,66 @@ export function visitLocation(
 
   if (workersVisiting > 0) {
     return addResourcesToPlayer(newState, playerColor, location.resources);
+  }
+
+  return newState;
+}
+
+export function visitEvent(
+  state: GameState,
+  playerColor: PlayerColor,
+  index: number,
+  workersVisiting: 1 | -1
+): GameState {
+  if (index >= state.events.length) return state;
+
+  const event = state.events[index];
+  const player = state.players[playerColor];
+
+  if (workersVisiting >= 0) {
+    if (player.workers.workersLeft - workersVisiting < 0) return state;
+  } else {
+    if (
+      player.workers.workersLeft - workersVisiting >
+      player.workers.maxWorkers
+    )
+      return state;
+    if (event.workers[playerColor] <= 0) return state;
+  }
+
+  const updatedEvent = {
+    ...event,
+    workers: {
+      ...event.workers,
+      [playerColor]: event.workers[playerColor] + workersVisiting,
+    },
+  };
+
+  const newState: GameState = {
+    ...state,
+    events: state.events.map((event, i) =>
+      i === index ? updatedEvent : event
+    ),
+    players: {
+      ...state.players,
+      [playerColor]: {
+        ...player,
+        workers: {
+          ...player.workers,
+          workersLeft: player.workers.workersLeft - workersVisiting,
+        },
+        resources: {
+          ...player.resources,
+        },
+      },
+    },
+  };
+
+  if (workersVisiting > 0) {
+    return addResourcesToPlayer(newState, playerColor, {
+      ...defaultResources,
+      coins: event.value,
+    });
   }
 
   return newState;
