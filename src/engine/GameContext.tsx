@@ -1,19 +1,11 @@
-import React, { createContext, ReactNode, useContext, useState } from 'react';
-import { Card, defaultPlayer, GameState, PlayerColor, Resources } from './gameTypes';
-import * as Actions from "./gameActions"
+import { doc, getFirestore, onSnapshot, setDoc } from 'firebase/firestore';
+import { createContext, useContext, useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { cardFrequencies, rawCards } from '../assets/data/cards';
-import { locations } from '../assets/data/locations';
 import { events } from '../assets/data/events';
-
-const cards: Card[] = rawCards.flatMap((card) => {
-  const count = cardFrequencies[card.name] ?? 1;
-  return Array.from({ length: count }, () => ({
-    ...card,
-    discarding: false,
-    playing: false
-  }));
-});
-
+import { locations } from '../assets/data/locations';
+import * as Actions from "./gameActions";
+import { Card, defaultPlayer, GameState, PlayerColor, Resources } from './gameTypes';
 
 const shuffleArray = (array: any[]) => {
   const newArray = [...array]
@@ -24,7 +16,15 @@ const shuffleArray = (array: any[]) => {
   return newArray;
 };
 
-export function setupGame(cards: Card[], firstPlayer: PlayerColor): GameState {
+export function setupGame(firstPlayer: PlayerColor): GameState {
+  const cards: Card[] = rawCards.flatMap((card) => {
+    const count = cardFrequencies[card.name] ?? 1;
+    return Array.from({ length: count }, () => ({
+      ...card,
+      discarding: false,
+      playing: false
+    }));
+  });
   const deck = shuffleArray(cards);
 
   const meadow = deck.slice(0, 8);  // 8 cards
@@ -53,7 +53,7 @@ export function setupGame(cards: Card[], firstPlayer: PlayerColor): GameState {
     turn: firstPlayer,
   };
 }
-const defaultState = setupGame(cards, "Red");
+const defaultState = setupGame("Red");
 
 const noop = (..._: any[]) => { };
 
@@ -95,58 +95,79 @@ const GameContext = createContext<{
   harvest: noop,
 });
 
-export const GameProvider = ({ children }: { children: ReactNode }) => {
-  const [game, setGame] = useState<GameState>(defaultState);
+export const GameProviderLoader = ({ children }: { children: React.ReactNode }) => {
+  const { gameId } = useParams();
+  const [game, setGame] = useState<GameState | null>(null);
 
-  function wrapAction<T extends (...args: any[]) => GameState>(
-    fn: T
-  ): (...args: Tail<Parameters<T>>) => void {
-    return (...args: Tail<Parameters<T>>) =>
-      setGame((prev) => fn(prev, ...args));
+  useEffect(() => {
+    if (!gameId) return;
+    const dbRef = doc(getFirestore(), `games/${gameId}`);
+    const unsubscribe = onSnapshot(dbRef, (snapshot) => {
+      const data = snapshot.data();
+      if (data) setGame(data as GameState);
+    });
+    return () => unsubscribe();
+  }, [gameId]);
+
+  if (!game || !gameId) return <div>Loading game...</div>;
+
+  return <GameProvider game={game} gameId={gameId}>{children}</GameProvider>;
+};
+
+export const GameProvider = ({
+  children,
+  game,
+  gameId,
+}: {
+  children: React.ReactNode;
+  game: GameState;
+  gameId: string;
+}) => {
+  const [localGame, setLocalGame] = useState(game);
+  const dbRef = doc(getFirestore(), `games/${gameId}`);
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(dbRef, (snapshot) => {
+      const data = snapshot.data();
+      if (data) setLocalGame(data as GameState);
+    });
+    return () => unsubscribe();
+  }, [gameId]);
+
+  function wrapAction<T extends (...args: any[]) => GameState>(fn: T) {
+    return async (...args: Tail<Parameters<T>>) => {
+      setLocalGame((prev) => {
+        const updated = fn(prev, ...args);
+        setDoc(dbRef, updated); // Don't await inside setState
+        return updated;
+      });
+    };
   }
+
 
   type Tail<T extends any[]> = T extends [any, ...infer R] ? R : never;
 
-  const endTurn = wrapAction(Actions.endTurn);
-  const setDiscarding = wrapAction(Actions.setDiscarding);
-  const setPlaying = wrapAction(Actions.setPlaying);
-  const toggleCardDiscarding = wrapAction(Actions.toggleCardDiscarding);
-  const toggleCardPlaying = wrapAction(Actions.toggleCardPlaying);
-  const discardSelectedCards = wrapAction(Actions.discardSelectedCards);
-  const playSelectedCards = wrapAction(Actions.playSelectedCards);
-  const drawCard = wrapAction(Actions.drawCard);
-  const addToMeadow = wrapAction(Actions.addToMeadow);
-  const visitLocation = wrapAction(Actions.visitLocation);
-  const visitEvent = wrapAction(Actions.visitEvent);
-  const visitCardInCity = wrapAction(Actions.visitCardInCity);
-  const toggleOccupiedCardInCity = wrapAction(Actions.toggleOccupiedCardInCity);
-  const addResourcesToCardInCity = wrapAction(Actions.addResourcesToCardInCity);
-  const addResourcesToPlayer = wrapAction(Actions.addResourcesToPlayer);
-  const harvest = wrapAction(Actions.harvest);
+  const contextValue = {
+    game: localGame,
+    endTurn: wrapAction(Actions.endTurn),
+    setDiscarding: wrapAction(Actions.setDiscarding),
+    setPlaying: wrapAction(Actions.setPlaying),
+    toggleCardDiscarding: wrapAction(Actions.toggleCardDiscarding),
+    toggleCardPlaying: wrapAction(Actions.toggleCardPlaying),
+    discardSelectedCards: wrapAction(Actions.discardSelectedCards),
+    playSelectedCards: wrapAction(Actions.playSelectedCards),
+    drawCard: wrapAction(Actions.drawCard),
+    addToMeadow: wrapAction(Actions.addToMeadow),
+    visitLocation: wrapAction(Actions.visitLocation),
+    visitEvent: wrapAction(Actions.visitEvent),
+    visitCardInCity: wrapAction(Actions.visitCardInCity),
+    toggleOccupiedCardInCity: wrapAction(Actions.toggleOccupiedCardInCity),
+    addResourcesToCardInCity: wrapAction(Actions.addResourcesToCardInCity),
+    addResourcesToPlayer: wrapAction(Actions.addResourcesToPlayer),
+    harvest: wrapAction(Actions.harvest),
+  };
 
-  return (
-    <GameContext.Provider value={{
-      game,
-      endTurn,
-      setDiscarding,
-      setPlaying,
-      toggleCardDiscarding,
-      toggleCardPlaying,
-      discardSelectedCards,
-      playSelectedCards,
-      drawCard,
-      addToMeadow,
-      visitLocation,
-      visitEvent,
-      visitCardInCity,
-      toggleOccupiedCardInCity,
-      addResourcesToCardInCity,
-      addResourcesToPlayer,
-      harvest
-    }}>
-      {children}
-    </GameContext.Provider>
-  );
+  return <GameContext.Provider value={contextValue}>{children}</GameContext.Provider>;
 };
 
 export const useGame = () => useContext(GameContext);

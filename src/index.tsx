@@ -1,27 +1,29 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { GameProviderLoader } from './engine/GameContext';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import Home from './screens/Home';
-import { Routes, Route, BrowserRouter } from 'react-router-dom';
-import Lobby from './screens/Lobby';
 import Game from './screens/Game';
-import { GameProvider } from './engine/GameContext';
+import Home from './screens/Home';
+import Lobby from './screens/Lobby';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <GameProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/lobby" element={<Lobby />} />
-          <Route path="/game" element={<Game />} />
-        </Routes>
-      </BrowserRouter>
-    </GameProvider>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/lobby" element={<Lobby />} />
+        <Route path="/game/:gameId" element={
+          <GameProviderLoader>
+            <Game />
+          </GameProviderLoader>
+        } />
+      </Routes>
+    </BrowserRouter>
   </React.StrictMode>
 );
 

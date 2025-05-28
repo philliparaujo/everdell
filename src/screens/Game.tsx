@@ -1,3 +1,4 @@
+import { useParams } from "react-router-dom";
 import whitecoin from "../assets/icons/whitecoin.png";
 import CardPreview from '../components/CardPreview';
 import EventsDisplay from '../components/EventsDisplay';
@@ -24,6 +25,7 @@ function Game() {
     toggleCardDiscarding,
     toggleCardPlaying,
   } = useGame();
+  const { gameId } = useParams();
 
   const currentPlayer = game.players[game.turn];
 
@@ -35,6 +37,7 @@ function Game() {
 
   return (
     <div style={{ padding: '16px', fontFamily: 'sans-serif' }}>
+      <div>Game ID: {gameId}</div>
       <LocationsDisplay />
       <EventsDisplay />
       <PlayerStatuses />

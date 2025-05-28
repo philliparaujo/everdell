@@ -71,6 +71,7 @@ function LocationDisplay({ location, index }: { location: Location, index: numbe
 
 function LocationsDisplay() {
   const { game, visitLocation } = useGame();
+
   const discardLocation = game.locations[game.locations.length - 1];
 
   return (
