@@ -1,8 +1,8 @@
 import { useGame } from "../engine/GameContext";
 import { PlayerColor, ResourceType } from "../engine/gameTypes";
 import Controls from "./Controls";
+import { ResourceIcon } from "./Icons";
 import ResourceBank from "./ResourceBank";
-import { ResourceIcon } from "./ResourceIcon";
 
 function PlayerStatus({ playerColor }: { playerColor: PlayerColor }) {
   const {
@@ -18,7 +18,7 @@ function PlayerStatus({ playerColor }: { playerColor: PlayerColor }) {
       <div>Hand: {player.hand.length} / 8</div>
       <div>City: {player.city.length} / 15</div>
       {Object.entries(player.resources)
-        .filter(([key, val]) => (
+        .filter(([, val]) => (
           val.valueOf() > 0
         ))
         .map(([key, val]) => (

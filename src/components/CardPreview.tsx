@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Card, PlayerColor, ResourceType } from "../engine/gameTypes";
 import CardInspect from "./CardInspect";
-import { ResourceIcon, WorkerIcon } from "./ResourceIcon";
+import { ResourceIcon, WorkerIcon } from "./Icons";
 
 function CardPreview({ card, index, onClick, placedDown, cityColor }: { card: Card | null, index: number, onClick?: () => void, placedDown: Boolean, cityColor: PlayerColor | null }) {
   const [inspecting, setInspecting] = useState(false);

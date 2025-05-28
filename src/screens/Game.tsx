@@ -1,9 +1,9 @@
 import whitecoin from "../assets/icons/whitecoin.png";
 import CardPreview from '../components/CardPreview';
 import EventsDisplay from '../components/EventsDisplay';
+import { CustomResourceIcon } from "../components/Icons";
 import LocationsDisplay from '../components/LocationsDisplay';
 import PlayerStatuses from '../components/PlayerStatus';
-import { CustomResourceIcon } from '../components/ResourceIcon';
 import { useGame } from '../engine/GameContext';
 
 const scrollRowStyle: React.CSSProperties = {

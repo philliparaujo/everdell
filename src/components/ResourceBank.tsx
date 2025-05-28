@@ -1,6 +1,6 @@
 import { useGame } from "../engine/GameContext";
 import { defaultResources, PlayerColor, ResourceType } from "../engine/gameTypes";
-import { ResourceIcon } from "./ResourceIcon";
+import { ResourceIcon } from "./Icons";
 
 export const resourceList: ResourceType[] = Object.entries(defaultResources).map(([key]) => key) as ResourceType[];
 
@@ -10,12 +10,10 @@ function ResourceDisplay({ playerColor, resource }: { playerColor: PlayerColor, 
   } = useGame();
 
   const decrementResources = () => {
-    const emptyResources = { ...defaultResources };
-    addResourcesToPlayer(playerColor, { ...emptyResources, [resource]: -1 })
+    addResourcesToPlayer(playerColor, { ...defaultResources, [resource]: -1 })
   }
   const incrementResources = () => {
-    const emptyResources = { ...defaultResources };
-    addResourcesToPlayer(playerColor, { ...emptyResources, [resource]: 1 })
+    addResourcesToPlayer(playerColor, { ...defaultResources, [resource]: 1 })
   }
 
   return (

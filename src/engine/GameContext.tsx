@@ -55,6 +55,8 @@ export function setupGame(cards: Card[], firstPlayer: PlayerColor): GameState {
 }
 const defaultState = setupGame(cards, "Red");
 
+const noop = (..._: any[]) => { };
+
 const GameContext = createContext<{
   game: GameState;
   endTurn: () => void;
@@ -75,43 +77,52 @@ const GameContext = createContext<{
   harvest: (playerColor: PlayerColor) => void;
 }>({
   game: defaultState,
-  endTurn: () => { },
-  setDiscarding: (playerColor, discarding) => { },
-  setPlaying: (playerColor, playing) => { },
-  toggleCardDiscarding: (playerColor, location, index) => { },
-  toggleCardPlaying: (playerColor, location, index) => { },
-  discardSelectedCards: (playerColor) => { },
-  playSelectedCards: (playerColor) => { },
-  drawCard: (playerColor) => { },
-  addToMeadow: () => { },
-  visitLocation: (playerColor, index, workersVisiting) => { },
-  visitEvent: (playerColor, index, workersVisiting) => { },
-  visitCardInCity: (playerColor, cityColor, index, workersVisiting) => { },
-  toggleOccupiedCardInCity: (cityColor, index, occupied) => { },
-  addResourcesToCardInCity: (cityColor, index, resoruces) => { },
-  addResourcesToPlayer: (playerColor, resources) => { },
-  harvest: (playerColor) => { },
+  endTurn: noop,
+  setDiscarding: noop,
+  setPlaying: noop,
+  toggleCardDiscarding: noop,
+  toggleCardPlaying: noop,
+  discardSelectedCards: noop,
+  playSelectedCards: noop,
+  drawCard: noop,
+  addToMeadow: noop,
+  visitLocation: noop,
+  visitEvent: noop,
+  visitCardInCity: noop,
+  toggleOccupiedCardInCity: noop,
+  addResourcesToCardInCity: noop,
+  addResourcesToPlayer: noop,
+  harvest: noop,
 });
 
 export const GameProvider = ({ children }: { children: ReactNode }) => {
   const [game, setGame] = useState<GameState>(defaultState);
 
-  const endTurn = () => setGame((prev) => Actions.endTurn(prev));
-  const setDiscarding = (playerColor: PlayerColor, discarding: Boolean) => setGame((prev) => Actions.setDiscarding(prev, playerColor, discarding));
-  const setPlaying = (playerColor: PlayerColor, playing: Boolean) => setGame((prev) => Actions.setPlaying(prev, playerColor, playing));
-  const toggleCardDiscarding = (playerColor: PlayerColor, location: "hand" | "city" | "meadow", index: number) => setGame((prev) => Actions.toggleCardDiscarding(prev, playerColor, location, index));
-  const toggleCardPlaying = (playerColor: PlayerColor, location: "hand" | "meadow" | "discard", index: number) => setGame((prev) => Actions.toggleCardPlaying(prev, playerColor, location, index));
-  const discardSelectedCards = (playerColor: PlayerColor) => setGame((prev) => Actions.discardSelectedCards(prev, playerColor));
-  const playSelectedCards = (playerColor: PlayerColor) => setGame((prev) => Actions.playSelectedCards(prev, playerColor));
-  const drawCard = (playerColor: PlayerColor) => setGame((prev) => Actions.drawCard(prev, playerColor))
-  const addToMeadow = () => setGame((prev) => Actions.addToMeadow(prev));
-  const visitLocation = (playerColor: PlayerColor, index: number, workersVisiting: 1 | -1) => setGame((prev) => Actions.visitLocation(prev, playerColor, index, workersVisiting));
-  const visitEvent = (playerColor: PlayerColor, index: number, workersVisiting: 1 | -1) => setGame((prev) => Actions.visitEvent(prev, playerColor, index, workersVisiting));
-  const visitCardInCity = (playerColor: PlayerColor, cityColor: PlayerColor, index: number, workersVisiting: 1 | -1) => setGame((prev) => Actions.visitCardInCity(prev, playerColor, cityColor, index, workersVisiting));
-  const toggleOccupiedCardInCity = (cityColor: PlayerColor, index: number, occupied: Boolean) => setGame((prev) => Actions.toggleOccupiedCardInCity(prev, cityColor, index, occupied));
-  const addResourcesToCardInCity = (cityColor: PlayerColor, index: number, resources: Resources) => setGame((prev) => Actions.addResourcesToCardInCity(prev, cityColor, index, resources));
-  const addResourcesToPlayer = (playerColor: PlayerColor, resources: Resources) => setGame((prev) => Actions.addResourcesToPlayer(prev, playerColor, resources));
-  const harvest = (playerColor: PlayerColor) => setGame((prev) => Actions.harvest(prev, playerColor));
+  function wrapAction<T extends (...args: any[]) => GameState>(
+    fn: T
+  ): (...args: Tail<Parameters<T>>) => void {
+    return (...args: Tail<Parameters<T>>) =>
+      setGame((prev) => fn(prev, ...args));
+  }
+
+  type Tail<T extends any[]> = T extends [any, ...infer R] ? R : never;
+
+  const endTurn = wrapAction(Actions.endTurn);
+  const setDiscarding = wrapAction(Actions.setDiscarding);
+  const setPlaying = wrapAction(Actions.setPlaying);
+  const toggleCardDiscarding = wrapAction(Actions.toggleCardDiscarding);
+  const toggleCardPlaying = wrapAction(Actions.toggleCardPlaying);
+  const discardSelectedCards = wrapAction(Actions.discardSelectedCards);
+  const playSelectedCards = wrapAction(Actions.playSelectedCards);
+  const drawCard = wrapAction(Actions.drawCard);
+  const addToMeadow = wrapAction(Actions.addToMeadow);
+  const visitLocation = wrapAction(Actions.visitLocation);
+  const visitEvent = wrapAction(Actions.visitEvent);
+  const visitCardInCity = wrapAction(Actions.visitCardInCity);
+  const toggleOccupiedCardInCity = wrapAction(Actions.toggleOccupiedCardInCity);
+  const addResourcesToCardInCity = wrapAction(Actions.addResourcesToCardInCity);
+  const addResourcesToPlayer = wrapAction(Actions.addResourcesToPlayer);
+  const harvest = wrapAction(Actions.harvest);
 
   return (
     <GameContext.Provider value={{

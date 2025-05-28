@@ -1,7 +1,6 @@
 import { useGame } from "../engine/GameContext";
 import { Event } from "../engine/gameTypes";
-import { EffectTypeIcon } from "./EffectTypeIcon";
-import { ResourceIcon, WorkerIcon } from "./ResourceIcon";
+import { EffectTypeIcon, ResourceIcon, WorkerIcon } from "./Icons";
 
 function EventDisplay({ event, index }: { event: Event, index: number }) {
   const { game, visitEvent } = useGame();

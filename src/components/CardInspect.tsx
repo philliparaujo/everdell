@@ -1,8 +1,9 @@
 import { useGame } from "../engine/GameContext";
 import { Card, defaultResources, PlayerColor, ResourceType } from "../engine/gameTypes";
-import { ResourceIcon } from "./ResourceIcon";
+import { ResourceIcon } from "./Icons";
 
-function CardInspect({ card, index, cityColor, onClose, placedDown }: { card: Card, index: number, cityColor: PlayerColor | null, onClose: () => void, placedDown: Boolean }) {
+function CardInspect(
+  { card, index, cityColor, onClose, placedDown }: { card: Card, index: number, cityColor: PlayerColor | null, onClose: () => void, placedDown: Boolean }) {
   const {
     game,
     visitCardInCity,
@@ -54,7 +55,12 @@ function CardInspect({ card, index, cityColor, onClose, placedDown }: { card: Ca
         >
           <h2>{card.name}</h2>
           {card.value !== undefined && <p><strong>Base Points:</strong> {card.value}</p>}
-          {placedDown && card.occupied !== null && cityColor ? <p><strong>Occupied:</strong> <button onClick={() => toggleOccupiedCardInCity(cityColor, index, !card.occupied)}>{card.occupied ? "Yes" : "No"}</button></p> : <></>}
+          {placedDown && card.occupied !== null && cityColor ? (
+            <p>
+              <strong>Occupied:</strong>
+              <button onClick={() => toggleOccupiedCardInCity(cityColor, index, !card.occupied)}>{card.occupied ? "Yes" : "No"}</button>
+            </p>
+          ) : <></>}
 
           {placedDown && card.maxDestinations != null && cityColor !== null && (
             <>

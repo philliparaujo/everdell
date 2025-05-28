@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import { useGame } from '../engine/GameContext';
 import { Location, ResourceType } from '../engine/gameTypes';
-import { ResourceIcon, WorkerIcon } from './ResourceIcon';
+import { ResourceIcon, WorkerIcon } from './Icons';
 
 const workerStyling: React.CSSProperties = {
   display: 'flex', height: '25px', alignContent: 'center', gap: '8px'
