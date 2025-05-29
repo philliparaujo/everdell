@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/everdell/static/css/main.e6c13ad2.css",
-    "main.js": "/everdell/static/js/main.f642a9e8.js",
+    "main.js": "/everdell/static/js/main.de61f00a.js",
     "static/js/453.4ef6d67d.chunk.js": "/everdell/static/js/453.4ef6d67d.chunk.js",
     "static/media/postoffice.jpg": "/everdell/static/media/postoffice.864beee783c293333622.jpg",
     "static/media/cemetery.jpg": "/everdell/static/media/cemetery.882e3325553fe4e3edb8.jpg",
@@ -66,11 +66,11 @@
     "static/media/twig.png": "/everdell/static/media/twig.5305380c21de87a0bf10.png",
     "index.html": "/everdell/index.html",
     "main.e6c13ad2.css.map": "/everdell/static/css/main.e6c13ad2.css.map",
-    "main.f642a9e8.js.map": "/everdell/static/js/main.f642a9e8.js.map",
+    "main.de61f00a.js.map": "/everdell/static/js/main.de61f00a.js.map",
     "453.4ef6d67d.chunk.js.map": "/everdell/static/js/453.4ef6d67d.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.e6c13ad2.css",
-    "static/js/main.f642a9e8.js"
+    "static/js/main.de61f00a.js"
   ]
 }
