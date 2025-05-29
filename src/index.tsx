@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { Route, HashRouter as Router, Routes } from 'react-router-dom';
 import { GameProviderLoader } from './engine/GameContext';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
@@ -13,7 +13,7 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
+    <Router>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/lobby" element={<Lobby />} />
@@ -23,7 +23,7 @@ root.render(
           </GameProviderLoader>
         } />
       </Routes>
-    </BrowserRouter>
+    </Router>
   </React.StrictMode>
 );
 
