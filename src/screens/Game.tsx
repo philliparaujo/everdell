@@ -38,6 +38,8 @@ function Game() {
   return (
     <div style={{ padding: '16px', fontFamily: 'sans-serif' }}>
       <div>Game ID: {gameId}</div>
+      <div>Red ID: {game.players.Red.id}</div>
+      <div>Blue ID: {game.players.Blue.id}</div>
       <LocationsDisplay />
       <EventsDisplay />
       <PlayerStatuses />
