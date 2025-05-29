@@ -1,28 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { Route, HashRouter as Router, Routes } from 'react-router-dom';
-import { GameProviderLoader } from './engine/GameContext';
+import { HashRouter as Router } from 'react-router-dom';
+import App from './App';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import Game from './screens/Game';
-import Home from './screens/Home';
-import Lobby from './screens/Lobby';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
 root.render(
   <React.StrictMode>
     <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/lobby" element={<Lobby />} />
-        <Route path="/game/:gameId" element={
-          <GameProviderLoader>
-            <Game />
-          </GameProviderLoader>
-        } />
-      </Routes>
+      <App />
     </Router>
   </React.StrictMode>
 );

@@ -1,24 +1,43 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 
 function Home() {
+  const [name, setName] = useState("Guest");
+  const [playerId, setPlayerId] = useState("");
+
   useEffect(() => {
-    let playerId = localStorage.getItem('playerId');
-    if (!playerId) {
-      playerId = uuidv4();
-      console.log(playerId);
-      localStorage.setItem('playerId', playerId);
-    }
+    const storedName = sessionStorage.getItem("playerName") ?? "Guest";
+    const storedId = sessionStorage.getItem("playerId") ?? uuidv4();
+
+    sessionStorage.setItem("playerName", storedName);
+    sessionStorage.setItem("playerId", storedId);
+
+    console.log("SESSION STORAGE SET");
+
+    setName(storedName);
+    setPlayerId(storedId);
   }, []);
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setName(e.target.value);
+    sessionStorage.setItem('playerName', e.target.value);
+  };
 
   return (
     <div>
       <p>HOME SCREEN</p>
-      <p>{localStorage.getItem('playerId')}</p>
-      <Link to="/lobby">{"Go to lobby"}</Link>
+      <p>PlayerId: {playerId}</p>
+      <label>
+        Display Name:
+        <input value={name} onChange={handleNameChange} />
+      </label>
+      <div>
+        <Link to="/lobby">Go to lobby</Link>
+      </div>
     </div>
   );
 }
+
 
 export default Home;

@@ -12,7 +12,7 @@ function PlayerStatus({ playerColor }: { playerColor: PlayerColor }) {
   const player = game.players[playerColor];
   return (
     <div key={playerColor} style={{ marginBottom: '12px' }}>
-      <strong>{playerColor} - {player.name || 'Username'}</strong>
+      <strong>{playerColor} - {player.name || 'Guest'}</strong>
       <div>{player.season.toString()}</div>
       <div>Workers: {player.workers.workersLeft} / {player.workers.maxWorkers}</div>
       <div>Hand: {player.hand.length} / 8</div>
@@ -53,7 +53,7 @@ function PlayerStatuses() {
         <ResourceBank playerColor={game.turn} />
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-        <h5>MY TURN</h5>
+        <h5>{game.turn} Turn</h5>
         <PlayerStatus playerColor={"Red"} />
         <hr />
         <PlayerStatus playerColor={"Blue"} />

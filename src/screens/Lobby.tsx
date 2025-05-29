@@ -10,14 +10,17 @@ function Lobby() {
   const navigate = useNavigate();
   const [gameList, setGameList] = useState<{ id: string }[]>([]);
 
+  const [name, setName] = useState(() => sessionStorage.getItem('playerName') || '');
+  const [playerId, setPlayerId] = useState(() => sessionStorage.getItem('playerId') || null);
+
   const startGame = async () => {
     const gameId = uuidv4();
 
-    const playerId = localStorage.getItem('playerId');
     if (playerId === null) return;
 
     const gameState: GameState = setupGame("Red");
     gameState.players.Red.id = playerId;
+    gameState.players.Red.name = name;
 
     await setDoc(doc(firestore, `games/${gameId}`), gameState);
 
@@ -25,17 +28,41 @@ function Lobby() {
   };
 
   const handleJoinGame = async (gameId: string) => {
-    const playerId = localStorage.getItem('playerId');
-    if (!playerId) return;
+    if (playerId === null) return;
 
     const gameDocRef = doc(firestore, 'games', gameId);
     const snapshot = await getDoc(gameDocRef);
     const game = snapshot.data() as GameState;
 
     if (!game) return alert("Game not found");
-    if (game.players.Blue.id) return alert("Blue slot already taken");
+    if (game.players.Blue.id) return alert("Blue player already taken");
+    if (game.players.Red.id === playerId) return alert("Cannot join with same ID as red player");
 
     game.players.Blue.id = playerId;
+    game.players.Blue.name = name;
+
+    await setDoc(gameDocRef, game);
+
+    navigate(`/game/${gameId}`);
+  }
+
+  const handleRejoinGame = async (gameId: string) => {
+    if (playerId === null) return;
+
+    const gameDocRef = doc(firestore, 'games', gameId);
+    const snapshot = await getDoc(gameDocRef);
+    const game = snapshot.data() as GameState;
+
+    if (!game) return alert("Game not found");
+    if (game.players.Red.id === game.players.Blue.id) return alert("Red and Blue have same ID, AHH");
+    if (game.players.Red.id !== playerId && game.players.Blue.id !== playerId) return alert("Player IDs do not match");
+
+    if (game.players.Red.id === playerId) {
+      game.players.Red.name = name;
+    } else {
+      game.players.Blue.name = name;
+    }
+
     await setDoc(gameDocRef, game);
 
     navigate(`/game/${gameId}`);
@@ -59,8 +86,12 @@ function Lobby() {
   return (
     <div>
       <p>LOBBY SCREEN</p>
+
+      <p>PlayerId: {playerId}</p>
+      <p>Display Name: {name}</p>
+
       <div>
-        <Link to="/">{"Go back to home"}</Link>
+        <Link to="/home">{"Go back to home"}</Link>
       </div>
       <div>
         <button onClick={startGame}>{"Start game"}</button>
@@ -75,6 +106,7 @@ function Lobby() {
               {game.id}
               <button onClick={() => handleJoinGame(game.id)}>Join as Blue</button>
               <button onClick={() => handleDeleteGame(game.id)}>Delete</button>
+              <button onClick={() => handleRejoinGame(game.id)}>Rejoin game</button>
             </li>
           ))}
         </ul>
