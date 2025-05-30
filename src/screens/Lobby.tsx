@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import { setupGame } from '../engine/GameContext';
 import { GameState } from '../engine/gameTypes';
-import { firestore } from '../firebase';
+import { db } from '../firebase';
 import { useEffect, useState } from 'react';
 
 function Lobby() {
@@ -22,7 +22,7 @@ function Lobby() {
     gameState.players.Red.id = playerId;
     gameState.players.Red.name = name;
 
-    await setDoc(doc(firestore, `games/${gameId}`), gameState);
+    await setDoc(doc(db, `games/${gameId}`), gameState);
 
     navigate(`/game/${gameId}`);
   };
@@ -30,7 +30,7 @@ function Lobby() {
   const handleJoinGame = async (gameId: string) => {
     if (playerId === null) return;
 
-    const gameDocRef = doc(firestore, 'games', gameId);
+    const gameDocRef = doc(db, 'games', gameId);
     const snapshot = await getDoc(gameDocRef);
     const game = snapshot.data() as GameState;
 
@@ -49,7 +49,7 @@ function Lobby() {
   const handleRejoinGame = async (gameId: string) => {
     if (playerId === null) return;
 
-    const gameDocRef = doc(firestore, 'games', gameId);
+    const gameDocRef = doc(db, 'games', gameId);
     const snapshot = await getDoc(gameDocRef);
     const game = snapshot.data() as GameState;
 
@@ -69,13 +69,13 @@ function Lobby() {
   }
 
   const handleDeleteGame = async (gameId: string) => {
-    await deleteDoc(doc(firestore, 'games', gameId));
+    await deleteDoc(doc(db, 'games', gameId));
     setGameList((prev) => prev.filter((game) => game.id !== gameId));
   };
 
   useEffect(() => {
     const fetchGames = async () => {
-      const snapshot = await getDocs(collection(firestore, 'games'));
+      const snapshot = await getDocs(collection(db, 'games'));
       const games = snapshot.docs.map((doc) => ({ id: doc.id }));
       setGameList(games);
     };
