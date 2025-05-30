@@ -32,6 +32,8 @@ export function setupGame(firstPlayer: PlayerColor): GameState {
   const secondHand = deck.slice(13, 19);  // 6 cards
   const remainingDeck = deck.slice(19);
 
+  console.log("DECK SIZE IS ", remainingDeck.length);
+
   return {
     players: {
       Red: {

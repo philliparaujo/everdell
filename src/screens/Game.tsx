@@ -6,8 +6,12 @@ import { CustomResourceIcon } from "../components/Icons";
 import LocationsDisplay from '../components/LocationsDisplay';
 import PlayerStatuses from '../components/PlayerStatus';
 import { useGame } from '../engine/GameContext';
+import Hand from "../components/Hand";
+import Meadow from "../components/Meadow";
+import City from "../components/City";
+import Discard from "../components/Discard";
 
-const scrollRowStyle: React.CSSProperties = {
+export const scrollRowStyle: React.CSSProperties = {
   display: 'flex',
   flexWrap: 'nowrap',
   overflowX: 'auto',
@@ -22,8 +26,6 @@ const scrollRowStyle: React.CSSProperties = {
 function Game() {
   const {
     game,
-    toggleCardDiscarding,
-    toggleCardPlaying,
   } = useGame();
   const { gameId } = useParams();
 
@@ -31,9 +33,6 @@ function Game() {
 
   const oppositePlayerColor = game.turn === "Red" ? "Blue" : "Red";
   const oppositePlayer = game.players[oppositePlayerColor];
-
-  const isDiscarding = currentPlayer.discarding;
-  const isPlaying = currentPlayer.playing;
 
   return (
     <div style={{ padding: '16px', fontFamily: 'sans-serif' }}>
@@ -47,55 +46,13 @@ function Game() {
       {/* Hand */}
       <section>
         <h4>Hand</h4>
-        <div style={scrollRowStyle}>
-          {Array.from({ length: 8 }).map((_, index) => {
-            const card = currentPlayer.hand[index] ?? null;
-
-            return (
-              <CardPreview
-                key={index}
-                index={index}
-                card={card}
-                placedDown={false}
-                cityColor={null}
-                onClick={() => {
-                  if (isDiscarding && card) {
-                    toggleCardDiscarding(game.turn, "hand", index);
-                  } else if (isPlaying && card) {
-                    toggleCardPlaying(game.turn, "hand", index);
-                  }
-                }}
-              />
-            )
-          })}
-        </div>
+        <Hand />
       </section>
 
       {/* Meadow */}
       <section>
         <h4>Meadow</h4>
-        <div style={scrollRowStyle}>
-          {Array.from({ length: 8 }).map((_, index) => {
-            const card = game.meadow[index] ?? null;
-
-            return (
-              <CardPreview
-                key={index}
-                index={index}
-                card={card}
-                placedDown={false}
-                cityColor={null}
-                onClick={() => {
-                  if (isDiscarding && card) {
-                    toggleCardDiscarding(game.turn, "meadow", index);
-                  } else if (isPlaying && card) {
-                    toggleCardPlaying(game.turn, "meadow", index);
-                  }
-                }}
-              />
-            )
-          })}
-        </div>
+        <Meadow />
       </section>
 
       {/* My City */}
@@ -105,26 +62,7 @@ function Game() {
           <CustomResourceIcon path={whitecoin} /> {currentPlayer.city.reduce((acc, curr) => acc + curr.value, 0)}
           )
         </h4>
-        <div style={scrollRowStyle}>
-          {Array.from({ length: 15 }).map((_, index) => {
-            const card = currentPlayer.city[index] ?? null;
-
-            return (
-              <CardPreview
-                key={index}
-                index={index}
-                card={card}
-                placedDown={true}
-                cityColor={game.turn}
-                onClick={() => {
-                  if (isDiscarding && card) {
-                    toggleCardDiscarding(game.turn, "city", index);
-                  }
-                }}
-              />
-            )
-          })}
-        </div>
+        <City color={game.turn} />
       </section>
 
       {/* Opposite City */}
@@ -134,49 +72,13 @@ function Game() {
           <CustomResourceIcon path={whitecoin} /> {oppositePlayer.city.reduce((acc, curr) => acc + curr.value, 0)}
           )
         </h4>
-        <div style={scrollRowStyle}>
-          {Array.from({ length: 15 }).map((_, index) => {
-            const card = oppositePlayer.city[index] ?? null;
-
-            return (
-              <CardPreview
-                key={index}
-                index={index}
-                card={card}
-                placedDown={true}
-                cityColor={oppositePlayerColor}
-                onClick={() => {
-                  if (isDiscarding && card) {
-                    toggleCardDiscarding(game.turn, "city", index);
-                  }
-                }}
-              />
-            )
-          })}
-        </div>
+        <City color={oppositePlayerColor} />
       </section>
 
       {/* Discard Pile */}
       <section>
         <h4>Discard Pile</h4>
-        <div style={scrollRowStyle}>
-          {game.discard.map((card, index) => {
-            return (
-              <CardPreview
-                key={index}
-                index={index}
-                card={card}
-                placedDown={false}
-                cityColor={null}
-                onClick={() => {
-                  if (isPlaying && card) {
-                    toggleCardPlaying(game.turn, "discard", index);
-                  }
-                }}
-              />
-            )
-          })}
-        </div>
+        <Discard />
       </section>
     </div>
   );
