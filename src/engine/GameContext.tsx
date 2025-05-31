@@ -6,15 +6,9 @@ import { events } from '../assets/data/events';
 import { locations } from '../assets/data/locations';
 import * as Actions from "./gameActions";
 import { Card, defaultPlayer, GameState, PlayerColor, Resources } from './gameTypes';
+import { shuffleArray } from './helpers';
 
-const shuffleArray = (array: any[]) => {
-  const newArray = [...array]
-  for (let i = newArray.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
-  }
-  return newArray;
-};
+let actionQueue = Promise.resolve();
 
 export function setupGame(firstPlayer: PlayerColor): GameState {
   const cards: Card[] = rawCards.flatMap((card) => {
@@ -61,22 +55,22 @@ const noop = (..._: any[]) => { };
 
 const GameContext = createContext<{
   game: GameState;
-  endTurn: () => void;
-  setDiscarding: (playerColor: PlayerColor, discarding: Boolean) => void;
-  setPlaying: (playerColor: PlayerColor, playing: Boolean) => void;
-  toggleCardDiscarding: (playerColor: PlayerColor, location: "hand" | "city" | "meadow", index: number) => void;
-  toggleCardPlaying: (playerColor: PlayerColor, location: "hand" | "meadow" | "discard", index: number) => void;
-  discardSelectedCards: (playerColor: PlayerColor) => void;
-  playSelectedCards: (playerColor: PlayerColor) => void;
-  drawCard: (playerColor: PlayerColor) => void;
-  addToMeadow: () => void;
-  visitLocation: (playerColor: PlayerColor, index: number, workersVisiting: 1 | -1) => void;
-  visitEvent: (playerColor: PlayerColor, index: number, workersVisiting: 1 | -1) => void;
-  visitCardInCity: (playerColor: PlayerColor, cityColor: PlayerColor, index: number, workersVisiting: 1 | -1) => void;
-  toggleOccupiedCardInCity: (cityColor: PlayerColor, index: number, occupied: Boolean) => void;
-  addResourcesToCardInCity: (cityColor: PlayerColor, index: number, resources: Resources) => void;
-  addResourcesToPlayer: (playerColor: PlayerColor, resources: Resources) => void;
-  harvest: (playerColor: PlayerColor) => void;
+  endTurn: (playerId: string | null) => void;
+  setDiscarding: (playerId: string | null, discarding: Boolean) => void;
+  setPlaying: (playerId: string | null, playing: Boolean) => void;
+  toggleCardDiscarding: (playerId: string | null, location: "hand" | "city" | "meadow", index: number) => void;
+  toggleCardPlaying: (playerId: string | null, location: "hand" | "meadow" | "discard", index: number) => void;
+  discardSelectedCards: (playerId: string | null) => void;
+  playSelectedCards: (playerId: string | null) => void;
+  drawCard: (playerId: string | null) => void;
+  addToMeadow: (playerId: string | null) => void;
+  visitLocation: (playerId: string | null, index: number, workersVisiting: 1 | -1) => void;
+  visitEvent: (playerId: string | null, index: number, workersVisiting: 1 | -1) => void;
+  visitCardInCity: (playerId: string | null, cityColor: PlayerColor, index: number, workersVisiting: 1 | -1) => void;
+  toggleOccupiedCardInCity: (playerId: string | null, cityColor: PlayerColor, index: number, occupied: Boolean) => void;
+  addResourcesToCardInCity: (playerId: string | null, cityColor: PlayerColor, index: number, resources: Resources) => void;
+  addResourcesToSelf: (playerId: string | null, resources: Resources) => void;
+  harvest: (playerId: string | null) => void;
 }>({
   game: defaultState,
   endTurn: noop,
@@ -93,7 +87,7 @@ const GameContext = createContext<{
   visitCardInCity: noop,
   toggleOccupiedCardInCity: noop,
   addResourcesToCardInCity: noop,
-  addResourcesToPlayer: noop,
+  addResourcesToSelf: noop,
   harvest: noop,
 });
 
@@ -137,15 +131,20 @@ export const GameProvider = ({
   }, [gameId]);
 
   function wrapAction<T extends (...args: any[]) => GameState>(fn: T) {
-    return async (...args: Tail<Parameters<T>>) => {
-      setLocalGame((prev) => {
-        const updated = fn(prev, ...args);
-        setDoc(dbRef, updated); // Don't await inside setState
-        return updated;
+    return (...args: Tail<Parameters<T>>) => {
+      // Chain this action onto the queue
+      actionQueue = actionQueue.then(async () => {
+        setLocalGame((prev) => {
+          const updated = fn(prev, ...args);
+          // Update Firestore without awaiting inside setState
+          void setDoc(dbRef, updated);
+          return updated;
+        });
+      }).catch((err) => {
+        console.error("Action failed:", err);
       });
     };
   }
-
 
   type Tail<T extends any[]> = T extends [any, ...infer R] ? R : never;
 
@@ -165,7 +164,7 @@ export const GameProvider = ({
     visitCardInCity: wrapAction(Actions.visitCardInCity),
     toggleOccupiedCardInCity: wrapAction(Actions.toggleOccupiedCardInCity),
     addResourcesToCardInCity: wrapAction(Actions.addResourcesToCardInCity),
-    addResourcesToPlayer: wrapAction(Actions.addResourcesToPlayer),
+    addResourcesToSelf: wrapAction(Actions.addResourcesToSelf),
     harvest: wrapAction(Actions.harvest),
   };
 

@@ -1,15 +1,20 @@
 import { useGame } from "../engine/GameContext";
 import { Card, defaultResources, PlayerColor, ResourceType } from "../engine/gameTypes";
+import { getPlayerId, isNotYourTurn, mapOverResources } from "../engine/helpers";
 import { ResourceIcon } from "./Icons";
 
 function CardInspect(
-  { card, index, cityColor, onClose, placedDown }: { card: Card, index: number, cityColor: PlayerColor | null, onClose: () => void, placedDown: Boolean }) {
+  { card, index, cityColor, onClose, placedDown }: { card: Card, index: number, cityColor: PlayerColor | null, onClose: () => void, placedDown: Boolean }
+) {
   const {
     game,
     visitCardInCity,
     addResourcesToCardInCity,
     toggleOccupiedCardInCity,
   } = useGame();
+
+  const storedId = getPlayerId();
+  const disabled = isNotYourTurn(game, storedId);
 
   return (
     <div
@@ -58,14 +63,14 @@ function CardInspect(
           {placedDown && card.occupied !== null && cityColor ? (
             <p>
               <strong>Occupied:</strong>
-              <button onClick={() => toggleOccupiedCardInCity(cityColor, index, !card.occupied)}>{card.occupied ? "Yes" : "No"}</button>
+              <button disabled={disabled} onClick={() => toggleOccupiedCardInCity(storedId, cityColor, index, !card.occupied)}>{card.occupied ? "Yes" : "No"}</button>
             </p>
           ) : <></>}
 
           {placedDown && card.maxDestinations != null && cityColor !== null && (
             <>
-              <button onClick={() => visitCardInCity(game.turn, cityColor, index, 1)}>{"Visit"}</button>
-              <button onClick={() => visitCardInCity(game.turn, cityColor, index, -1)}>{"Unvisit"}</button>
+              <button disabled={disabled} onClick={() => visitCardInCity(storedId, cityColor, index, 1)}>{"Visit"}</button>
+              <button disabled={disabled} onClick={() => visitCardInCity(storedId, cityColor, index, -1)}>{"Unvisit"}</button>
             </>
           )}
 
@@ -73,13 +78,13 @@ function CardInspect(
             <div>
               <strong>Stored Resources:</strong>
               <ul>
-                {Object.entries(card.storage).map(([key, val]) =>
+                {mapOverResources(card.storage, (key, val) => (
                   <li key={key}>
                     <ResourceIcon type={key as ResourceType} /> {val}
-                    <button onClick={() => addResourcesToCardInCity(game.turn, index, { ...defaultResources, [key]: -1 })}>{"-"}</button>
-                    <button onClick={() => addResourcesToCardInCity(game.turn, index, { ...defaultResources, [key]: 1 })}>{"+"}</button>
+                    <button disabled={disabled} onClick={() => addResourcesToCardInCity(storedId, game.turn, index, { ...defaultResources, [key]: -1 })}>{"-"}</button>
+                    <button disabled={disabled} onClick={() => addResourcesToCardInCity(storedId, game.turn, index, { ...defaultResources, [key]: 1 })}>{"+"}</button>
                   </li>
-                )}
+                ), false)}
               </ul>
             </div>
           )}

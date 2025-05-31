@@ -1,19 +1,23 @@
 import { useGame } from "../engine/GameContext";
-import { defaultResources, PlayerColor, ResourceType } from "../engine/gameTypes";
+import { defaultResources, ResourceType } from "../engine/gameTypes";
+import { getPlayerId, isNotYourTurn, mapOverResources } from "../engine/helpers";
 import { ResourceIcon } from "./Icons";
 
-export const resourceList: ResourceType[] = Object.entries(defaultResources).map(([key]) => key) as ResourceType[];
 
-function ResourceDisplay({ playerColor, resource }: { playerColor: PlayerColor, resource: ResourceType }) {
+function ResourceDisplay({ resource }: { resource: ResourceType }) {
   const {
-    addResourcesToPlayer
+    game,
+    addResourcesToSelf
   } = useGame();
 
+  const storedId = getPlayerId();
+  const disabled = isNotYourTurn(game, storedId);
+
   const decrementResources = () => {
-    addResourcesToPlayer(playerColor, { ...defaultResources, [resource]: -1 })
+    addResourcesToSelf(storedId, { ...defaultResources, [resource]: -1 })
   }
   const incrementResources = () => {
-    addResourcesToPlayer(playerColor, { ...defaultResources, [resource]: 1 })
+    addResourcesToSelf(storedId, { ...defaultResources, [resource]: 1 })
   }
 
   return (
@@ -33,21 +37,27 @@ function ResourceDisplay({ playerColor, resource }: { playerColor: PlayerColor, 
     >
       <div>
         <ResourceIcon type={resource} />
-        <button onClick={decrementResources}>{"-"}</button>
-        <button onClick={incrementResources}>{"+"}</button>
+        <button disabled={disabled} onClick={decrementResources}>{"-"}</button>
+        <button disabled={disabled} onClick={incrementResources}>{"+"}</button>
       </div>
     </div>
   );
 }
 
-function ResourceBank({ playerColor }: { playerColor: PlayerColor }) {
+function ResourceBank() {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-      {resourceList
-        .filter((key) => key !== "cards")
-        .map((key) => (
-          <ResourceDisplay key={key} playerColor={playerColor} resource={key as ResourceType} />
-        ))}
+    <div style={{
+      marginTop: '16px',
+      display: 'grid',
+      gridTemplateColumns: '1fr 1fr 1fr',
+      gap: '8px',
+      maxWidth: '400px',
+      marginLeft: 'auto',
+      marginRight: 'auto'
+    }}>
+      {mapOverResources(defaultResources, (key, _) => (
+        <ResourceDisplay key={key} resource={key} />
+      ), false)}
     </div>
   );
 }

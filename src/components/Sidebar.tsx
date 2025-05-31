@@ -1,5 +1,6 @@
 import { useGame } from "../engine/GameContext";
 import { PlayerColor, ResourceType } from "../engine/gameTypes";
+import { mapOverResources } from "../engine/helpers";
 import Controls from "./Controls";
 import { ResourceIcon } from "./Icons";
 import ResourceBank from "./ResourceBank";
@@ -12,55 +13,52 @@ function PlayerStatus({ playerColor }: { playerColor: PlayerColor }) {
   const player = game.players[playerColor];
   return (
     <div key={playerColor} style={{ marginBottom: '12px' }}>
-      <strong>{playerColor} - {player.name || 'Guest'}</strong>
+      <div style={{ color: playerColor }}>
+        <strong>{playerColor} - {player.name || 'Guest'}</strong>
+        <p style={{ fontSize: '12px' }}>{player.id}</p>
+      </div>
       <div>{player.season.toString()}</div>
       <div>Workers: {player.workers.workersLeft} / {player.workers.maxWorkers}</div>
       <div>Hand: {player.hand.length} / 8</div>
       <div>City: {player.city.length} / 15</div>
-      {Object.entries(player.resources)
-        .filter(([, val]) => (
-          val.valueOf() > 0
-        ))
-        .map(([key, val]) => (
+      <div style={{ display: 'flex', flexDirection: 'row', gap: '8px' }}>
+        {mapOverResources(player.resources, (key, val) => (
           <div key={key}>
             <ResourceIcon type={key as ResourceType} /> {val}
           </div>
         ))}
+      </div>
     </div>
   );
 }
 
-function PlayerStatuses() {
+function Sidebar({ gameId }: { gameId: string | undefined }) {
   const {
     game
   } = useGame();
 
   return (
     <div style={{
-      position: 'absolute',
-      display: 'flex',
-      top: 16,
-      right: 16,
       background: '#DCBA9E',
       border: '1px solid #ccc',
       borderRadius: '8px',
       padding: '12px',
       gap: '40px',
+      width: '250px',
+      height: '100%'
     }}>
-      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start' }}>
-        <Controls />
-        <hr />
-        <ResourceBank playerColor={game.turn} />
-      </div>
-      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-        <h5>{game.turn} Turn</h5>
-        <PlayerStatus playerColor={"Red"} />
-        <hr />
-        <PlayerStatus playerColor={"Blue"} />
-      </div>
+      <div style={{ fontSize: '12px' }}>{gameId}</div>
+      <h5>{game.turn} Turn</h5>
+      <hr />
+      <PlayerStatus playerColor={"Red"} />
+      <hr />
+      <PlayerStatus playerColor={"Blue"} />
+      <hr />
+      <Controls />
+      <hr />
+      <ResourceBank />
     </div>
   );
 }
 
-
-export default PlayerStatuses;
+export default Sidebar;

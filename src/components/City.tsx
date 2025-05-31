@@ -1,38 +1,30 @@
 import { useGame } from "../engine/GameContext";
 import { PlayerColor } from "../engine/gameTypes";
-import { scrollRowStyle } from "../screens/Game";
-import CardPreview from "./CardPreview";
+import { getPlayerId } from "../engine/helpers";
+import CardRow from "./CardRow";
 
 function City({ color }: { color: PlayerColor }) {
   const {
     game,
     toggleCardDiscarding,
   } = useGame();
-  const currentPlayer = game.players[color];
+  const cityOwner = game.players[color];
+  const isDiscarding = cityOwner.discarding;
 
-  const isDiscarding = currentPlayer.discarding;
+  const storedId = getPlayerId();
 
   return (
-    <div style={scrollRowStyle}>
-      {Array.from({ length: 15 }).map((_, index) => {
-        const card = currentPlayer.city[index] ?? null;
-
-        return (
-          <CardPreview
-            key={index}
-            index={index}
-            card={card}
-            placedDown={true}
-            cityColor={game.turn}
-            onClick={() => {
-              if (isDiscarding && card) {
-                toggleCardDiscarding(game.turn, "city", index);
-              }
-            }}
-          />
-        )
-      })}
-    </div>
+    <CardRow
+      cards={cityOwner.city}
+      maxLength={15}
+      placedDown={true}
+      cityColor={color}
+      onLeftClick={(index, card) => {
+        if (isDiscarding && card) {
+          toggleCardDiscarding(storedId, "city", index);
+        }
+      }}
+    />
   )
 }
 

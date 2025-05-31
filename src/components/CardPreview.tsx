@@ -2,8 +2,9 @@ import { useState } from "react";
 import { Card, PlayerColor, ResourceType } from "../engine/gameTypes";
 import CardInspect from "./CardInspect";
 import { ResourceIcon, WorkerIcon } from "./Icons";
+import { mapOverResources } from "../engine/helpers";
 
-function CardPreview({ card, index, onClick, placedDown, cityColor }: { card: Card | null, index: number, onClick?: () => void, placedDown: Boolean, cityColor: PlayerColor | null }) {
+function CardPreview({ card, index, onLeftClick, placedDown, cityColor }: { card: Card | null, index: number, onLeftClick?: () => void, placedDown: Boolean, cityColor: PlayerColor | null }) {
   const [inspecting, setInspecting] = useState(false);
   const borderStyle = card?.discarding ? '2px solid red' : (card?.playing ? '2px solid green' : '2px solid #ccc');
 
@@ -19,12 +20,15 @@ function CardPreview({ card, index, onClick, placedDown, cityColor }: { card: Ca
         padding: '4px',
         borderRadius: '4px',
         textAlign: 'center',
-        cursor: card && onClick ? 'pointer' : 'default',
+        cursor: card && onLeftClick ? 'pointer' : 'default',
         flex: '0 0 auto',
         display: 'flex',
         flexDirection: 'column',
       }}
-      onClick={onClick}
+      onMouseDown={(e) => {
+        if (e.button !== 0 || inspecting || onLeftClick === undefined) return;
+        onLeftClick();
+      }}
       onContextMenu={(e) => {
         e.preventDefault();
         setInspecting(true);
@@ -60,13 +64,13 @@ function CardPreview({ card, index, onClick, placedDown, cityColor }: { card: Ca
                 borderRadius: '4px',
               }}
             >
-              {card.storage && Object.entries(card.storage)
-                .filter(([, val]) => val > 0)
-                .map(([key, val]) => (
+              {card.storage &&
+                mapOverResources(card.storage, (key, val) => (
                   <div key={key} style={{ fontSize: '10px' }}>
                     <ResourceIcon type={key as ResourceType} /> {val}
                   </div>
-                ))}
+                ))
+              }
               {card.workers.Red > 0 && (
                 <div style={{ fontSize: '10px' }}><WorkerIcon playerColor={"Red"} /> {card.workers.Red}</div>
               )}

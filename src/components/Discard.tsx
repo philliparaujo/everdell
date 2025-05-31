@@ -1,6 +1,6 @@
 import { useGame } from "../engine/GameContext";
-import { scrollRowStyle } from "../screens/Game";
-import CardPreview from "./CardPreview";
+import { getPlayerId } from "../engine/helpers";
+import CardRow from "./CardRow";
 
 function Discard() {
   const {
@@ -11,25 +11,20 @@ function Discard() {
   const currentPlayer = game.players[game.turn];
   const isPlaying = currentPlayer.playing;
 
+  const storedId = getPlayerId();
+
   return (
-    <div style={scrollRowStyle}>
-      {game.discard.map((card, index) => {
-        return (
-          <CardPreview
-            key={index}
-            index={index}
-            card={card}
-            placedDown={false}
-            cityColor={null}
-            onClick={() => {
-              if (isPlaying && card) {
-                toggleCardPlaying(game.turn, "discard", index);
-              }
-            }}
-          />
-        )
-      })}
-    </div>
+    <CardRow
+      cards={game.discard}
+      maxLength={game.discard.length}
+      placedDown={false}
+      cityColor={null}
+      onLeftClick={(index, card) => {
+        if (isPlaying && card) {
+          toggleCardPlaying(storedId, "discard", index);
+        }
+      }}
+    />
   )
 }
 

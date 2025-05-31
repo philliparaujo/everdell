@@ -5,13 +5,14 @@ import { setupGame } from '../engine/GameContext';
 import { GameState } from '../engine/gameTypes';
 import { db } from '../firebase';
 import { useEffect, useState } from 'react';
+import { getPlayerId, getPlayerName } from '../engine/helpers';
 
 function Lobby() {
   const navigate = useNavigate();
   const [gameList, setGameList] = useState<{ id: string }[]>([]);
 
-  const [name, setName] = useState(() => sessionStorage.getItem('playerName') || '');
-  const [playerId, setPlayerId] = useState(() => sessionStorage.getItem('playerId') || null);
+  const [name] = useState(() => getPlayerName() || '');
+  const [playerId] = useState(() => getPlayerId() || null);
 
   const startGame = async () => {
     const gameId = uuidv4();

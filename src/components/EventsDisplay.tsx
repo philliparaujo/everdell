@@ -1,9 +1,13 @@
 import { useGame } from "../engine/GameContext";
 import { Event } from "../engine/gameTypes";
+import { getPlayerId, isNotYourTurn } from "../engine/helpers";
 import { EffectTypeIcon, ResourceIcon, WorkerIcon } from "./Icons";
 
 function EventDisplay({ event, index }: { event: Event, index: number }) {
   const { game, visitEvent } = useGame();
+
+  const storedId = getPlayerId();
+  const disabled = isNotYourTurn(game, storedId);
 
   return (
     <div style={{
@@ -19,12 +23,12 @@ function EventDisplay({ event, index }: { event: Event, index: number }) {
       textAlign: 'center'
     }}>
       <div>
-        <button onClick={() => visitEvent(game.turn, index, 1)}>
+        <button disabled={disabled} onClick={() => visitEvent(storedId, index, 1)}>
           Visit
         </button>
       </div>
       <div>
-        <button onClick={() => visitEvent(game.turn, index, -1)}>
+        <button disabled={disabled} onClick={() => visitEvent(storedId, index, -1)}>
           Unvisit
         </button>
       </div>

@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import { useGame } from '../engine/GameContext';
 import { Location, ResourceType } from '../engine/gameTypes';
+import { getPlayerId, isNotYourTurn, mapOverResources } from '../engine/helpers';
 import { ResourceIcon, WorkerIcon } from './Icons';
 
 const workerStyling: React.CSSProperties = {
@@ -34,15 +35,18 @@ function BaseLocationDisplay({ children }: { children: ReactNode }) {
 function LocationDisplay({ location, index }: { location: Location, index: number }) {
   const { game, visitLocation } = useGame();
 
+  const storedId = getPlayerId();
+  const disabled = isNotYourTurn(game, storedId);
+
   return (
     <BaseLocationDisplay>
       <div>
-        <button onClick={() => visitLocation(game.turn, index, 1)}>
+        <button disabled={disabled} onClick={() => visitLocation(storedId, index, 1)}>
           Visit{location.exclusive ? ' (excl.)' : ''}
         </button>
       </div>
       <div>
-        <button onClick={() => visitLocation(game.turn, index, -1)}>
+        <button disabled={disabled} onClick={() => visitLocation(storedId, index, -1)}>
           Unvisit
         </button>
       </div>
@@ -57,13 +61,13 @@ function LocationDisplay({ location, index }: { location: Location, index: numbe
       </div>
 
       <div style={resourceStyling}>
-        {Object.entries(location.resources)
-          .filter(([, val]) => val > 0)
-          .map(([key, val]) => (
+        {
+          mapOverResources(location.resources, (key, val) => (
             <div key={key}>
               <ResourceIcon type={key as ResourceType} /> {val}
             </div>
-          ))}
+          ))
+        }
       </div>
     </BaseLocationDisplay>
   );
@@ -71,6 +75,9 @@ function LocationDisplay({ location, index }: { location: Location, index: numbe
 
 function LocationsDisplay() {
   const { game, visitLocation } = useGame();
+
+  const storedId = getPlayerId();
+  const disabled = isNotYourTurn(game, storedId);
 
   const discardLocation = game.locations[game.locations.length - 1];
 
@@ -84,12 +91,12 @@ function LocationsDisplay() {
 
       <BaseLocationDisplay>
         <div>
-          <button onClick={() => visitLocation(game.turn, game.locations.length - 1, 1)}>
+          <button disabled={disabled} onClick={() => visitLocation(storedId, game.locations.length - 1, 1)}>
             Visit
           </button>
         </div>
         <div>
-          <button onClick={() => visitLocation(game.turn, game.locations.length - 1, -1)}>
+          <button disabled={disabled} onClick={() => visitLocation(storedId, game.locations.length - 1, -1)}>
             Unvisit
           </button>
         </div>

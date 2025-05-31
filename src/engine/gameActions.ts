@@ -7,8 +7,16 @@ import {
   Resources,
   Season,
 } from "./gameTypes";
+import { getPlayerColor, isSafeToEndTurn, partition } from "./helpers";
 
-export function endTurn(state: GameState): GameState {
+export function endTurn(state: GameState, playerId: string | null): GameState {
+  const playerColor = getPlayerColor(state, playerId);
+  if (playerColor === null) return state;
+  if (playerColor !== state.turn) return state;
+
+  // Can't end turn if meadow not full
+  if (!isSafeToEndTurn(state)) return state;
+
   return {
     ...state,
     turn: state.turn === "Red" ? "Blue" : "Red",
@@ -17,9 +25,13 @@ export function endTurn(state: GameState): GameState {
 
 export function setDiscarding(
   state: GameState,
-  playerColor: PlayerColor,
+  playerId: string | null,
   discarding: Boolean
 ): GameState {
+  const playerColor = getPlayerColor(state, playerId);
+  if (playerColor === null) return state;
+  if (playerColor !== state.turn) return state;
+
   const players = { ...state.players };
   players[playerColor] = {
     ...players[playerColor],
@@ -34,9 +46,13 @@ export function setDiscarding(
 
 export function setPlaying(
   state: GameState,
-  playerColor: PlayerColor,
+  playerId: string | null,
   playing: Boolean
 ): GameState {
+  const playerColor = getPlayerColor(state, playerId);
+  if (playerColor === null) return state;
+  if (playerColor !== state.turn) return state;
+
   const players = { ...state.players };
   players[playerColor] = {
     ...players[playerColor],
@@ -49,10 +65,11 @@ export function setPlaying(
   };
 }
 
-export function drawCard(
-  state: GameState,
-  playerColor: PlayerColor
-): GameState {
+export function drawCard(state: GameState, playerId: string | null): GameState {
+  const playerColor = getPlayerColor(state, playerId);
+  if (playerColor === null) return state;
+  if (playerColor !== state.turn) return state;
+
   const deck: Card[] = [...state.deck];
 
   if (deck.length === 0) {
@@ -82,10 +99,14 @@ export function drawCard(
 
 export function toggleCardDiscarding(
   state: GameState,
-  playerColor: PlayerColor,
+  playerId: string | null,
   location: "hand" | "city" | "meadow",
   index: number
 ): GameState {
+  const playerColor = getPlayerColor(state, playerId);
+  if (playerColor === null) return state;
+  if (playerColor !== state.turn) return state;
+
   const newState: GameState = {
     ...state,
     players: {
@@ -132,10 +153,14 @@ export function toggleCardDiscarding(
 
 export function toggleCardPlaying(
   state: GameState,
-  playerColor: PlayerColor,
+  playerId: string | null,
   location: "hand" | "meadow" | "discard",
   index: number
 ): GameState {
+  const playerColor = getPlayerColor(state, playerId);
+  if (playerColor === null) return state;
+  if (playerColor !== state.turn) return state;
+
   const newState: GameState = {
     ...state,
     players: {
@@ -183,8 +208,12 @@ export function toggleCardPlaying(
 
 export function discardSelectedCards(
   state: GameState,
-  playerColor: PlayerColor
+  playerId: string | null
 ): GameState {
+  const playerColor = getPlayerColor(state, playerId);
+  if (playerColor === null) return state;
+  if (playerColor !== state.turn) return state;
+
   const player = state.players[playerColor];
 
   const [handKeep, handDiscard] = partition(
@@ -227,8 +256,12 @@ export function discardSelectedCards(
 
 export function playSelectedCards(
   state: GameState,
-  playerColor: PlayerColor
+  playerId: string | null
 ): GameState {
+  const playerColor = getPlayerColor(state, playerId);
+  if (playerColor === null) return state;
+  if (playerColor !== state.turn) return state;
+
   const player = state.players[playerColor];
 
   const [handKeep, handPlay] = partition(player.hand, (card) => !card.playing);
@@ -267,16 +300,14 @@ export function playSelectedCards(
   };
 }
 
-function partition<T>(arr: T[], predicate: (item: T) => boolean): [T[], T[]] {
-  const keep: T[] = [];
-  const discard: T[] = [];
-  for (const item of arr) {
-    (predicate(item) ? keep : discard).push(item);
-  }
-  return [keep, discard];
-}
+export function addToMeadow(
+  state: GameState,
+  playerId: string | null
+): GameState {
+  const playerColor = getPlayerColor(state, playerId);
+  if (playerColor === null) return state;
+  if (playerColor !== state.turn) return state;
 
-export function addToMeadow(state: GameState): GameState {
   const deck: Card[] = [...state.deck];
 
   if (deck.length === 0) {
@@ -300,10 +331,14 @@ export function addToMeadow(state: GameState): GameState {
 
 export function visitLocation(
   state: GameState,
-  playerColor: PlayerColor,
+  playerId: string | null,
   index: number,
   workersVisiting: 1 | -1
 ): GameState {
+  const playerColor = getPlayerColor(state, playerId);
+  if (playerColor === null) return state;
+  if (playerColor !== state.turn) return state;
+
   if (index >= state.locations.length) return state;
 
   const location = state.locations[index];
@@ -354,7 +389,7 @@ export function visitLocation(
   };
 
   if (workersVisiting > 0) {
-    return addResourcesToPlayer(newState, playerColor, location.resources);
+    return addResourcesToSelf(newState, playerId, location.resources);
   }
 
   return newState;
@@ -362,10 +397,14 @@ export function visitLocation(
 
 export function visitEvent(
   state: GameState,
-  playerColor: PlayerColor,
+  playerId: string | null,
   index: number,
   workersVisiting: 1 | -1
 ): GameState {
+  const playerColor = getPlayerColor(state, playerId);
+  if (playerColor === null) return state;
+  if (playerColor !== state.turn) return state;
+
   if (index >= state.events.length) return state;
 
   const event = state.events[index];
@@ -411,7 +450,7 @@ export function visitEvent(
   };
 
   if (workersVisiting > 0) {
-    return addResourcesToPlayer(newState, playerColor, {
+    return addResourcesToSelf(newState, playerId, {
       ...defaultResources,
       coins: event.value,
     });
@@ -422,11 +461,15 @@ export function visitEvent(
 
 export function visitCardInCity(
   state: GameState,
-  playerColor: PlayerColor,
+  playerId: string | null,
   cityColor: PlayerColor,
   index: number,
   workersVisiting: 1 | -1
 ): GameState {
+  const playerColor = getPlayerColor(state, playerId);
+  if (playerColor === null) return state;
+  if (playerColor !== state.turn) return state;
+
   if (index >= state.players[cityColor].city.length) return state;
 
   const card = state.players[cityColor].city[index];
@@ -493,10 +536,15 @@ export function visitCardInCity(
 
 export function addResourcesToCardInCity(
   state: GameState,
+  playerId: string | null,
   cityColor: PlayerColor,
   index: number,
   resources: Resources
 ): GameState {
+  const playerColor = getPlayerColor(state, playerId);
+  if (playerColor === null) return state;
+  if (playerColor !== state.turn) return state;
+
   if (index >= state.players[cityColor].city.length) return state;
 
   const card = state.players[cityColor].city[index];
@@ -535,10 +583,15 @@ export function addResourcesToCardInCity(
 
 export function toggleOccupiedCardInCity(
   state: GameState,
+  playerId: string | null,
   cityColor: PlayerColor,
   index: number,
   occupied: Boolean
 ): GameState {
+  const playerColor = getPlayerColor(state, playerId);
+  if (playerColor === null) return state;
+  if (playerColor !== state.turn) return state;
+
   if (index >= state.players[cityColor].city.length) return state;
 
   const card = state.players[cityColor].city[index];
@@ -565,11 +618,15 @@ export function toggleOccupiedCardInCity(
   };
 }
 
-export function addResourcesToPlayer(
+export function addResourcesToSelf(
   state: GameState,
-  playerColor: PlayerColor,
+  playerId: string | null,
   resources: Resources
 ): GameState {
+  const playerColor = getPlayerColor(state, playerId);
+  if (playerColor === null) return state;
+  if (playerColor !== state.turn) return state;
+
   const player = state.players[playerColor];
   const updatedResources: Resources = { ...player.resources };
 
@@ -581,7 +638,7 @@ export function addResourcesToPlayer(
 
       if (typedKey === "cards") {
         for (let i = 0; i < resources.cards; i++) {
-          updatedState = drawCard(updatedState, playerColor);
+          updatedState = drawCard(updatedState, playerId);
         }
       } else {
         updatedResources[typedKey] += resources[typedKey];
@@ -602,7 +659,11 @@ export function addResourcesToPlayer(
   };
 }
 
-export function harvest(state: GameState, playerColor: PlayerColor): GameState {
+export function harvest(state: GameState, playerId: string | null): GameState {
+  const playerColor = getPlayerColor(state, playerId);
+  if (playerColor === null) return state;
+  if (playerColor !== state.turn) return state;
+
   const player = state.players[playerColor];
   const { season } = player;
 
@@ -611,13 +672,13 @@ export function harvest(state: GameState, playerColor: PlayerColor): GameState {
 
   if (season === "Winter") {
     newSeason = "Spring";
-    additionalWorkers = 2;
+    additionalWorkers = 1;
   } else if (season === "Spring") {
     newSeason = "Summer";
     additionalWorkers = 1;
   } else if (season === "Summer") {
     newSeason = "Autumn";
-    additionalWorkers = 1;
+    additionalWorkers = 2;
   } else {
     return state;
   }
