@@ -1,4 +1,5 @@
 import { Card, PlayerColor } from "../engine/gameTypes";
+import { maxCitySize } from "../engine/helpers";
 import CardPreview from "./CardPreview";
 
 const rowStyle: React.CSSProperties = {
@@ -16,21 +17,23 @@ const rowStyle: React.CSSProperties = {
 function CardRow(
   {
     cards,
-    maxLength,
     placedDown,
     cityColor,
-    onLeftClick
+    onLeftClick,
+    maxLength,
   }: {
     cards: Card[],
-    maxLength: number,
     placedDown: Boolean,
     cityColor: PlayerColor | null,
-    onLeftClick: (index: number, card: Card | null) => void
+    onLeftClick: (index: number, card: Card | null) => void,
+    maxLength?: number,
   }
 ) {
+  const rowLength = maxLength ?? maxCitySize(cards);
+
   return (
     <div style={rowStyle}>
-      {Array.from({ length: maxLength }).map((_, index) => {
+      {Array.from({ length: rowLength }).map((_, index) => {
         const card = cards[index] ?? null;
 
         return (

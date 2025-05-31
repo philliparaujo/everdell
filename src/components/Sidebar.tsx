@@ -1,6 +1,6 @@
 import { useGame } from "../engine/GameContext";
 import { PlayerColor, ResourceType } from "../engine/gameTypes";
-import { mapOverResources } from "../engine/helpers";
+import { mapOverResources, maxCitySize } from "../engine/helpers";
 import Controls from "./Controls";
 import { ResourceIcon } from "./Icons";
 import ResourceBank from "./ResourceBank";
@@ -20,7 +20,7 @@ function PlayerStatus({ playerColor }: { playerColor: PlayerColor }) {
       <div>{player.season.toString()}</div>
       <div>Workers: {player.workers.workersLeft} / {player.workers.maxWorkers}</div>
       <div>Hand: {player.hand.length} / 8</div>
-      <div>City: {player.city.length} / 15</div>
+      <div>City: {player.city.length} / {maxCitySize(player.city)}</div>
       <div style={{ display: 'flex', flexDirection: 'row', gap: '8px' }}>
         {mapOverResources(player.resources, (key, val) => (
           <div key={key}>

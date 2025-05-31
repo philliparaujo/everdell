@@ -16,7 +16,6 @@ function City({ color }: { color: PlayerColor }) {
   return (
     <CardRow
       cards={cityOwner.city}
-      maxLength={15}
       placedDown={true}
       cityColor={color}
       onLeftClick={(index, card) => {

@@ -1,4 +1,10 @@
-import { GameState, PlayerColor, Resources, ResourceType } from "./gameTypes";
+import {
+  Card,
+  GameState,
+  PlayerColor,
+  Resources,
+  ResourceType,
+} from "./gameTypes";
 
 export const shuffleArray = (array: any[]) => {
   const newArray = [...array];
@@ -74,4 +80,18 @@ export function mapOverResources(
 
 export function isSafeToEndTurn(state: GameState): boolean {
   return state.meadow.length === 8;
+}
+
+export function maxCitySize(city: Card[]) {
+  const baseMaxCitySize = 15;
+  const husbandWifePairs = Math.min(
+    city.reduce((acc, curr) => acc + (curr.name === "Husband" ? 1 : 0), 0),
+    city.reduce((acc, curr) => acc + (curr.name === "Wife" ? 1 : 0), 0)
+  );
+  const wanderers = city.reduce(
+    (acc, curr) => acc + (curr.name === "Wanderer" ? 1 : 0),
+    0
+  );
+
+  return baseMaxCitySize + husbandWifePairs + wanderers;
 }

@@ -7,7 +7,12 @@ import {
   Resources,
   Season,
 } from "./gameTypes";
-import { getPlayerColor, isSafeToEndTurn, partition } from "./helpers";
+import {
+  getPlayerColor,
+  isSafeToEndTurn,
+  maxCitySize,
+  partition,
+} from "./helpers";
 
 export function endTurn(state: GameState, playerId: string | null): GameState {
   const playerColor = getPlayerColor(state, playerId);
@@ -280,7 +285,7 @@ export function playSelectedCards(
       a.effectType.toString() < b.effectType.toString() ? -1 : 1
     );
 
-  if (city.length > 15) return state;
+  if (city.length > maxCitySize(city)) return state;
 
   return {
     ...state,
