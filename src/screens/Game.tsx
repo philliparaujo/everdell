@@ -1,16 +1,15 @@
 import { useParams } from "react-router-dom";
 import City from "../components/City";
 import Discard from "../components/Discard";
+import EventsDisplay from "../components/EventsDisplay";
 import Hand from "../components/Hand";
+import { ResourceIcon } from "../components/Icons";
+import LocationsDisplay from "../components/LocationsDisplay";
 import Meadow from "../components/Meadow";
 import Sidebar from '../components/Sidebar';
 import { useGame } from '../engine/GameContext';
 import { PlayerColor } from "../engine/gameTypes";
 import { getPlayerId } from "../engine/helpers";
-import LocationsDisplay from "../components/LocationsDisplay";
-import EventsDisplay from "../components/EventsDisplay";
-import { CustomResourceIcon } from "../components/Icons";
-import whitecoin from "../assets/icons/whitecoin.png";
 
 const sideBarColumnStyling: React.CSSProperties = {
   width: '250px',
@@ -168,7 +167,7 @@ function Game() {
         <section style={fullRowStyling}>
           <h4 style={{ ...headingStyling, color: playerColor }}>
             My City (
-            <CustomResourceIcon path={whitecoin} /> {player.city.reduce((acc, curr) => acc + curr.value, 0)}
+            <ResourceIcon type={"coins"} /> {player.city.reduce((acc, curr) => acc + curr.value, 0)}
             )
           </h4>
           <div>
@@ -179,7 +178,7 @@ function Game() {
         <section style={fullRowStyling}>
           <h4 style={{ ...headingStyling, color: oppositePlayerColor }}>
             Opponent City (
-            <CustomResourceIcon path={whitecoin} /> {oppositePlayer.city.reduce((acc, curr) => acc + curr.value, 0)}
+            <ResourceIcon type={"coins"} /> {oppositePlayer.city.reduce((acc, curr) => acc + curr.value, 0)}
             )
           </h4>
           <div>

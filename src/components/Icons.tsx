@@ -1,18 +1,18 @@
 
-import bluetype from "../assets/icons/bluetype.png";
-import greentype from "../assets/icons/greentype.png";
-import purpletype from "../assets/icons/purpletype.png";
-import redtype from "../assets/icons/redtype.png";
-import tantype from "../assets/icons/tantype.png";
-import twig from "../assets/icons/twig.png";
-import resin from "../assets/icons/resin.png";
-import pebble from "../assets/icons/pebble.png";
-import berry from "../assets/icons/berry.png";
-import coin from "../assets/icons/coin.png";
-import card from "../assets/icons/card.png";
-import wildcard from "../assets/icons/wildcard.png";
-import redworker from "../assets/icons/redworker.png";
-import blueworker from "../assets/icons/blueworker.png";
+import bluetype from "../assets/transparent-icons/bluetype.png";
+import greentype from "../assets/transparent-icons/greentype.png";
+import purpletype from "../assets/transparent-icons/purpletype.png";
+import redtype from "../assets/transparent-icons/redtype.png";
+import tantype from "../assets/transparent-icons/tantype.png";
+import twig from "../assets/transparent-icons/twig.png";
+import resin from "../assets/transparent-icons/resin.png";
+import pebble from "../assets/transparent-icons/pebble.png";
+import berry from "../assets/transparent-icons/berry.png";
+import coin from "../assets/transparent-icons/coin.png";
+import card from "../assets/transparent-icons/card.png";
+import wildcard from "../assets/transparent-icons/wildcard.png";
+import redworker from "../assets/transparent-icons/redworker.png";
+import blueworker from "../assets/transparent-icons/blueworker.png";
 import { EffectType, PlayerColor, ResourceType } from "../engine/gameTypes";
 
 // Icons mappings
