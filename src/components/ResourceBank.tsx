@@ -48,9 +48,13 @@ function ResourceDisplay({ resource }: { resource: ResourceType }) {
 function ResourceBank() {
   return (
     <div style={resourceBankStyling}>
-      {mapOverResources(defaultResources, (key, _) => (
-        <ResourceDisplay key={key} resource={key} />
-      ), false)}
+      {mapOverResources(defaultResources, (key, _) => {
+        return (
+          key === "cards" ?
+            (<></>) :
+            (<ResourceDisplay key={key} resource={key} />)
+        )
+      }, false)}
     </div>
   );
 }

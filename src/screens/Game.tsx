@@ -24,8 +24,16 @@ export const sideBarStyling: React.CSSProperties = {
   height: '100%',
 }
 
+export const controlsStyling: React.CSSProperties = {
+  display: 'grid',
+  gridTemplateColumns: '1fr 1fr',
+  gap: '8px',
+  maxWidth: '400px',
+  marginLeft: 'auto',
+  marginRight: 'auto'
+}
+
 export const resourceBankStyling: React.CSSProperties = {
-  marginTop: '16px',
   display: 'grid',
   gridTemplateColumns: '1fr 1fr',
   gap: '8px',
@@ -42,8 +50,13 @@ const playAreaStyling: React.CSSProperties = {
   minWidth: 0,
 }
 
-const headingStyling: React.CSSProperties = {
+export const headingStyling: React.CSSProperties = {
   margin: 0
+}
+
+export const idStyle: React.CSSProperties = {
+  fontSize: '10px',
+  fontStyle: 'italic'
 }
 
 const fullRowStyling: React.CSSProperties = {

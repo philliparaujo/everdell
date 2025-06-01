@@ -1,5 +1,6 @@
 import { useGame } from "../engine/GameContext";
 import { getPlayerId, isNotYourTurn, isSafeToEndTurn } from "../engine/helpers";
+import { controlsStyling } from "../screens/Game";
 
 function Controls() {
   const {
@@ -23,15 +24,7 @@ function Controls() {
 
   return (
     <div
-      style={{
-        marginTop: '16px',
-        display: 'grid',
-        gridTemplateColumns: '1fr 1fr',
-        gap: '8px',
-        maxWidth: '400px',
-        marginLeft: 'auto',
-        marginRight: 'auto'
-      }}
+      style={controlsStyling}
     >
       <button disabled={disabled} onClick={() => drawCard(storedId)}>Draw Card</button>
       <button disabled={disabled} onClick={() => addToMeadow(storedId)}>Refill Meadow</button>

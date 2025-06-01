@@ -72,8 +72,17 @@ const RESOURCE_ORDER: ResourceType[] = [
 export function mapOverResources(
   resources: Resources,
   onMap: (key: ResourceType, val: number) => React.ReactNode,
-  filter: boolean = true
+  filter: boolean = true,
+  onNoResources?: () => React.ReactNode
 ) {
+  const resourceCount = RESOURCE_ORDER.reduce(
+    (acc, curr) => acc + resources[curr],
+    0
+  );
+  if (resourceCount === 0 && onNoResources) {
+    return onNoResources();
+  }
+
   return RESOURCE_ORDER.filter((key) => resources[key] > 0 || !filter).map(
     (key) => onMap(key, resources[key])
   );
