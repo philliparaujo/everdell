@@ -1,7 +1,9 @@
+import { COLORS } from "../colors";
 import { useGame } from "../engine/GameContext";
 import { defaultResources, ResourceType } from "../engine/gameTypes";
 import { getPlayerId, isNotYourTurn, mapOverResources } from "../engine/helpers";
 import { resourceBankStyling } from "../screens/Game";
+import Button from "./Button";
 import { ResourceIcon } from "./Icons";
 
 
@@ -26,7 +28,7 @@ function ResourceDisplay({ resource }: { resource: ResourceType }) {
       style={{
         width: '70px',
         height: '20px',
-        background: '#DCBA9E',
+        background: COLORS.location,
         padding: '4px',
         borderRadius: '8px',
         display: 'flex',
@@ -38,8 +40,8 @@ function ResourceDisplay({ resource }: { resource: ResourceType }) {
     >
       <div>
         <ResourceIcon type={resource} />
-        <button disabled={disabled} onClick={decrementResources}>{"-"}</button>
-        <button disabled={disabled} onClick={incrementResources}>{"+"}</button>
+        <Button disabled={disabled} onClick={decrementResources}>{"-"}</Button>
+        <Button disabled={disabled} onClick={incrementResources}>{"+"}</Button>
       </div>
     </div>
   );

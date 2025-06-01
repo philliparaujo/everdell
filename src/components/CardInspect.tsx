@@ -1,6 +1,8 @@
+import { COLORS } from "../colors";
 import { useGame } from "../engine/GameContext";
 import { Card, defaultResources, PlayerColor, ResourceType } from "../engine/gameTypes";
 import { getPlayerId, isNotYourTurn, mapOverResources } from "../engine/helpers";
+import Button from "./Button";
 import { ResourceIcon } from "./Icons";
 
 function CardInspect(
@@ -21,7 +23,7 @@ function CardInspect(
       style={{
         position: 'fixed',
         top: 0, left: 0, right: 0, bottom: 0,
-        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+        backgroundColor: COLORS.cardInspectBackground,
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
@@ -33,7 +35,7 @@ function CardInspect(
         style={{
           display: 'flex',
           gap: '32px',
-          backgroundColor: '#fff',
+          backgroundColor: COLORS.cardInspect,
           padding: '24px',
           borderRadius: '12px',
           maxWidth: '80%',
@@ -49,7 +51,7 @@ function CardInspect(
             width: 'auto',
             flexShrink: 0,
             borderRadius: '8px',
-            border: '1px solid black',
+            border: `1px solid ${COLORS.cardInspectImageBorder}`,
           }}
         />
 
@@ -63,14 +65,14 @@ function CardInspect(
           {placedDown && card.occupied !== null && cityColor ? (
             <p>
               <strong>Occupied:</strong>
-              <button disabled={disabled} onClick={() => toggleOccupiedCardInCity(storedId, cityColor, index, !card.occupied)}>{card.occupied ? "Yes" : "No"}</button>
+              <Button disabled={disabled} onClick={() => toggleOccupiedCardInCity(storedId, cityColor, index, !card.occupied)}>{card.occupied ? "Yes" : "No"}</Button>
             </p>
           ) : <></>}
 
           {placedDown && card.maxDestinations != null && cityColor !== null && (
             <>
-              <button disabled={disabled} onClick={() => visitCardInCity(storedId, cityColor, index, 1)}>{"Visit"}</button>
-              <button disabled={disabled} onClick={() => visitCardInCity(storedId, cityColor, index, -1)}>{"Leave"}</button>
+              <Button disabled={disabled} onClick={() => visitCardInCity(storedId, cityColor, index, 1)}>{"Visit"}</Button>
+              <Button disabled={disabled} onClick={() => visitCardInCity(storedId, cityColor, index, -1)}>{"Leave"}</Button>
             </>
           )}
 
@@ -81,8 +83,8 @@ function CardInspect(
                 {mapOverResources(card.storage, (key, val) => (
                   <li key={key}>
                     <ResourceIcon type={key as ResourceType} /> {val}
-                    <button disabled={disabled} onClick={() => addResourcesToCardInCity(storedId, game.turn, index, { ...defaultResources, [key]: -1 })}>{"-"}</button>
-                    <button disabled={disabled} onClick={() => addResourcesToCardInCity(storedId, game.turn, index, { ...defaultResources, [key]: 1 })}>{"+"}</button>
+                    <Button disabled={disabled} onClick={() => addResourcesToCardInCity(storedId, game.turn, index, { ...defaultResources, [key]: -1 })}>{"-"}</Button>
+                    <Button disabled={disabled} onClick={() => addResourcesToCardInCity(storedId, game.turn, index, { ...defaultResources, [key]: 1 })}>{"+"}</Button>
                   </li>
                 ), false)}
               </ul>

@@ -1,3 +1,4 @@
+import { COLORS, PLAYER_COLORS } from "../colors";
 import { useGame } from "../engine/GameContext";
 import { PlayerColor, ResourceType, Season } from "../engine/gameTypes";
 import { getPlayerId, mapOverResources, maxCitySize } from "../engine/helpers";
@@ -7,13 +8,13 @@ import { ResourceIcon, WorkerIcon } from "./Icons";
 function seasonColor(season: Season) {
   switch (season) {
     case "Winter":
-      return "black";
+      return COLORS.seasonWinter;
     case "Spring":
-      return "black";
+      return COLORS.seasonSpring;
     case "Summer":
-      return "black";
+      return COLORS.seasonSummer;
     case "Autumn":
-      return "black";
+      return COLORS.seasonFall;
   }
 }
 
@@ -27,7 +28,7 @@ function PlayerStatus({ playerColor }: { playerColor: PlayerColor }) {
 
   return (
     <div key={playerColor}>
-      <div style={{ color: playerColor }}>
+      <div style={{ color: PLAYER_COLORS[playerColor] }}>
         <strong>{storedId === player.id ? "(Me) " : ""}{player.name || 'Guest'}</strong>
         <p style={{ ...headingStyling, ...idStyle, marginBottom: '8px' }}>{player.id !== "" ? player.id : "Not in game"}</p>
       </div>

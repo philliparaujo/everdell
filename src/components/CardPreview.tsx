@@ -1,12 +1,13 @@
 import { useState } from "react";
+import { COLORS } from "../colors";
 import { Card, PlayerColor, ResourceType } from "../engine/gameTypes";
+import { mapOverResources } from "../engine/helpers";
 import CardInspect from "./CardInspect";
 import { ResourceIcon, WorkerIcon } from "./Icons";
-import { mapOverResources } from "../engine/helpers";
 
 function CardPreview({ card, index, onLeftClick, placedDown, cityColor }: { card: Card | null, index: number, onLeftClick?: () => void, placedDown: Boolean, cityColor: PlayerColor | null }) {
   const [inspecting, setInspecting] = useState(false);
-  const borderStyle = card?.discarding ? '2px solid red' : (card?.playing ? '2px solid green' : '2px solid #ccc');
+  const borderStyle = card?.discarding ? `2px solid ${COLORS.cardPreviewDiscarding}` : (card?.playing ? `2px solid ${COLORS.cardPreviewPlaying}` : `2px solid ${COLORS.cardPreviewOutline}`);
 
   const storable = card && (card.storage || card.maxDestinations != null) && placedDown;
 
@@ -15,7 +16,7 @@ function CardPreview({ card, index, onLeftClick, placedDown, cityColor }: { card
       style={{
         width: '100px',
         height: storable ? '210px' : '170px',
-        background: '#fff',
+        background: COLORS.cardPreview,
         border: borderStyle,
         padding: '4px',
         borderRadius: '4px',
@@ -54,7 +55,7 @@ function CardPreview({ card, index, onLeftClick, placedDown, cityColor }: { card
           {storable &&
             <div
               style={{
-                background: '#DCBA9E',
+                background: COLORS.storage,
                 flexGrow: 1,
                 display: 'flex',
                 flexWrap: 'wrap',

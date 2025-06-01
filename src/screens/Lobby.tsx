@@ -6,6 +6,7 @@ import { GameState } from '../engine/gameTypes';
 import { db } from '../firebase';
 import { useEffect, useState } from 'react';
 import { getPlayerId, getPlayerName } from '../engine/helpers';
+import Button from '../components/Button';
 
 function Lobby() {
   const navigate = useNavigate();
@@ -95,7 +96,7 @@ function Lobby() {
         <Link to="/home">{"Go back to home"}</Link>
       </div>
       <div>
-        <button onClick={startGame}>{"Start game"}</button>
+        <Button onClick={startGame}>{"Start game"}</Button>
       </div>
 
       <div>
@@ -105,9 +106,9 @@ function Lobby() {
           {gameList.map((game) => (
             <li key={game.id}>
               {game.id}
-              <button onClick={() => handleJoinGame(game.id)}>Join as Blue</button>
-              <button onClick={() => handleDeleteGame(game.id)}>Delete</button>
-              <button onClick={() => handleRejoinGame(game.id)}>Rejoin game</button>
+              <Button onClick={() => handleJoinGame(game.id)}>Join as Blue</Button>
+              <Button onClick={() => handleDeleteGame(game.id)}>Delete</Button>
+              <Button onClick={() => handleRejoinGame(game.id)}>Rejoin game</Button>
             </li>
           ))}
         </ul>

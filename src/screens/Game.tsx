@@ -10,15 +10,16 @@ import Sidebar from '../components/Sidebar';
 import { useGame } from '../engine/GameContext';
 import { PlayerColor } from "../engine/gameTypes";
 import { getPlayerId } from "../engine/helpers";
+import { COLORS, PLAYER_COLORS } from "../colors";
 
 const sideBarColumnStyling: React.CSSProperties = {
   width: '250px',
-  borderRight: '1px solid #ccc',
+  borderRight: `1px solid ${COLORS.sidebarBorder}`,
   flexShrink: 0,
 }
 
 export const sideBarStyling: React.CSSProperties = {
-  background: '#DCBA9E',
+  background: COLORS.sidebar,
   width: '250px',
   height: '100%',
 }
@@ -106,7 +107,6 @@ function Game() {
   }
 
   const player = game.players[playerColor];
-  // const backgroundColor = game.turn === "Red" ? '#FFDDDD' : "#DDDDFF";
 
   const oppositePlayerColor = playerColor === "Red" ? "Blue" : "Red";
   const oppositePlayer = game.players[oppositePlayerColor];
@@ -127,7 +127,7 @@ function Game() {
       {/* --- Right Content Area --- */}
       <div style={{
         ...playAreaStyling,
-        // background: backgroundColor
+        background: COLORS.playArea
       }}>
         <section>
           <h4 style={headingStyling}>Locations</h4>
@@ -147,7 +147,7 @@ function Game() {
         <div style={twoColumnRowStyling}>
           {/* Column 1 */}
           <section style={halfColumnStyling}>
-            <h4 style={{ ...headingStyling, color: playerColor }}>
+            <h4 style={{ ...headingStyling, color: PLAYER_COLORS[playerColor] }}>
               Hand
             </h4>
             <div>
@@ -165,7 +165,7 @@ function Game() {
 
         {/* --- Full Width Rows --- */}
         <section style={fullRowStyling}>
-          <h4 style={{ ...headingStyling, color: playerColor }}>
+          <h4 style={{ ...headingStyling, color: PLAYER_COLORS[playerColor] }}>
             My City (
             <ResourceIcon type={"coins"} /> {player.city.reduce((acc, curr) => acc + curr.value, 0)}
             )
@@ -176,7 +176,7 @@ function Game() {
         </section>
 
         <section style={fullRowStyling}>
-          <h4 style={{ ...headingStyling, color: oppositePlayerColor }}>
+          <h4 style={{ ...headingStyling, color: PLAYER_COLORS[oppositePlayerColor] }}>
             Opponent City (
             <ResourceIcon type={"coins"} /> {oppositePlayer.city.reduce((acc, curr) => acc + curr.value, 0)}
             )

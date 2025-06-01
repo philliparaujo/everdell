@@ -1,6 +1,8 @@
+import { COLORS } from "../colors";
 import { useGame } from "../engine/GameContext";
 import { getPlayerId, isNotYourTurn, isSafeToEndTurn } from "../engine/helpers";
 import { controlsStyling } from "../screens/Game";
+import Button from "./Button";
 
 function Controls() {
   const {
@@ -26,30 +28,30 @@ function Controls() {
     <div
       style={controlsStyling}
     >
-      <button disabled={disabled} onClick={() => drawCard(storedId)}>Draw Card</button>
-      <button disabled={disabled} onClick={() => addToMeadow(storedId)}>Refill Meadow</button>
-      <button disabled={disabled}
+      <Button disabled={disabled} onClick={() => drawCard(storedId)}>Draw Card</Button>
+      <Button disabled={disabled} onClick={() => addToMeadow(storedId)}>Refill Meadow</Button>
+      <Button disabled={disabled}
         onClick={() => {
           if (isPlaying) playSelectedCards(storedId);
           setPlaying(storedId, !isPlaying);
         }}
       >
         {isPlaying ? 'Confirm play' : 'Play cards'}
-      </button>
-      <button disabled={disabled}
+      </Button>
+      <Button disabled={disabled}
         onClick={() => {
           if (isDiscarding) discardSelectedCards(storedId);
           setDiscarding(storedId, !isDiscarding);
         }}
       >
         {isDiscarding ? 'Confirm discard' : 'Discard cards'}
-      </button>
-      <button disabled={disabled || !isSafeToEndTurn(game)} style={{ background: 'yellow' }} onClick={() => endTurn(storedId)}>
+      </Button>
+      <Button disabled={disabled || !isSafeToEndTurn(game)} style={{ backgroundColor: COLORS.importantButton }} onClick={() => endTurn(storedId)}>
         End Turn
-      </button>
-      <button disabled={disabled || !isSafeToEndTurn(game)} style={{ background: 'yellow' }} onClick={() => harvest(storedId)}>
+      </Button>
+      <Button disabled={disabled || !isSafeToEndTurn(game)} style={{ backgroundColor: COLORS.importantButton }} onClick={() => harvest(storedId)}>
         Harvest
-      </button>
+      </Button>
     </div>
   );
 }

@@ -4,12 +4,14 @@ import { Event } from "../engine/gameTypes";
 import { Location, ResourceType } from '../engine/gameTypes';
 import { getPlayerId, isNotYourTurn, mapOverResources } from '../engine/helpers';
 import { ResourceIcon, WorkerIcon } from './Icons';
+import { COLORS } from '../colors';
+import Button from './Button';
 
 const locationStyling: React.CSSProperties = {
   width: '100px',
-  background: '#DCBA9E',
+  background: COLORS.location,
   padding: '0px',
-  border: 'solid 2px #DCBA9E',
+  border: `solid 2px ${COLORS.location}`,
   borderRadius: '8px',
   display: 'flex',
   flexDirection: 'column',
@@ -35,12 +37,12 @@ export const arrowResourceStyling: React.CSSProperties = {
 export function renderButtons(disabled: boolean, onVisit: () => void, onLeave: () => void) {
   return (
     <div>
-      <button disabled={disabled} onClick={onVisit}>
+      <Button disabled={disabled} onClick={onVisit}>
         Visit
-      </button>
-      <button disabled={disabled} onClick={onLeave}>
+      </Button>
+      <Button disabled={disabled} onClick={onLeave}>
         Leave
-      </button>
+      </Button>
     </div>
   )
 }
@@ -63,7 +65,7 @@ export function BaseLocationDisplay({ buttonChildren, workerChildren, resourceCh
     <div
       style={{
         ...locationStyling,
-        border: exclusive ? 'solid 2px black' : 'solid 2px #DCBA9E',
+        border: exclusive ? `solid 2px ${COLORS.locationExclusive}` : `solid 2px ${COLORS.location}`,
       }}
     >
       {buttonChildren}
