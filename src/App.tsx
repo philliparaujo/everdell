@@ -5,7 +5,6 @@ import Home from './screens/Home';
 import Lobby from './screens/Lobby';
 
 const App = () => {
-
   return (
     <Routes>
       <Route path="/" element={<Navigate to="/home" replace />} />

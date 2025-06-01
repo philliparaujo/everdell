@@ -70,7 +70,7 @@ function CardInspect(
           {placedDown && card.maxDestinations != null && cityColor !== null && (
             <>
               <button disabled={disabled} onClick={() => visitCardInCity(storedId, cityColor, index, 1)}>{"Visit"}</button>
-              <button disabled={disabled} onClick={() => visitCardInCity(storedId, cityColor, index, -1)}>{"Unvisit"}</button>
+              <button disabled={disabled} onClick={() => visitCardInCity(storedId, cityColor, index, -1)}>{"Leave"}</button>
             </>
           )}
 

@@ -1,6 +1,7 @@
 import { useGame } from "../engine/GameContext";
 import { defaultResources, ResourceType } from "../engine/gameTypes";
 import { getPlayerId, isNotYourTurn, mapOverResources } from "../engine/helpers";
+import { resourceBankStyling } from "../screens/Game";
 import { ResourceIcon } from "./Icons";
 
 
@@ -46,15 +47,7 @@ function ResourceDisplay({ resource }: { resource: ResourceType }) {
 
 function ResourceBank() {
   return (
-    <div style={{
-      marginTop: '16px',
-      display: 'grid',
-      gridTemplateColumns: '1fr 1fr 1fr',
-      gap: '8px',
-      maxWidth: '400px',
-      marginLeft: 'auto',
-      marginRight: 'auto'
-    }}>
+    <div style={resourceBankStyling}>
       {mapOverResources(defaultResources, (key, _) => (
         <ResourceDisplay key={key} resource={key} />
       ), false)}

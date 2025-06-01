@@ -1,18 +1,7 @@
 import { Card, PlayerColor } from "../engine/gameTypes";
 import { maxCitySize } from "../engine/helpers";
+import { cardRowStyle } from "../screens/Game";
 import CardPreview from "./CardPreview";
-
-const rowStyle: React.CSSProperties = {
-  display: 'flex',
-  flexWrap: 'nowrap',
-  gap: '8px',
-  padding: '4px',
-  border: '1px solid #ddd',
-  borderRadius: '4px',
-  height: '100%',
-  overflowX: 'auto',
-  overflowY: 'hidden',
-};
 
 function CardRow(
   {
@@ -32,7 +21,7 @@ function CardRow(
   const rowLength = maxLength ?? maxCitySize(cards);
 
   return (
-    <div style={rowStyle}>
+    <div style={cardRowStyle}>
       {Array.from({ length: rowLength }).map((_, index) => {
         const card = cards[index] ?? null;
 

@@ -1,6 +1,7 @@
 import { useGame } from "../engine/GameContext";
 import { PlayerColor, ResourceType } from "../engine/gameTypes";
 import { mapOverResources, maxCitySize } from "../engine/helpers";
+import { sideBarStyling } from "../screens/Game";
 import Controls from "./Controls";
 import { ResourceIcon } from "./Icons";
 import ResourceBank from "./ResourceBank";
@@ -38,15 +39,7 @@ function Sidebar({ gameId }: { gameId: string | undefined }) {
   } = useGame();
 
   return (
-    <div style={{
-      background: '#DCBA9E',
-      border: '1px solid #ccc',
-      borderRadius: '8px',
-      padding: '12px',
-      gap: '40px',
-      width: '250px',
-      height: '100%'
-    }}>
+    <div style={sideBarStyling}>
       <div style={{ fontSize: '12px' }}>{gameId}</div>
       <h5>{game.turn} Turn</h5>
       <hr />

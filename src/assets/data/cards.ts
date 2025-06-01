@@ -19,7 +19,7 @@ export const cardFrequencies: Record<string, number> = {
   Fool: 2,
   "General Store": 3,
   Historian: 3,
-  Husband: 400,
+  Husband: 4,
   Inn: 3,
   Innkeeper: 3,
   Judge: 2,
@@ -46,8 +46,8 @@ export const cardFrequencies: Record<string, number> = {
   "Twig Barge": 3,
   Undertaker: 2,
   University: 2,
-  Wanderer: 300,
-  Wife: 400,
+  Wanderer: 3,
+  Wife: 4,
   Woodcarver: 3,
 };
 

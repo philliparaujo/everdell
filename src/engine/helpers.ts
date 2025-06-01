@@ -67,6 +67,7 @@ const RESOURCE_ORDER: ResourceType[] = [
   "berries",
   "coins",
   "cards",
+  "wildcard",
 ];
 export function mapOverResources(
   resources: Resources,

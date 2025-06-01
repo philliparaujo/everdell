@@ -1,28 +1,78 @@
 import { useParams } from "react-router-dom";
-import whitecoin from "../assets/icons/whitecoin.png";
 import City from "../components/City";
 import Discard from "../components/Discard";
-import EventsDisplay from '../components/EventsDisplay';
 import Hand from "../components/Hand";
-import { CustomResourceIcon } from "../components/Icons";
-import LocationsDisplay from '../components/LocationsDisplay';
 import Meadow from "../components/Meadow";
 import Sidebar from '../components/Sidebar';
 import { useGame } from '../engine/GameContext';
 import { PlayerColor } from "../engine/gameTypes";
 import { getPlayerId } from "../engine/helpers";
+import LocationsDisplay from "../components/LocationsDisplay";
+import EventsDisplay from "../components/EventsDisplay";
+import { CustomResourceIcon } from "../components/Icons";
+import whitecoin from "../assets/icons/whitecoin.png";
 
-export const scrollRowStyle: React.CSSProperties = {
-  display: 'flex',
-  flexWrap: 'nowrap',
-  overflowX: 'auto',
-  overflowY: 'hidden',
+const sideBarColumnStyling: React.CSSProperties = {
+  width: '250px',
+  borderRight: '1px solid #ccc',
+  flexShrink: 0,
+}
+
+export const sideBarStyling: React.CSSProperties = {
+  background: '#DCBA9E',
+  width: '250px',
+  height: '100%',
+}
+
+export const resourceBankStyling: React.CSSProperties = {
+  marginTop: '16px',
+  display: 'grid',
+  gridTemplateColumns: '1fr 1fr',
   gap: '8px',
+  marginLeft: 'auto',
+  marginRight: 'auto'
+}
+
+const playAreaStyling: React.CSSProperties = {
+  flex: 1,
+  padding: '16px',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '16px',
+  minWidth: 0,
+}
+
+const headingStyling: React.CSSProperties = {
+  margin: 0
+}
+
+const fullRowStyling: React.CSSProperties = {
+}
+
+const twoColumnRowStyling: React.CSSProperties = {
+  display: 'flex',
+  gap: '32px'
+}
+
+const halfColumnStyling: React.CSSProperties = {
+  flex: 1, // Equally share the width
+  minWidth: 0,
+  overflowX: 'auto',
+}
+
+const scrollStyle: React.CSSProperties = {
+  display: 'flex',
+  overflowY: 'hidden',
+  scrollbarWidth: 'thin'
+}
+
+export const cardRowStyle: React.CSSProperties = {
+  ...scrollStyle,
+  gap: '4px',
   padding: '4px',
-  border: '1px solid #ddd',
+  paddingInlineStart: 0,
   borderRadius: '4px',
   height: '100%',
-  width: '30%'
 };
 
 function Game() {
@@ -44,56 +94,91 @@ function Game() {
   }
 
   const player = game.players[playerColor];
-  const backgroundColor = game.turn === "Red" ? '#FFDDDD' : "#DDDDFF";
+  // const backgroundColor = game.turn === "Red" ? '#FFDDDD' : "#DDDDFF";
 
   const oppositePlayerColor = playerColor === "Red" ? "Blue" : "Red";
   const oppositePlayer = game.players[oppositePlayerColor];
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'row', gap: '8px', padding: '16px', fontFamily: 'sans-serif', background: backgroundColor }}>
-      <div>
+    <div style={{
+      display: 'flex',
+      flexDirection: 'row',
+      width: '100%',
+      minHeight: '100vh' // Added for demonstration to fill the screen
+    }}>
+      {/* --- Left Sidebar --- */}
+      <div style={sideBarColumnStyling}>
+        {/* Sidebar */}
         <Sidebar gameId={gameId} />
       </div>
-      <div style={{ display: 'block', padding: '16px', fontFamily: 'sans-serif' }}>
-        <LocationsDisplay />
-        <EventsDisplay />
 
-        {/* Meadow */}
+      {/* --- Right Content Area --- */}
+      <div style={{
+        ...playAreaStyling,
+        // background: backgroundColor
+      }}>
         <section>
-          <h4>Meadow</h4>
-          <Meadow />
+          <h4 style={headingStyling}>Locations</h4>
+          <div style={scrollStyle}>
+            <LocationsDisplay />
+          </div>
         </section>
 
-        {/* Hand */}
         <section>
-          <h4 style={{ color: playerColor }}>Hand</h4>
-          <Hand color={playerColor} />
+          <h4 style={headingStyling}>Events</h4>
+          <div style={scrollStyle}>
+            <EventsDisplay />
+          </div>
         </section>
 
-        {/* My City */}
-        <section>
-          <h4 style={{ color: playerColor }}>
+        {/* --- Two Column Row --- */}
+        <div style={twoColumnRowStyling}>
+          {/* Column 1 */}
+          <section style={halfColumnStyling}>
+            <h4 style={{ ...headingStyling, color: playerColor }}>
+              Hand
+            </h4>
+            <div>
+              <Hand color={playerColor} />
+            </div>
+          </section>
+          {/* Column 2 */}
+          <section style={halfColumnStyling}>
+            <h4 style={headingStyling}>Meadow</h4>
+            <div>
+              <Meadow />
+            </div>
+          </section>
+        </div>
+
+        {/* --- Full Width Rows --- */}
+        <section style={fullRowStyling}>
+          <h4 style={{ ...headingStyling, color: playerColor }}>
             My City (
             <CustomResourceIcon path={whitecoin} /> {player.city.reduce((acc, curr) => acc + curr.value, 0)}
             )
           </h4>
-          <City color={playerColor} />
+          <div>
+            <City color={playerColor} />
+          </div>
         </section>
 
-        {/* Opposite City */}
-        <section>
-          <h4 style={{ color: oppositePlayerColor }}>
-            Opposite City (
+        <section style={fullRowStyling}>
+          <h4 style={{ ...headingStyling, color: oppositePlayerColor }}>
+            Opponent City (
             <CustomResourceIcon path={whitecoin} /> {oppositePlayer.city.reduce((acc, curr) => acc + curr.value, 0)}
             )
           </h4>
-          <City color={oppositePlayerColor} />
+          <div>
+            <City color={oppositePlayerColor} />
+          </div>
         </section>
 
-        {/* Discard Pile */}
-        <section>
-          <h4>Discard Pile</h4>
-          <Discard />
+        <section style={fullRowStyling}>
+          <h4 style={headingStyling}>Discard</h4>
+          <div>
+            <Discard />
+          </div>
         </section>
       </div>
     </div>
