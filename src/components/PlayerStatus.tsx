@@ -1,4 +1,5 @@
 import { COLORS, PLAYER_COLORS } from "../colors";
+import { MAX_HAND_SIZE } from "../engine/gameConstants";
 import { useGame } from "../engine/GameContext";
 import { PlayerColor, ResourceType, Season } from "../engine/gameTypes";
 import { getPlayerId, mapOverResources, maxCitySize } from "../engine/helpers";
@@ -40,7 +41,7 @@ function PlayerStatus({ playerColor }: { playerColor: PlayerColor }) {
           <span><WorkerIcon playerColor={playerColor} /> {player.workers.workersLeft} / {player.workers.maxWorkers}</span>
         </div>
         <div>
-          <div>Hand: {player.hand.length} / 8</div>
+          <div>Hand: {player.hand.length} / {MAX_HAND_SIZE}</div>
           <div>City: {player.city.length} / {maxCitySize(player.city)}</div>
         </div>
       </div>

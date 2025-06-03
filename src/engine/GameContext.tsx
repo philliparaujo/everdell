@@ -7,6 +7,7 @@ import { locations } from '../assets/data/locations';
 import * as Actions from "./gameActions";
 import { Card, defaultPlayer, GameState, PlayerColor, Resources } from './gameTypes';
 import { shuffleArray } from './helpers';
+import { MAX_MEADOW_SIZE } from './gameConstants';
 
 let actionQueue = Promise.resolve();
 
@@ -16,12 +17,13 @@ export function setupGame(firstPlayer: PlayerColor): GameState {
     return Array.from({ length: count }, () => ({
       ...card,
       discarding: false,
-      playing: false
+      playing: false,
+      giving: false,
     }));
   });
   const deck = shuffleArray(cards);
 
-  const meadow = deck.slice(0, 8);  // 8 cards
+  const meadow = deck.slice(0, MAX_MEADOW_SIZE);  // 8 cards
   const firstHand = deck.slice(8, 13);  // 5 cards
   const secondHand = deck.slice(13, 19);  // 6 cards
   const remainingDeck = deck.slice(19);
@@ -58,10 +60,13 @@ const GameContext = createContext<{
   endTurn: (playerId: string | null) => void;
   setDiscarding: (playerId: string | null, discarding: boolean) => void;
   setPlaying: (playerId: string | null, playing: boolean) => void;
+  setGiving: (playerId: string | null, giving: boolean) => void;
   toggleCardDiscarding: (playerId: string | null, location: "hand" | "city" | "meadow", index: number) => void;
   toggleCardPlaying: (playerId: string | null, location: "hand" | "meadow" | "discard", index: number) => void;
+  toggleCardGiving: (playerId: string | null, location: "hand" | "meadow", index: number) => void;
   discardSelectedCards: (playerId: string | null) => void;
   playSelectedCards: (playerId: string | null) => void;
+  giveSelectedCards: (playerId: string | null, toColor: PlayerColor) => void;
   drawCard: (playerId: string | null) => void;
   addToMeadow: (playerId: string | null) => void;
   visitLocation: (playerId: string | null, index: number, workersVisiting: 1 | -1) => void;
@@ -76,10 +81,13 @@ const GameContext = createContext<{
   endTurn: noop,
   setDiscarding: noop,
   setPlaying: noop,
+  setGiving: noop,
   toggleCardDiscarding: noop,
   toggleCardPlaying: noop,
+  toggleCardGiving: noop,
   discardSelectedCards: noop,
   playSelectedCards: noop,
+  giveSelectedCards: noop,
   drawCard: noop,
   addToMeadow: noop,
   visitLocation: noop,
@@ -153,10 +161,13 @@ export const GameProvider = ({
     endTurn: wrapAction(Actions.endTurn),
     setDiscarding: wrapAction(Actions.setDiscarding),
     setPlaying: wrapAction(Actions.setPlaying),
+    setGiving: wrapAction(Actions.setGiving),
     toggleCardDiscarding: wrapAction(Actions.toggleCardDiscarding),
     toggleCardPlaying: wrapAction(Actions.toggleCardPlaying),
+    toggleCardGiving: wrapAction(Actions.toggleCardGiving),
     discardSelectedCards: wrapAction(Actions.discardSelectedCards),
     playSelectedCards: wrapAction(Actions.playSelectedCards),
+    giveSelectedCards: wrapAction(Actions.giveSelectedCards),
     drawCard: wrapAction(Actions.drawCard),
     addToMeadow: wrapAction(Actions.addToMeadow),
     visitLocation: wrapAction(Actions.visitLocation),

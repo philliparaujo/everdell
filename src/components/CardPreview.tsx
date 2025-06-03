@@ -7,7 +7,17 @@ import { ResourceIcon, WorkerIcon } from "./Icons";
 
 function CardPreview({ card, index, onLeftClick, placedDown, cityColor }: { card: Card | null, index: number, onLeftClick?: () => void, placedDown: boolean, cityColor: PlayerColor | null }) {
   const [inspecting, setInspecting] = useState(false);
-  const borderStyle = card?.discarding ? `2px solid ${COLORS.cardPreviewDiscarding}` : (card?.playing ? `2px solid ${COLORS.cardPreviewPlaying}` : `2px solid ${COLORS.cardPreviewOutline}`);
+
+  let borderStyle: string
+  if (card?.discarding) {
+    borderStyle = `2px solid ${COLORS.cardPreviewDiscarding}`;
+  } else if (card?.playing) {
+    borderStyle = `2px solid ${COLORS.cardPreviewPlaying}`;
+  } else if (card?.giving) {
+    borderStyle = `2px solid ${COLORS.cardPreviewGiving}`;
+  } else {
+    borderStyle = `2px solid ${COLORS.cardPreviewOutline}`;
+  }
 
   const storable = card && (card.storage || card.maxDestinations != null) && placedDown;
 

@@ -1,6 +1,6 @@
 import { COLORS } from "../colors";
 import { useGame } from "../engine/GameContext";
-import { getPlayerId, isNotYourTurn, isSafeToEndTurn } from "../engine/helpers";
+import { getPlayerId, isNotYourTurn, isSafeToEndTurn, oppositePlayerOf } from "../engine/helpers";
 import { controlsStyling } from "../screens/Game";
 import Button from "./Button";
 
@@ -10,8 +10,10 @@ function Controls() {
     endTurn,
     setDiscarding,
     setPlaying,
+    setGiving,
     discardSelectedCards,
     playSelectedCards,
+    giveSelectedCards,
     drawCard,
     addToMeadow,
     harvest
@@ -23,6 +25,7 @@ function Controls() {
   const currentPlayer = game.players[game.turn];
   const isDiscarding = currentPlayer.discarding;
   const isPlaying = currentPlayer.playing;
+  const isGiving = currentPlayer.giving;
 
   return (
     <div
@@ -30,7 +33,7 @@ function Controls() {
     >
       <Button disabled={disabled} onClick={() => drawCard(storedId)}>Draw Card</Button>
       <Button disabled={disabled} onClick={() => addToMeadow(storedId)}>Refill Meadow</Button>
-      <Button disabled={disabled || isDiscarding}
+      <Button disabled={disabled || isDiscarding || isGiving}
         onClick={() => {
           if (isPlaying) playSelectedCards(storedId);
           setPlaying(storedId, !isPlaying);
@@ -38,7 +41,7 @@ function Controls() {
       >
         {isPlaying ? 'Confirm play' : 'Play cards'}
       </Button>
-      <Button disabled={disabled || isPlaying}
+      <Button disabled={disabled || isPlaying || isGiving}
         onClick={() => {
           if (isDiscarding) discardSelectedCards(storedId);
           setDiscarding(storedId, !isDiscarding);
@@ -51,6 +54,18 @@ function Controls() {
       </Button>
       <Button disabled={disabled || !isSafeToEndTurn(game)} style={{ backgroundColor: COLORS.importantButton }} onClick={() => harvest(storedId)}>
         Harvest
+      </Button>
+      <Button disabled={disabled || isDiscarding || isPlaying} onClick={() => {
+        if (isGiving) giveSelectedCards(storedId, game.turn);
+        setGiving(storedId, !isGiving);
+      }}>
+        Give to self
+      </Button>
+      <Button disabled={disabled || isDiscarding || isPlaying} onClick={() => {
+        if (isGiving) giveSelectedCards(storedId, oppositePlayerOf(game.turn));
+        setGiving(storedId, !isGiving);
+      }}>
+        Give opponent
       </Button>
     </div>
   );

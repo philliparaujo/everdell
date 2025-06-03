@@ -1,3 +1,4 @@
+import { MAX_MEADOW_SIZE } from "./gameConstants";
 import {
   Card,
   GameState,
@@ -93,7 +94,7 @@ export function mapOverResources(
 }
 
 export function isSafeToEndTurn(state: GameState): boolean {
-  return state.meadow.length === 8;
+  return state.meadow.length === MAX_MEADOW_SIZE;
 }
 
 export function maxCitySize(city: Card[]) {

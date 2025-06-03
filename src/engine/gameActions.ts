@@ -1,3 +1,4 @@
+import { MAX_HAND_SIZE, MAX_MEADOW_SIZE } from "./gameConstants";
 import {
   Card,
   defaultResources,
@@ -37,7 +38,8 @@ export function setDiscarding(
   const playerColor = getPlayerColor(state, playerId);
   if (playerColor === null) return state;
   if (playerColor !== state.turn) return state;
-  if (state.players[playerColor].playing) return state;
+  if (state.players[playerColor].playing || state.players[playerColor].giving)
+    return state;
 
   const players = { ...state.players };
   players[playerColor] = {
@@ -59,12 +61,43 @@ export function setPlaying(
   const playerColor = getPlayerColor(state, playerId);
   if (playerColor === null) return state;
   if (playerColor !== state.turn) return state;
-  if (state.players[playerColor].discarding) return state;
+  if (
+    state.players[playerColor].discarding ||
+    state.players[playerColor].giving
+  )
+    return state;
 
   const players = { ...state.players };
   players[playerColor] = {
     ...players[playerColor],
     playing: playing,
+  };
+
+  return {
+    ...state,
+    players,
+  };
+}
+
+export function setGiving(
+  state: GameState,
+  playerId: string | null,
+  giving: boolean
+): GameState {
+  const playerColor = getPlayerColor(state, playerId);
+  if (playerColor === null) return state;
+  if (playerColor !== state.turn) return state;
+  if (
+    state.players[playerColor].discarding ||
+    state.players[playerColor].playing
+  )
+    return state;
+  if (state.players[playerColor].giving === giving) return state;
+
+  const players = { ...state.players };
+  players[playerColor] = {
+    ...players[playerColor],
+    giving: giving,
   };
 
   return {
@@ -83,7 +116,7 @@ export function drawCard(state: GameState, playerId: string | null): GameState {
   if (deck.length === 0) {
     return state;
   }
-  if (state.players[playerColor].hand.length >= 8) {
+  if (state.players[playerColor].hand.length >= MAX_HAND_SIZE) {
     return state;
   }
 
@@ -214,6 +247,53 @@ export function toggleCardPlaying(
   return newState;
 }
 
+export function toggleCardGiving(
+  state: GameState,
+  playerId: string | null,
+  location: "hand" | "meadow",
+  index: number
+): GameState {
+  const playerColor = getPlayerColor(state, playerId);
+  if (playerColor === null) return state;
+  if (playerColor !== state.turn) return state;
+
+  const newState: GameState = {
+    ...state,
+    players: {
+      ...state.players,
+      [playerColor]: {
+        ...state.players[playerColor],
+        hand: [...state.players[playerColor].hand],
+        city: [...state.players[playerColor].city],
+      },
+    },
+    meadow: [...state.meadow],
+    discard: [...state.discard],
+  };
+
+  let cardToToggle: Card | undefined;
+
+  if (location === "hand") {
+    cardToToggle = newState.players[playerColor].hand[index];
+    if (cardToToggle) {
+      newState.players[playerColor].hand[index] = {
+        ...cardToToggle,
+        giving: !cardToToggle.giving,
+      };
+    }
+  } else if (location === "meadow") {
+    cardToToggle = newState.meadow[index];
+    if (cardToToggle) {
+      newState.meadow[index] = {
+        ...cardToToggle,
+        giving: !cardToToggle.giving,
+      };
+    }
+  }
+
+  return newState;
+}
+
 export function discardSelectedCards(
   state: GameState,
   playerId: string | null
@@ -289,13 +369,16 @@ export function playSelectedCards(
     (card) => card.name !== "Fool"
   );
 
+  const oppositeCity = [...oppositePlayer.city, ...otherPlayedCards];
+
+  if (myCity.length > maxCitySize(myCity)) return state;
+  if (oppositeCity.length > maxCitySize(oppositeCity)) return state;
+
   const mySortedCity = myCity
     .sort((a, b) => (a.name < b.name ? -1 : 1))
     .sort((a, b) =>
       a.effectType.toString() < b.effectType.toString() ? -1 : 1
     );
-
-  if (mySortedCity.length > maxCitySize(mySortedCity)) return state;
 
   return {
     ...state,
@@ -311,7 +394,7 @@ export function playSelectedCards(
       },
       [oppositePlayerOf(playerColor)]: {
         ...oppositePlayer,
-        city: [...oppositePlayer.city, ...otherPlayedCards].map((card) => ({
+        city: oppositeCity.map((card) => ({
           ...card,
           playing: false,
         })),
@@ -319,6 +402,57 @@ export function playSelectedCards(
     },
     meadow: meadowKeep,
     discard: discardKeep,
+  };
+}
+
+export function giveSelectedCards(
+  state: GameState,
+  playerId: string | null,
+  toColor: PlayerColor
+): GameState {
+  const playerColor = getPlayerColor(state, playerId);
+  if (playerColor === null) return state;
+  if (playerColor !== state.turn) return state;
+
+  const player = state.players[playerColor];
+  const playerTo = state.players[toColor];
+
+  const [handKeep, handGive] = partition(player.hand, (card) => !card.giving);
+  const [meadowKeep, meadowGive] = partition(
+    state.meadow,
+    (card) => !card.giving
+  );
+
+  const updatePlayerHand: Card[] =
+    playerColor === toColor ? [...player.hand, ...meadowGive] : [...handKeep];
+  const playerToHand = [...playerTo.hand, ...handGive, ...meadowGive];
+
+  if (updatePlayerHand.length > MAX_HAND_SIZE) return state;
+  if (playerColor !== toColor && playerToHand.length > MAX_HAND_SIZE)
+    return state;
+
+  return {
+    ...state,
+    players: {
+      ...state.players,
+      [playerColor]: {
+        ...player,
+        hand: updatePlayerHand.map((card) => ({
+          ...card,
+          giving: false,
+        })),
+      },
+      ...(playerColor !== toColor && {
+        [toColor]: {
+          ...playerTo,
+          hand: playerToHand.map((card) => ({
+            ...card,
+            giving: false,
+          })),
+        },
+      }),
+    },
+    meadow: meadowKeep,
   };
 }
 
@@ -335,7 +469,7 @@ export function addToMeadow(
   if (deck.length === 0) {
     return state;
   }
-  if (state.meadow.length >= 8) {
+  if (state.meadow.length >= MAX_MEADOW_SIZE) {
     return state;
   }
 

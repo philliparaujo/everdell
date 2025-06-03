@@ -41,6 +41,7 @@ export type Card = {
 
   discarding: boolean;
   playing: boolean;
+  giving: boolean;
 };
 
 export type Location = {
@@ -70,6 +71,9 @@ export type Player = {
 
   discarding: boolean;
   playing: boolean;
+  giving: boolean;
+  revealingDeck: boolean;
+  revealingDiscard: boolean;
 };
 
 export type GameState = {
@@ -109,4 +113,7 @@ export const defaultPlayer: Player = {
 
   discarding: false,
   playing: false,
+  giving: false,
+  revealingDeck: false,
+  revealingDiscard: false,
 };
