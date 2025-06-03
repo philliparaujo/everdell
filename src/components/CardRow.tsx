@@ -12,7 +12,7 @@ function CardRow(
     maxLength,
   }: {
     cards: Card[],
-    placedDown: Boolean,
+    placedDown: boolean,
     cityColor: PlayerColor | null,
     onLeftClick: (index: number, card: Card | null) => void,
     maxLength?: number,

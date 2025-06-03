@@ -9,7 +9,7 @@ import Meadow from "../components/Meadow";
 import Sidebar from '../components/Sidebar';
 import { useGame } from '../engine/GameContext';
 import { PlayerColor } from "../engine/gameTypes";
-import { getPlayerId } from "../engine/helpers";
+import { getPlayerId, oppositePlayerOf } from "../engine/helpers";
 import { COLORS, PLAYER_COLORS } from "../colors";
 
 const sideBarColumnStyling: React.CSSProperties = {
@@ -108,8 +108,7 @@ function Game() {
 
   const player = game.players[playerColor];
 
-  const oppositePlayerColor = playerColor === "Red" ? "Blue" : "Red";
-  const oppositePlayer = game.players[oppositePlayerColor];
+  const oppositePlayer = game.players[oppositePlayerOf(playerColor)];
 
   return (
     <div style={{
@@ -176,13 +175,13 @@ function Game() {
         </section>
 
         <section style={fullRowStyling}>
-          <h4 style={{ ...headingStyling, color: PLAYER_COLORS[oppositePlayerColor] }}>
+          <h4 style={{ ...headingStyling, color: PLAYER_COLORS[oppositePlayerOf(playerColor)] }}>
             Opponent City (
             <ResourceIcon type={"coins"} /> {oppositePlayer.city.reduce((acc, curr) => acc + curr.value, 0)}
             )
           </h4>
           <div>
-            <City color={oppositePlayerColor} />
+            <City color={oppositePlayerOf(playerColor)} />
           </div>
         </section>
 

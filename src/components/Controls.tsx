@@ -30,7 +30,7 @@ function Controls() {
     >
       <Button disabled={disabled} onClick={() => drawCard(storedId)}>Draw Card</Button>
       <Button disabled={disabled} onClick={() => addToMeadow(storedId)}>Refill Meadow</Button>
-      <Button disabled={disabled}
+      <Button disabled={disabled || isDiscarding}
         onClick={() => {
           if (isPlaying) playSelectedCards(storedId);
           setPlaying(storedId, !isPlaying);
@@ -38,7 +38,7 @@ function Controls() {
       >
         {isPlaying ? 'Confirm play' : 'Play cards'}
       </Button>
-      <Button disabled={disabled}
+      <Button disabled={disabled || isPlaying}
         onClick={() => {
           if (isDiscarding) discardSelectedCards(storedId);
           setDiscarding(storedId, !isDiscarding);

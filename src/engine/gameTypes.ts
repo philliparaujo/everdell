@@ -24,12 +24,12 @@ export type Card = {
   value: number;
   cardType: CardType;
   effectType: EffectType;
-  unique: Boolean;
+  unique: boolean;
   description: string;
 
   imageKey: string;
 
-  occupied: Boolean | null; // Constructions can be occupied for free critters
+  occupied: boolean | null; // Constructions can be occupied for free critters
   constructionRequirement: string | null; // Critters can be played for free by occupying constructions
 
   // Some cards can be visited by workers
@@ -39,12 +39,12 @@ export type Card = {
 
   storage: Resources | null; // Some cards can store resources or coins on them
 
-  discarding: Boolean;
-  playing: Boolean;
+  discarding: boolean;
+  playing: boolean;
 };
 
 export type Location = {
-  exclusive: Boolean;
+  exclusive: boolean;
   resources: Resources;
   workers: Record<PlayerColor, number>;
 };
@@ -68,8 +68,8 @@ export type Player = {
   workers: Workers;
   season: Season;
 
-  discarding: Boolean;
-  playing: Boolean;
+  discarding: boolean;
+  playing: boolean;
 };
 
 export type GameState = {

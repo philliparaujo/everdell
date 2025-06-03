@@ -53,6 +53,10 @@ export function getPlayerColor(
   return null;
 }
 
+export function oppositePlayerOf(playerColor: PlayerColor): PlayerColor {
+  return playerColor === "Red" ? "Blue" : "Red";
+}
+
 export function isNotYourTurn(
   game: GameState,
   playerId: string | null

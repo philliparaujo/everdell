@@ -6,7 +6,7 @@ import Button from "./Button";
 import { ResourceIcon } from "./Icons";
 
 function CardInspect(
-  { card, index, cityColor, onClose, placedDown }: { card: Card, index: number, cityColor: PlayerColor | null, onClose: () => void, placedDown: Boolean }
+  { card, index, cityColor, onClose, placedDown }: { card: Card, index: number, cityColor: PlayerColor | null, onClose: () => void, placedDown: boolean }
 ) {
   const {
     game,

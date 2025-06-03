@@ -60,7 +60,7 @@ export function renderWorkers(location: Location | Event) {
   )
 }
 
-export function BaseLocationDisplay({ buttonChildren, workerChildren, resourceChildren, exclusive = false }: { buttonChildren: ReactNode, workerChildren: ReactNode, resourceChildren: ReactNode, exclusive?: Boolean }) {
+export function BaseLocationDisplay({ buttonChildren, workerChildren, resourceChildren, exclusive = false }: { buttonChildren: ReactNode, workerChildren: ReactNode, resourceChildren: ReactNode, exclusive?: boolean }) {
   return (
     <div
       style={{

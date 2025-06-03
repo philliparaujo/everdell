@@ -11,6 +11,7 @@ import {
   getPlayerColor,
   isSafeToEndTurn,
   maxCitySize,
+  oppositePlayerOf,
   partition,
 } from "./helpers";
 
@@ -24,18 +25,19 @@ export function endTurn(state: GameState, playerId: string | null): GameState {
 
   return {
     ...state,
-    turn: state.turn === "Red" ? "Blue" : "Red",
+    turn: oppositePlayerOf(state.turn),
   };
 }
 
 export function setDiscarding(
   state: GameState,
   playerId: string | null,
-  discarding: Boolean
+  discarding: boolean
 ): GameState {
   const playerColor = getPlayerColor(state, playerId);
   if (playerColor === null) return state;
   if (playerColor !== state.turn) return state;
+  if (state.players[playerColor].playing) return state;
 
   const players = { ...state.players };
   players[playerColor] = {
@@ -52,11 +54,12 @@ export function setDiscarding(
 export function setPlaying(
   state: GameState,
   playerId: string | null,
-  playing: Boolean
+  playing: boolean
 ): GameState {
   const playerColor = getPlayerColor(state, playerId);
   if (playerColor === null) return state;
   if (playerColor !== state.turn) return state;
+  if (state.players[playerColor].discarding) return state;
 
   const players = { ...state.players };
   players[playerColor] = {
@@ -268,6 +271,7 @@ export function playSelectedCards(
   if (playerColor !== state.turn) return state;
 
   const player = state.players[playerColor];
+  const oppositePlayer = state.players[oppositePlayerOf(playerColor)];
 
   const [handKeep, handPlay] = partition(player.hand, (card) => !card.playing);
   const [meadowKeep, meadowPlay] = partition(
@@ -279,13 +283,19 @@ export function playSelectedCards(
     (card) => !card.playing
   );
 
-  const city = [...player.city, ...handPlay, ...meadowPlay, ...discardPlay]
+  const city = [...player.city, ...handPlay, ...meadowPlay, ...discardPlay];
+  const [myCity, otherPlayedCards] = partition(
+    city,
+    (card) => card.name !== "Fool"
+  );
+
+  const mySortedCity = myCity
     .sort((a, b) => (a.name < b.name ? -1 : 1))
     .sort((a, b) =>
       a.effectType.toString() < b.effectType.toString() ? -1 : 1
     );
 
-  if (city.length > maxCitySize(city)) return state;
+  if (mySortedCity.length > maxCitySize(mySortedCity)) return state;
 
   return {
     ...state,
@@ -294,7 +304,14 @@ export function playSelectedCards(
       [playerColor]: {
         ...player,
         hand: handKeep,
-        city: city.map((card) => ({
+        city: mySortedCity.map((card) => ({
+          ...card,
+          playing: false,
+        })),
+      },
+      [oppositePlayerOf(playerColor)]: {
+        ...oppositePlayer,
+        city: [...oppositePlayer.city, ...otherPlayedCards].map((card) => ({
           ...card,
           playing: false,
         })),
@@ -591,7 +608,7 @@ export function toggleOccupiedCardInCity(
   playerId: string | null,
   cityColor: PlayerColor,
   index: number,
-  occupied: Boolean
+  occupied: boolean
 ): GameState {
   const playerColor = getPlayerColor(state, playerId);
   if (playerColor === null) return state;

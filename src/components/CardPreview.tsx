@@ -5,7 +5,7 @@ import { mapOverResources } from "../engine/helpers";
 import CardInspect from "./CardInspect";
 import { ResourceIcon, WorkerIcon } from "./Icons";
 
-function CardPreview({ card, index, onLeftClick, placedDown, cityColor }: { card: Card | null, index: number, onLeftClick?: () => void, placedDown: Boolean, cityColor: PlayerColor | null }) {
+function CardPreview({ card, index, onLeftClick, placedDown, cityColor }: { card: Card | null, index: number, onLeftClick?: () => void, placedDown: boolean, cityColor: PlayerColor | null }) {
   const [inspecting, setInspecting] = useState(false);
   const borderStyle = card?.discarding ? `2px solid ${COLORS.cardPreviewDiscarding}` : (card?.playing ? `2px solid ${COLORS.cardPreviewPlaying}` : `2px solid ${COLORS.cardPreviewOutline}`);
 

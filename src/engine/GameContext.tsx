@@ -56,8 +56,8 @@ const noop = (..._: any[]) => { };
 const GameContext = createContext<{
   game: GameState;
   endTurn: (playerId: string | null) => void;
-  setDiscarding: (playerId: string | null, discarding: Boolean) => void;
-  setPlaying: (playerId: string | null, playing: Boolean) => void;
+  setDiscarding: (playerId: string | null, discarding: boolean) => void;
+  setPlaying: (playerId: string | null, playing: boolean) => void;
   toggleCardDiscarding: (playerId: string | null, location: "hand" | "city" | "meadow", index: number) => void;
   toggleCardPlaying: (playerId: string | null, location: "hand" | "meadow" | "discard", index: number) => void;
   discardSelectedCards: (playerId: string | null) => void;
@@ -67,7 +67,7 @@ const GameContext = createContext<{
   visitLocation: (playerId: string | null, index: number, workersVisiting: 1 | -1) => void;
   visitEvent: (playerId: string | null, index: number, workersVisiting: 1 | -1) => void;
   visitCardInCity: (playerId: string | null, cityColor: PlayerColor, index: number, workersVisiting: 1 | -1) => void;
-  toggleOccupiedCardInCity: (playerId: string | null, cityColor: PlayerColor, index: number, occupied: Boolean) => void;
+  toggleOccupiedCardInCity: (playerId: string | null, cityColor: PlayerColor, index: number, occupied: boolean) => void;
   addResourcesToCardInCity: (playerId: string | null, cityColor: PlayerColor, index: number, resources: Resources) => void;
   addResourcesToSelf: (playerId: string | null, resources: Resources) => void;
   harvest: (playerId: string | null) => void;
