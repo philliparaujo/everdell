@@ -51,7 +51,7 @@ export const cardFrequencies: Record<string, number> = {
   Woodcarver: 3,
 };
 
-export const rawCards: Omit<Card, "discarding" | "playing">[] = [
+export const rawCards: Omit<Card, "discarding" | "playing" | "giving">[] = [
   {
     name: "Architect",
     cost: {

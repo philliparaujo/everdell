@@ -3,6 +3,7 @@ import { headingStyling, idStyle, sideBarStyling } from "../screens/Game";
 import Controls from "./Controls";
 import PlayerStatus from "./PlayerStatus";
 import ResourceBank from "./ResourceBank";
+import Reveal from "./Reveal";
 
 function Sidebar({ gameId }: { gameId: string | undefined }) {
   const {
@@ -20,7 +21,10 @@ function Sidebar({ gameId }: { gameId: string | undefined }) {
         <hr />
         <Controls />
         <hr />
+        <p style={{ margin: 0 }}>{`Deck size: ${game.deck.length}`}</p>
         <ResourceBank />
+        <hr />
+        <Reveal />
         <hr />
         <div style={idStyle}>{gameId}</div>
       </div>

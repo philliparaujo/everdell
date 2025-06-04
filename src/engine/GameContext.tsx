@@ -46,6 +46,7 @@ export function setupGame(firstPlayer: PlayerColor): GameState {
     deck: remainingDeck,
     discard: [],
     meadow: meadow,
+    reveal: [],
     locations: locations,
     events: events,
     turn: firstPlayer,
@@ -61,13 +62,14 @@ const GameContext = createContext<{
   setDiscarding: (playerId: string | null, discarding: boolean) => void;
   setPlaying: (playerId: string | null, playing: boolean) => void;
   setGiving: (playerId: string | null, giving: boolean) => void;
-  toggleCardDiscarding: (playerId: string | null, location: "hand" | "city" | "meadow", index: number) => void;
-  toggleCardPlaying: (playerId: string | null, location: "hand" | "meadow" | "discard", index: number) => void;
+  toggleCardDiscarding: (playerId: string | null, location: "hand" | "city" | "meadow" | "reveal", index: number) => void;
+  toggleCardPlaying: (playerId: string | null, location: "hand" | "meadow" | "discard" | "reveal", index: number) => void;
   toggleCardGiving: (playerId: string | null, location: "hand" | "meadow", index: number) => void;
   discardSelectedCards: (playerId: string | null) => void;
   playSelectedCards: (playerId: string | null) => void;
   giveSelectedCards: (playerId: string | null, toColor: PlayerColor) => void;
   drawCard: (playerId: string | null) => void;
+  revealCard: (playerId: string | null, location: "deck" | "discard") => void;
   addToMeadow: (playerId: string | null) => void;
   visitLocation: (playerId: string | null, index: number, workersVisiting: 1 | -1) => void;
   visitEvent: (playerId: string | null, index: number, workersVisiting: 1 | -1) => void;
@@ -89,6 +91,7 @@ const GameContext = createContext<{
   playSelectedCards: noop,
   giveSelectedCards: noop,
   drawCard: noop,
+  revealCard: noop,
   addToMeadow: noop,
   visitLocation: noop,
   visitEvent: noop,
@@ -169,6 +172,7 @@ export const GameProvider = ({
     playSelectedCards: wrapAction(Actions.playSelectedCards),
     giveSelectedCards: wrapAction(Actions.giveSelectedCards),
     drawCard: wrapAction(Actions.drawCard),
+    revealCard: wrapAction(Actions.revealCard),
     addToMeadow: wrapAction(Actions.addToMeadow),
     visitLocation: wrapAction(Actions.visitLocation),
     visitEvent: wrapAction(Actions.visitEvent),

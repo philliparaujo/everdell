@@ -1,4 +1,8 @@
-import { MAX_HAND_SIZE, MAX_MEADOW_SIZE } from "./gameConstants";
+import {
+  MAX_HAND_SIZE,
+  MAX_MEADOW_SIZE,
+  MAX_REVEAL_SIZE,
+} from "./gameConstants";
 import {
   Card,
   defaultResources,
@@ -138,10 +142,52 @@ export function drawCard(state: GameState, playerId: string | null): GameState {
   };
 }
 
+export function revealCard(
+  state: GameState,
+  playerId: string | null,
+  location: "deck" | "discard"
+): GameState {
+  const playerColor = getPlayerColor(state, playerId);
+  if (playerColor === null || playerColor !== state.turn) return state;
+
+  const reveal: Card[] = [...state.reveal];
+  if (reveal.length >= MAX_REVEAL_SIZE) return state;
+
+  if (location === "deck") {
+    if (state.deck.length === 0) return state;
+
+    const deck = [...state.deck];
+    const topCard = deck.pop();
+    if (!topCard) return state;
+
+    return {
+      ...state,
+      deck,
+      reveal: [...reveal, topCard],
+    };
+  }
+
+  if (location === "discard") {
+    if (state.discard.length === 0) return state;
+
+    const discard = [...state.discard];
+    const index = Math.floor(Math.random() * discard.length);
+    const [chosen] = discard.splice(index, 1);
+
+    return {
+      ...state,
+      discard,
+      reveal: [...reveal, chosen],
+    };
+  }
+
+  return state;
+}
+
 export function toggleCardDiscarding(
   state: GameState,
   playerId: string | null,
-  location: "hand" | "city" | "meadow",
+  location: "hand" | "city" | "meadow" | "reveal",
   index: number
 ): GameState {
   const playerColor = getPlayerColor(state, playerId);
@@ -159,6 +205,7 @@ export function toggleCardDiscarding(
       },
     },
     meadow: [...state.meadow],
+    reveal: [...state.reveal],
   };
 
   let cardToToggle: Card | undefined;
@@ -187,6 +234,14 @@ export function toggleCardDiscarding(
         discarding: !cardToToggle.discarding,
       };
     }
+  } else if (location === "reveal") {
+    cardToToggle = newState.reveal[index];
+    if (cardToToggle) {
+      newState.reveal[index] = {
+        ...cardToToggle,
+        discarding: !cardToToggle.discarding,
+      };
+    }
   }
 
   return newState;
@@ -195,7 +250,7 @@ export function toggleCardDiscarding(
 export function toggleCardPlaying(
   state: GameState,
   playerId: string | null,
-  location: "hand" | "meadow" | "discard",
+  location: "hand" | "meadow" | "discard" | "reveal",
   index: number
 ): GameState {
   const playerColor = getPlayerColor(state, playerId);
@@ -214,6 +269,7 @@ export function toggleCardPlaying(
     },
     meadow: [...state.meadow],
     discard: [...state.discard],
+    reveal: [...state.reveal],
   };
 
   let cardToToggle: Card | undefined;
@@ -238,6 +294,14 @@ export function toggleCardPlaying(
     cardToToggle = newState.discard[index];
     if (cardToToggle) {
       newState.discard[index] = {
+        ...cardToToggle,
+        playing: !cardToToggle.playing,
+      };
+    }
+  } else if (location === "reveal") {
+    cardToToggle = newState.reveal[index];
+    if (cardToToggle) {
+      newState.reveal[index] = {
         ...cardToToggle,
         playing: !cardToToggle.playing,
       };
@@ -316,12 +380,17 @@ export function discardSelectedCards(
     state.meadow,
     (card) => !card.discarding
   );
+  const [revealKeep, revealDiscard] = partition(
+    state.reveal,
+    (card) => !card.discarding
+  );
 
   const discard = [
     ...state.discard,
     ...handDiscard,
     ...cityDiscard,
     ...meadowDiscard,
+    ...revealDiscard,
   ];
 
   return {
@@ -339,6 +408,7 @@ export function discardSelectedCards(
       discarding: false,
     })),
     meadow: meadowKeep,
+    reveal: revealKeep,
   };
 }
 
@@ -362,8 +432,18 @@ export function playSelectedCards(
     state.discard,
     (card) => !card.playing
   );
+  const [revealKeep, revealPlay] = partition(
+    state.reveal,
+    (card) => !card.playing
+  );
 
-  const city = [...player.city, ...handPlay, ...meadowPlay, ...discardPlay];
+  const city = [
+    ...player.city,
+    ...handPlay,
+    ...meadowPlay,
+    ...discardPlay,
+    ...revealPlay,
+  ];
   const [myCity, otherPlayedCards] = partition(
     city,
     (card) => card.name !== "Fool"
@@ -402,6 +482,7 @@ export function playSelectedCards(
     },
     meadow: meadowKeep,
     discard: discardKeep,
+    reveal: revealKeep,
   };
 }
 

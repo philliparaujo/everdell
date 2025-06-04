@@ -81,6 +81,7 @@ export type GameState = {
   deck: Card[];
   discard: Card[];
   meadow: Card[];
+  reveal: Card[];
   locations: Location[];
   events: Event[];
   turn: PlayerColor;
