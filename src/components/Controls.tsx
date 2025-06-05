@@ -15,7 +15,7 @@ function Controls() {
     playSelectedCards,
     giveSelectedCards,
     drawCard,
-    addToMeadow,
+    refillMeadow,
     harvest
   } = useGame();
 
@@ -35,7 +35,7 @@ function Controls() {
       style={controlsStyling}
     >
       <Button disabled={disabled} onClick={() => drawCard(storedId)}>Draw Card</Button>
-      <Button disabled={disabled} onClick={() => addToMeadow(storedId)}>Refill Meadow</Button>
+      <Button disabled={disabled} onClick={() => refillMeadow(storedId)}>Refill Meadow</Button>
       <Button disabled={disabled || isDiscarding || isGiving}
         onClick={() => {
           if (isPlaying) playSelectedCards(storedId);

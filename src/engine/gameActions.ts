@@ -537,7 +537,7 @@ export function giveSelectedCards(
   };
 }
 
-export function addToMeadow(
+export function refillMeadow(
   state: GameState,
   playerId: string | null
 ): GameState {
@@ -546,23 +546,23 @@ export function addToMeadow(
   if (playerColor !== state.turn) return state;
 
   const deck: Card[] = [...state.deck];
+  const meadow: Card[] = [...state.meadow];
 
   if (deck.length === 0) {
     return state;
   }
-  if (state.meadow.length >= MAX_MEADOW_SIZE) {
+  if (meadow.length >= MAX_MEADOW_SIZE) {
     return state;
   }
 
-  const topCard: Card | undefined = deck.pop();
-  if (!topCard) {
-    return state;
-  }
+  const slotsOpen = MAX_MEADOW_SIZE - meadow.length;
+  const numToTake = Math.min(slotsOpen, deck.length);
+  const topCards = deck.splice(deck.length - numToTake, numToTake);
 
   return {
     ...state,
     deck,
-    meadow: [...state.meadow, topCard],
+    meadow: [...state.meadow, ...topCards],
   };
 }
 

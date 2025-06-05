@@ -70,7 +70,7 @@ const GameContext = createContext<{
   giveSelectedCards: (playerId: string | null, toColor: PlayerColor) => void;
   drawCard: (playerId: string | null) => void;
   revealCard: (playerId: string | null, location: "deck" | "discard") => void;
-  addToMeadow: (playerId: string | null) => void;
+  refillMeadow: (playerId: string | null) => void;
   visitLocation: (playerId: string | null, index: number, workersVisiting: 1 | -1) => void;
   visitEvent: (playerId: string | null, index: number, workersVisiting: 1 | -1) => void;
   visitCardInCity: (playerId: string | null, cityColor: PlayerColor, index: number, workersVisiting: 1 | -1) => void;
@@ -92,7 +92,7 @@ const GameContext = createContext<{
   giveSelectedCards: noop,
   drawCard: noop,
   revealCard: noop,
-  addToMeadow: noop,
+  refillMeadow: noop,
   visitLocation: noop,
   visitEvent: noop,
   visitCardInCity: noop,
@@ -173,7 +173,7 @@ export const GameProvider = ({
     giveSelectedCards: wrapAction(Actions.giveSelectedCards),
     drawCard: wrapAction(Actions.drawCard),
     revealCard: wrapAction(Actions.revealCard),
-    addToMeadow: wrapAction(Actions.addToMeadow),
+    refillMeadow: wrapAction(Actions.refillMeadow),
     visitLocation: wrapAction(Actions.visitLocation),
     visitEvent: wrapAction(Actions.visitEvent),
     visitCardInCity: wrapAction(Actions.visitCardInCity),
