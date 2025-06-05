@@ -55,6 +55,7 @@ export const COLORS = {
   buttonText: lightText, // Use the softened light text color
 
   importantButton: "#484", // Gold-like yellow for emphasis
+  rareButton: "#a60",
 };
 
 export const PLAYER_COLORS: Record<PlayerColor, string> = {

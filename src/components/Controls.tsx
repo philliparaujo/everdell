@@ -27,6 +27,9 @@ function Controls() {
   const isPlaying = currentPlayer.playing;
   const isGiving = currentPlayer.giving;
 
+  const canGiveSelf = currentPlayer.city.reduce((acc, curr) => acc || curr.name === "Undertaker", false);
+  const canGiveOpponent = currentPlayer.city.reduce((acc, curr) => acc || curr.name === "Post Office" || curr.name === "Teacher", false);
+
   return (
     <div
       style={controlsStyling}
@@ -55,18 +58,18 @@ function Controls() {
       <Button disabled={disabled || !isSafeToEndTurn(game)} style={{ backgroundColor: COLORS.importantButton }} onClick={() => harvest(storedId)}>
         Harvest
       </Button>
-      <Button disabled={disabled || isDiscarding || isPlaying} onClick={() => {
+      {canGiveSelf && <Button disabled={disabled || isDiscarding || isPlaying} style={{ backgroundColor: COLORS.rareButton }} onClick={() => {
         if (isGiving) giveSelectedCards(storedId, game.turn);
         setGiving(storedId, !isGiving);
       }}>
         Give to self
-      </Button>
-      <Button disabled={disabled || isDiscarding || isPlaying} onClick={() => {
+      </Button>}
+      {canGiveOpponent && <Button disabled={disabled || isDiscarding || isPlaying} style={{ backgroundColor: COLORS.rareButton }} onClick={() => {
         if (isGiving) giveSelectedCards(storedId, oppositePlayerOf(game.turn));
         setGiving(storedId, !isGiving);
       }}>
         Give opponent
-      </Button>
+      </Button>}
     </div>
   );
 }

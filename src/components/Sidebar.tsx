@@ -23,7 +23,6 @@ function Sidebar({ gameId }: { gameId: string | undefined }) {
         <hr />
         <p style={{ margin: 0 }}>{`Deck size: ${game.deck.length}`}</p>
         <ResourceBank />
-        <hr />
         <Reveal />
         <hr />
         <div style={idStyle}>{gameId}</div>
