@@ -94,7 +94,7 @@ export function mapOverResources(
 }
 
 export function isSafeToEndTurn(state: GameState): boolean {
-  return state.meadow.length === MAX_MEADOW_SIZE;
+  return state.meadow.length === MAX_MEADOW_SIZE || state.deck.length === 0;
 }
 
 export function maxCitySize(city: Card[]) {

@@ -9,7 +9,7 @@ import Meadow from "../components/Meadow";
 import Sidebar from '../components/Sidebar';
 import { useGame } from '../engine/GameContext';
 import { PlayerColor } from "../engine/gameTypes";
-import { getPlayerId, oppositePlayerOf } from "../engine/helpers";
+import { getPlayerColor, getPlayerId, oppositePlayerOf } from "../engine/helpers";
 import { COLORS, PLAYER_COLORS } from "../colors";
 
 const sideBarColumnStyling: React.CSSProperties = {
@@ -95,19 +95,10 @@ function Game() {
   const { gameId } = useParams();
 
   const storedId = getPlayerId();
-  let playerColor: PlayerColor = game.turn;
-  if (storedId === null) {
-    console.log("Could not find a player ID");
-  } else {
-    if (storedId === game.players.Red.id) {
-      playerColor = "Red";
-    } else if (storedId === game.players.Blue.id) {
-      playerColor = "Blue";
-    }
-  }
+  const playerColor = getPlayerColor(game, storedId) ?? game.turn;
+  const spectating = getPlayerColor(game, storedId) === null;
 
   const player = game.players[playerColor];
-
   const oppositePlayer = game.players[oppositePlayerOf(playerColor)];
 
   return (
@@ -145,14 +136,14 @@ function Game() {
         {/* --- Two Column Row --- */}
         <div style={twoColumnRowStyling}>
           {/* Column 1 */}
-          <section style={halfColumnStyling}>
+          {!spectating && <section style={halfColumnStyling}>
             <h4 style={{ ...headingStyling, color: PLAYER_COLORS[playerColor] }}>
               Hand
             </h4>
             <div>
               <Hand color={playerColor} />
             </div>
-          </section>
+          </section>}
           {/* Column 2 */}
           <section style={halfColumnStyling}>
             <h4 style={headingStyling}>Meadow</h4>
@@ -165,7 +156,7 @@ function Game() {
         {/* --- Full Width Rows --- */}
         <section style={fullRowStyling}>
           <h4 style={{ ...headingStyling, color: PLAYER_COLORS[playerColor] }}>
-            My City (
+            {spectating ? `${playerColor}'s` : "My"} City (
             <ResourceIcon type={"coins"} /> {player.city.reduce((acc, curr) => acc + curr.value, 0)}
             )
           </h4>
@@ -176,7 +167,7 @@ function Game() {
 
         <section style={fullRowStyling}>
           <h4 style={{ ...headingStyling, color: PLAYER_COLORS[oppositePlayerOf(playerColor)] }}>
-            Opponent City (
+            {spectating ? `${oppositePlayerOf(playerColor)}'s` : "Opponent"} City (
             <ResourceIcon type={"coins"} /> {oppositePlayer.city.reduce((acc, curr) => acc + curr.value, 0)}
             )
           </h4>
