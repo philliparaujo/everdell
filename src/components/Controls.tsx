@@ -32,7 +32,7 @@ function Controls() {
   const canGiveSelf = currentPlayer.city.reduce((acc, curr) => acc || curr.name === "Undertaker", false);
   const canGiveOpponent =
     currentPlayer.city.reduce((acc, curr) => acc || curr.name === "Post Office" || curr.name === "Teacher", false) ||
-    oppositePlayer.city.reduce((acc, curr) => acc || curr.name === "Post Office");
+    oppositePlayer.city.reduce((acc, curr) => acc || curr.name === "Post Office", false);
 
   return (
     <div

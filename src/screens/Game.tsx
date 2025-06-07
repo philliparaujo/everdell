@@ -1,16 +1,16 @@
 import { useParams } from "react-router-dom";
+import { COLORS, PLAYER_COLORS } from "../colors";
 import City from "../components/City";
 import Discard from "../components/Discard";
 import EventsDisplay from "../components/EventsDisplay";
 import Hand from "../components/Hand";
 import { ResourceIcon } from "../components/Icons";
+import JourneysDisplay from "../components/JourneysDisplay";
 import LocationsDisplay from "../components/LocationsDisplay";
 import Meadow from "../components/Meadow";
 import Sidebar from '../components/Sidebar';
 import { useGame } from '../engine/GameContext';
-import { PlayerColor } from "../engine/gameTypes";
 import { getPlayerColor, getPlayerId, oppositePlayerOf } from "../engine/helpers";
-import { COLORS, PLAYER_COLORS } from "../colors";
 
 const sideBarColumnStyling: React.CSSProperties = {
   width: '250px',
@@ -126,12 +126,21 @@ function Game() {
           </div>
         </section>
 
-        <section>
-          <h4 style={headingStyling}>Events</h4>
-          <div style={scrollStyle}>
-            <EventsDisplay />
-          </div>
-        </section>
+        <div style={twoColumnRowStyling}>
+          <section>
+            <h4 style={headingStyling}>Events</h4>
+            <div style={scrollStyle}>
+              <EventsDisplay />
+            </div>
+          </section>
+
+          {game.players[game.turn].season === "Autumn" && <section>
+            <h4 style={headingStyling}>Journeys</h4>
+            <div style={scrollStyle}>
+              <JourneysDisplay />
+            </div>
+          </section>}
+        </div>
 
         {/* --- Two Column Row --- */}
         <div style={twoColumnRowStyling}>

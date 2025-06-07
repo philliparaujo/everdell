@@ -50,6 +50,13 @@ export type Location = {
   workers: Record<PlayerColor, number>;
 };
 
+export type Journey = {
+  exclusive: boolean;
+  discardCount: number;
+  value: number;
+  workers: Record<PlayerColor, number>;
+};
+
 export type Event = {
   name: string;
   value: number;
@@ -83,6 +90,7 @@ export type GameState = {
   meadow: Card[];
   reveal: Card[];
   locations: Location[];
+  journeys: Journey[];
   events: Event[];
   turn: PlayerColor;
 };

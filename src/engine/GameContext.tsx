@@ -8,6 +8,7 @@ import * as Actions from "./gameActions";
 import { Card, defaultPlayer, GameState, PlayerColor, Resources } from './gameTypes';
 import { shuffleArray } from './helpers';
 import { MAX_MEADOW_SIZE } from './gameConstants';
+import { journeys } from '../assets/data/journey';
 
 let actionQueue = Promise.resolve();
 
@@ -48,6 +49,7 @@ export function setupGame(firstPlayer: PlayerColor): GameState {
     meadow: meadow,
     reveal: [],
     locations: locations,
+    journeys: journeys,
     events: events,
     turn: firstPlayer,
   };
@@ -72,6 +74,7 @@ const GameContext = createContext<{
   revealCard: (playerId: string | null, location: "deck" | "discard") => void;
   refillMeadow: (playerId: string | null) => void;
   visitLocation: (playerId: string | null, index: number, workersVisiting: 1 | -1) => void;
+  visitJourney: (playerId: string | null, index: number, workersVisiting: 1 | -1) => void;
   visitEvent: (playerId: string | null, index: number, workersVisiting: 1 | -1) => void;
   visitCardInCity: (playerId: string | null, cityColor: PlayerColor, index: number, workersVisiting: 1 | -1) => void;
   toggleOccupiedCardInCity: (playerId: string | null, cityColor: PlayerColor, index: number, occupied: boolean) => void;
@@ -94,6 +97,7 @@ const GameContext = createContext<{
   revealCard: noop,
   refillMeadow: noop,
   visitLocation: noop,
+  visitJourney: noop,
   visitEvent: noop,
   visitCardInCity: noop,
   toggleOccupiedCardInCity: noop,
@@ -175,6 +179,7 @@ export const GameProvider = ({
     revealCard: wrapAction(Actions.revealCard),
     refillMeadow: wrapAction(Actions.refillMeadow),
     visitLocation: wrapAction(Actions.visitLocation),
+    visitJourney: wrapAction(Actions.visitJourney),
     visitEvent: wrapAction(Actions.visitEvent),
     visitCardInCity: wrapAction(Actions.visitCardInCity),
     toggleOccupiedCardInCity: wrapAction(Actions.toggleOccupiedCardInCity),

@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { useGame } from '../engine/GameContext';
-import { Event } from "../engine/gameTypes";
+import { Event, Journey } from "../engine/gameTypes";
 import { Location, ResourceType } from '../engine/gameTypes';
 import { getPlayerId, isNotYourTurn, mapOverResources } from '../engine/helpers';
 import { ResourceIcon, WorkerIcon } from './Icons';
@@ -47,7 +47,7 @@ export function renderButtons(disabled: boolean, onVisit: () => void, onLeave: (
   )
 }
 
-export function renderWorkers(location: Location | Event) {
+export function renderWorkers(location: Location | Journey | Event) {
   return (
     <div style={workerStyling}>
       {location.workers.Red > 0 && (

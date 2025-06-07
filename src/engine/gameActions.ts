@@ -632,6 +632,77 @@ export function visitLocation(
   return newState;
 }
 
+export function visitJourney(
+  state: GameState,
+  playerId: string | null,
+  index: number,
+  workersVisiting: 1 | -1
+): GameState {
+  const playerColor = getPlayerColor(state, playerId);
+  if (playerColor === null) return state;
+  if (playerColor !== state.turn) return state;
+
+  if (index >= state.journeys.length) return state;
+
+  const journey = state.journeys[index];
+  const player = state.players[playerColor];
+
+  if (player.season !== "Autumn") return state;
+
+  if (workersVisiting >= 0) {
+    if (player.workers.workersLeft - workersVisiting < 0) return state;
+    if (
+      journey.exclusive &&
+      (journey.workers.Red > 0 || journey.workers.Blue > 0)
+    )
+      return state;
+  } else {
+    if (
+      player.workers.workersLeft - workersVisiting >
+      player.workers.maxWorkers
+    )
+      return state;
+    if (journey.workers[playerColor] <= 0) return state;
+  }
+
+  const updatedJourney = {
+    ...journey,
+    workers: {
+      ...journey.workers,
+      [playerColor]: journey.workers[playerColor] + workersVisiting,
+    },
+  };
+
+  const newState: GameState = {
+    ...state,
+    journeys: state.journeys.map((journey, i) =>
+      i === index ? updatedJourney : journey
+    ),
+    players: {
+      ...state.players,
+      [playerColor]: {
+        ...player,
+        workers: {
+          ...player.workers,
+          workersLeft: player.workers.workersLeft - workersVisiting,
+        },
+        resources: {
+          ...player.resources,
+        },
+      },
+    },
+  };
+
+  if (workersVisiting > 0) {
+    return addResourcesToSelf(newState, playerId, {
+      ...defaultResources,
+      coins: journey.value,
+    });
+  }
+
+  return newState;
+}
+
 export function visitEvent(
   state: GameState,
   playerId: string | null,
