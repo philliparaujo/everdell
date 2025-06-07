@@ -1,7 +1,9 @@
 import { MAX_MEADOW_SIZE } from "./gameConstants";
 import {
   Card,
+  Event,
   GameState,
+  Player,
   PlayerColor,
   Resources,
   ResourceType,
@@ -109,4 +111,33 @@ export function maxCitySize(city: Card[]) {
   );
 
   return baseMaxCitySize + husbandWifePairs + wanderers;
+}
+
+export function canVisitEvent(
+  state: GameState,
+  event: Event,
+  playerColor: PlayerColor,
+  workersVisiting: 1 | -1
+): boolean {
+  const player = state.players[playerColor];
+  const requirementCount = player.city.reduce(
+    (acc, curr) =>
+      acc + (curr.effectType === event.effectTypeRequirement ? 1 : 0),
+    0
+  );
+
+  if (event.used && workersVisiting > 0) return false;
+  if (requirementCount < event.effectTypeCount) return false;
+  if (workersVisiting >= 0 && player.workers.workersLeft - workersVisiting < 0)
+    return false;
+  if (workersVisiting < 0) {
+    if (
+      player.workers.workersLeft - workersVisiting >
+      player.workers.maxWorkers
+    )
+      return false;
+    if (event.workers[playerColor] <= 0) return false;
+  }
+
+  return true;
 }

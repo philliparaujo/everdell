@@ -16,6 +16,7 @@ function JourneyDisplay({ journey, index }: { journey: Journey, index: number })
       buttonChildren={
         renderButtons(
           disabled,
+          disabled,
           () => visitJourney(storedId, index, 1),
           () => visitJourney(storedId, index, -1)
         )

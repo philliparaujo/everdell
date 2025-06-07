@@ -1,6 +1,6 @@
 import { useGame } from "../engine/GameContext";
 import { Event } from "../engine/gameTypes";
-import { getPlayerId, isNotYourTurn } from "../engine/helpers";
+import { canVisitEvent, getPlayerColor, getPlayerId, isNotYourTurn } from "../engine/helpers";
 import { EffectTypeIcon, ResourceIcon } from "./Icons";
 import { arrowResourceStyling, BaseLocationDisplay, locationsDisplayStyling, renderButtons, renderWorkers } from "./LocationsDisplay";
 
@@ -8,13 +8,18 @@ function EventDisplay({ event, index }: { event: Event, index: number }) {
   const { game, visitEvent } = useGame();
 
   const storedId = getPlayerId();
+  const playerColor = getPlayerColor(game, storedId);
+
   const disabled = isNotYourTurn(game, storedId);
+  const canVisit = playerColor === null ? false : canVisitEvent(game, event, playerColor, 1);
+  const canLeave = playerColor === null ? false : canVisitEvent(game, event, playerColor, -1);
 
   return (
     <BaseLocationDisplay
       buttonChildren={
         renderButtons(
-          disabled,
+          disabled || event.used || !canVisit,
+          disabled || !canLeave,
           () => visitEvent(storedId, index, 1),
           () => visitEvent(storedId, index, -1)
         )
@@ -27,6 +32,7 @@ function EventDisplay({ event, index }: { event: Event, index: number }) {
           <ResourceIcon type={"coins"} /> {event.value}
         </div>
       )}
+      used={event.used}
     />
   )
 }

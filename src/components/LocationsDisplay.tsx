@@ -34,13 +34,13 @@ export const arrowResourceStyling: React.CSSProperties = {
   ...resourceStyling, gap: '2px', alignItems: 'center'
 }
 
-export function renderButtons(disabled: boolean, onVisit: () => void, onLeave: () => void) {
+export function renderButtons(visitDisabled: boolean, leaveDisabled: boolean, onVisit: () => void, onLeave: () => void) {
   return (
     <div>
-      <Button disabled={disabled} onClick={onVisit}>
+      <Button disabled={visitDisabled} onClick={onVisit}>
         Visit
       </Button>
-      <Button disabled={disabled} onClick={onLeave}>
+      <Button disabled={leaveDisabled} onClick={onLeave}>
         Leave
       </Button>
     </div>
@@ -60,12 +60,13 @@ export function renderWorkers(location: Location | Journey | Event) {
   )
 }
 
-export function BaseLocationDisplay({ buttonChildren, workerChildren, resourceChildren, exclusive = false }: { buttonChildren: ReactNode, workerChildren: ReactNode, resourceChildren: ReactNode, exclusive?: boolean }) {
+export function BaseLocationDisplay({ buttonChildren, workerChildren, resourceChildren, exclusive = false, used = false }: { buttonChildren: ReactNode, workerChildren: ReactNode, resourceChildren: ReactNode, exclusive?: boolean, used?: boolean }) {
   return (
     <div
       style={{
         ...locationStyling,
-        border: exclusive ? `solid 2px ${COLORS.locationExclusive}` : `solid 2px ${COLORS.location}`,
+        border: used ? `solid 2px ${COLORS.locationUsed}` : (
+          exclusive ? `solid 2px ${COLORS.locationExclusive}` : `solid 2px ${COLORS.location}`),
       }}
     >
       {buttonChildren}
@@ -86,6 +87,7 @@ function LocationDisplay({ location, index }: { location: Location, index: numbe
       exclusive={location.exclusive}
       buttonChildren={
         renderButtons(
+          disabled,
           disabled,
           () => visitLocation(storedId, index, 1),
           () => visitLocation(storedId, index, -1)
@@ -119,6 +121,7 @@ function HavenDisplay() {
     <BaseLocationDisplay
       buttonChildren={
         renderButtons(
+          disabled,
           disabled,
           () => visitLocation(storedId, game.locations.length - 1, 1),
           () => visitLocation(storedId, game.locations.length - 1, -1)

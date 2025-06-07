@@ -7,6 +7,7 @@ export const events: Event[] = [
     effectTypeRequirement: "Blue",
     effectTypeCount: 3,
     workers: { Red: 0, Blue: 0 },
+    used: false,
   },
   {
     name: "Grand Tour",
@@ -14,6 +15,7 @@ export const events: Event[] = [
     effectTypeRequirement: "Red",
     effectTypeCount: 3,
     workers: { Red: 0, Blue: 0 },
+    used: false,
   },
   {
     name: "Harvest Festival",
@@ -21,6 +23,7 @@ export const events: Event[] = [
     effectTypeRequirement: "Green",
     effectTypeCount: 4,
     workers: { Red: 0, Blue: 0 },
+    used: false,
   },
   {
     name: "Cartographer's Expedition",
@@ -28,5 +31,6 @@ export const events: Event[] = [
     effectTypeRequirement: "Tan",
     effectTypeCount: 3,
     workers: { Red: 0, Blue: 0 },
+    used: false,
   },
 ];

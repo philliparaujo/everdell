@@ -36,6 +36,7 @@ export const COLORS = {
   // Locations (using a subtle accent or slightly lighter background)
   location: mediumBackground, // Makes locations stand out subtly
   locationExclusive: "#8A8A8A", // A slightly darker shade for exclusive locations
+  locationUsed: "#DD8A8A",
 
   // Card Previews/Inspect
   cardPreview: darkBackground, // Keep consistent

@@ -13,6 +13,7 @@ import {
   Season,
 } from "./gameTypes";
 import {
+  canVisitEvent,
   getPlayerColor,
   isSafeToEndTurn,
   maxCitySize,
@@ -718,16 +719,7 @@ export function visitEvent(
   const event = state.events[index];
   const player = state.players[playerColor];
 
-  if (workersVisiting >= 0) {
-    if (player.workers.workersLeft - workersVisiting < 0) return state;
-  } else {
-    if (
-      player.workers.workersLeft - workersVisiting >
-      player.workers.maxWorkers
-    )
-      return state;
-    if (event.workers[playerColor] <= 0) return state;
-  }
+  if (!canVisitEvent(state, event, playerColor, workersVisiting)) return state;
 
   const updatedEvent = {
     ...event,
@@ -735,6 +727,7 @@ export function visitEvent(
       ...event.workers,
       [playerColor]: event.workers[playerColor] + workersVisiting,
     },
+    used: true,
   };
 
   const newState: GameState = {

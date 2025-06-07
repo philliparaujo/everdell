@@ -63,6 +63,7 @@ export type Event = {
   effectTypeRequirement: EffectType;
   effectTypeCount: number;
   workers: Record<PlayerColor, number>;
+  used: boolean;
 };
 
 export type PlayerColor = "Red" | "Blue";
