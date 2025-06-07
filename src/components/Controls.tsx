@@ -27,8 +27,12 @@ function Controls() {
   const isPlaying = currentPlayer.playing;
   const isGiving = currentPlayer.giving;
 
+  const oppositePlayer = game.players[oppositePlayerOf(game.turn)]
+
   const canGiveSelf = currentPlayer.city.reduce((acc, curr) => acc || curr.name === "Undertaker", false);
-  const canGiveOpponent = currentPlayer.city.reduce((acc, curr) => acc || curr.name === "Post Office" || curr.name === "Teacher", false);
+  const canGiveOpponent =
+    currentPlayer.city.reduce((acc, curr) => acc || curr.name === "Post Office" || curr.name === "Teacher", false) ||
+    oppositePlayer.city.reduce((acc, curr) => acc || curr.name === "Post Office");
 
   return (
     <div
