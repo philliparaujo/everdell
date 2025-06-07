@@ -3,6 +3,8 @@ import {
   Card,
   Event,
   GameState,
+  Journey,
+  Location,
   Player,
   PlayerColor,
   Resources,
@@ -113,6 +115,56 @@ export function maxCitySize(city: Card[]) {
   return baseMaxCitySize + husbandWifePairs + wanderers;
 }
 
+export function canVisitLocation(
+  state: GameState,
+  location: Location,
+  playerColor: PlayerColor,
+  workersVisiting: 1 | -1
+): boolean {
+  const player = state.players[playerColor];
+  const newWorkersLeft = player.workers.workersLeft - workersVisiting;
+
+  // Cannot end with negative workers or more than max available
+  if (newWorkersLeft < 0 || newWorkersLeft > player.workers.maxWorkers)
+    return false;
+  // Cannot leave location that doesn't have your worker on it
+  if (workersVisiting < 0 && location.workers[playerColor] <= 0) return false;
+
+  const workersOnLocation = location.workers.Red + location.workers.Blue;
+
+  // Cannot visit exclusive location with a worker already on it
+  if (workersVisiting >= 0 && location.exclusive && workersOnLocation > 0)
+    return false;
+
+  return true;
+}
+
+export function canVisitJourney(
+  state: GameState,
+  journey: Journey,
+  playerColor: PlayerColor,
+  workersVisiting: 1 | -1
+): boolean {
+  const player = state.players[playerColor];
+  const newWorkersLeft = player.workers.workersLeft - workersVisiting;
+
+  // Cannot end with negative workers or more than max available
+  if (newWorkersLeft < 0 || newWorkersLeft > player.workers.maxWorkers)
+    return false;
+  // Canont leave journey that doesn't have your worker on it
+  if (workersVisiting < 0 && journey.workers[playerColor] <= 0) return false;
+
+  const workersOnJourney = journey.workers.Red + journey.workers.Blue;
+
+  // Cannot visit exclusive journey with a worker already on it
+  if (workersVisiting >= 0 && journey.exclusive && workersOnJourney > 0)
+    return false;
+  // Cannot visit journey if player not in Autumn
+  if (player.season !== "Autumn") return false;
+
+  return true;
+}
+
 export function canVisitEvent(
   state: GameState,
   event: Event,
@@ -120,24 +172,24 @@ export function canVisitEvent(
   workersVisiting: 1 | -1
 ): boolean {
   const player = state.players[playerColor];
+  const newWorkersLeft = player.workers.workersLeft - workersVisiting;
+
+  // Cannot end with negative workers or more than max available
+  if (newWorkersLeft < 0 || newWorkersLeft > player.workers.maxWorkers)
+    return false;
+  // Canont leave event that doesn't have your worker on it
+  if (workersVisiting < 0 && event.workers[playerColor] <= 0) return false;
+
   const requirementCount = player.city.reduce(
     (acc, curr) =>
       acc + (curr.effectType === event.effectTypeRequirement ? 1 : 0),
     0
   );
 
+  // Cannot visit event that is already used
   if (event.used && workersVisiting > 0) return false;
+  // Cannot visit event if requirement not met
   if (requirementCount < event.effectTypeCount) return false;
-  if (workersVisiting >= 0 && player.workers.workersLeft - workersVisiting < 0)
-    return false;
-  if (workersVisiting < 0) {
-    if (
-      player.workers.workersLeft - workersVisiting >
-      player.workers.maxWorkers
-    )
-      return false;
-    if (event.workers[playerColor] <= 0) return false;
-  }
 
   return true;
 }

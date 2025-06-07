@@ -14,6 +14,8 @@ import {
 } from "./gameTypes";
 import {
   canVisitEvent,
+  canVisitJourney,
+  canVisitLocation,
   getPlayerColor,
   isSafeToEndTurn,
   maxCitySize,
@@ -582,21 +584,8 @@ export function visitLocation(
   const location = state.locations[index];
   const player = state.players[playerColor];
 
-  if (workersVisiting >= 0) {
-    if (player.workers.workersLeft - workersVisiting < 0) return state;
-    if (
-      location.exclusive &&
-      (location.workers.Red > 0 || location.workers.Blue > 0)
-    )
-      return state;
-  } else {
-    if (
-      player.workers.workersLeft - workersVisiting >
-      player.workers.maxWorkers
-    )
-      return state;
-    if (location.workers[playerColor] <= 0) return state;
-  }
+  if (!canVisitLocation(state, location, playerColor, workersVisiting))
+    return state;
 
   const updatedLocation = {
     ...location,
@@ -648,23 +637,8 @@ export function visitJourney(
   const journey = state.journeys[index];
   const player = state.players[playerColor];
 
-  if (player.season !== "Autumn") return state;
-
-  if (workersVisiting >= 0) {
-    if (player.workers.workersLeft - workersVisiting < 0) return state;
-    if (
-      journey.exclusive &&
-      (journey.workers.Red > 0 || journey.workers.Blue > 0)
-    )
-      return state;
-  } else {
-    if (
-      player.workers.workersLeft - workersVisiting >
-      player.workers.maxWorkers
-    )
-      return state;
-    if (journey.workers[playerColor] <= 0) return state;
-  }
+  if (!canVisitJourney(state, journey, playerColor, workersVisiting))
+    return state;
 
   const updatedJourney = {
     ...journey,

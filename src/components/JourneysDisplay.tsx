@@ -1,6 +1,6 @@
 import { useGame } from "../engine/GameContext";
 import { Journey } from "../engine/gameTypes";
-import { getPlayerId, isNotYourTurn } from "../engine/helpers";
+import { canVisitJourney, getPlayerColor, getPlayerId, isNotYourTurn } from "../engine/helpers";
 import { ResourceIcon } from "./Icons";
 import { arrowResourceStyling, BaseLocationDisplay, locationsDisplayStyling, renderButtons, renderWorkers } from "./LocationsDisplay";
 
@@ -8,15 +8,19 @@ function JourneyDisplay({ journey, index }: { journey: Journey, index: number })
   const { game, visitJourney } = useGame();
 
   const storedId = getPlayerId();
+  const playerColor = getPlayerColor(game, storedId);
+
   const disabled = isNotYourTurn(game, storedId);
+  const canVisit = playerColor === null ? false : canVisitJourney(game, journey, playerColor, 1);
+  const canLeave = playerColor === null ? false : canVisitJourney(game, journey, playerColor, -1);
 
   return (
     <BaseLocationDisplay
       exclusive={journey.exclusive}
       buttonChildren={
         renderButtons(
-          disabled,
-          disabled,
+          disabled || !canVisit,
+          disabled || !canLeave,
           () => visitJourney(storedId, index, 1),
           () => visitJourney(storedId, index, -1)
         )

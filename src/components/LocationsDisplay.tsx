@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 import { useGame } from '../engine/GameContext';
 import { Event, Journey } from "../engine/gameTypes";
 import { Location, ResourceType } from '../engine/gameTypes';
-import { getPlayerId, isNotYourTurn, mapOverResources } from '../engine/helpers';
+import { canVisitLocation, getPlayerColor, getPlayerId, isNotYourTurn, mapOverResources } from '../engine/helpers';
 import { ResourceIcon, WorkerIcon } from './Icons';
 import { COLORS } from '../colors';
 import Button from './Button';
@@ -80,15 +80,19 @@ function LocationDisplay({ location, index }: { location: Location, index: numbe
   const { game, visitLocation } = useGame();
 
   const storedId = getPlayerId();
+  const playerColor = getPlayerColor(game, storedId);
+
   const disabled = isNotYourTurn(game, storedId);
+  const canVisit = playerColor === null ? false : canVisitLocation(game, location, playerColor, 1);
+  const canLeave = playerColor === null ? false : canVisitLocation(game, location, playerColor, -1);
 
   return (
     <BaseLocationDisplay
       exclusive={location.exclusive}
       buttonChildren={
         renderButtons(
-          disabled,
-          disabled,
+          disabled || !canVisit,
+          disabled || !canLeave,
           () => visitLocation(storedId, index, 1),
           () => visitLocation(storedId, index, -1)
         )

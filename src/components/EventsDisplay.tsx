@@ -18,7 +18,7 @@ function EventDisplay({ event, index }: { event: Event, index: number }) {
     <BaseLocationDisplay
       buttonChildren={
         renderButtons(
-          disabled || event.used || !canVisit,
+          disabled || !canVisit,
           disabled || !canLeave,
           () => visitEvent(storedId, index, 1),
           () => visitEvent(storedId, index, -1)
