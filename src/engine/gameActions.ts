@@ -444,9 +444,9 @@ export function playSelectedCards(
     ...discardPlay,
     ...revealPlay,
   ];
-  const [myCity, otherPlayedCards] = partition(
+  const [otherPlayedCards, myCity] = partition(
     city,
-    (card) => card.name !== "Fool"
+    (card) => card.name === "Fool" && card.playing
   );
 
   const oppositeCity = [...oppositePlayer.city, ...otherPlayedCards];
