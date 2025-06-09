@@ -14,14 +14,18 @@ import { getPlayerColor, getPlayerId, oppositePlayerOf } from "../engine/helpers
 
 const sideBarColumnStyling: React.CSSProperties = {
   width: '250px',
-  borderRight: `1px solid ${COLORS.sidebarBorder}`,
   flexShrink: 0,
+  height: '100vh',
 }
 
 export const sideBarStyling: React.CSSProperties = {
   background: COLORS.sidebar,
   width: '250px',
   height: '100%',
+  overflowY: 'auto',
+  overflowX: 'hidden',
+  position: 'fixed',
+  borderRight: `1px solid ${COLORS.sidebarBorder}`,
 }
 
 export const controlsStyling: React.CSSProperties = {
@@ -68,10 +72,10 @@ const twoColumnRowStyling: React.CSSProperties = {
 }
 
 const halfColumnStyling: React.CSSProperties = {
-  flex: 1, // Equally share the width
-  minWidth: 0,
-  overflowX: 'auto',
-}
+  flex: '0 1 auto',   // Do not grow, allow shrinking, base size on content
+  minWidth: 0,        // Allows the item to shrink smaller than its content
+  overflowX: 'auto',  // Enable horizontal scrolling when content overflows
+};
 
 const scrollStyle: React.CSSProperties = {
   display: 'flex',
@@ -106,7 +110,7 @@ function Game() {
       display: 'flex',
       flexDirection: 'row',
       width: '100%',
-      minHeight: '100vh' // Added for demonstration to fill the screen
+      height: '100vh',
     }}>
       {/* --- Left Sidebar --- */}
       <div style={sideBarColumnStyling}>
