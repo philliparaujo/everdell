@@ -1,6 +1,6 @@
 import { COLORS } from "../colors";
 import { useGame } from "../engine/GameContext";
-import { getPlayerId, isNotYourTurn, isSafeToEndTurn, oppositePlayerOf } from "../engine/helpers";
+import { canGiveToOpponent, canGiveToSelf, getPlayerId, isNotYourTurn, isSafeToEndTurn, oppositePlayerOf } from "../engine/helpers";
 import { controlsStyling } from "../screens/Game";
 import Button from "./Button";
 
@@ -29,10 +29,8 @@ function Controls() {
 
   const oppositePlayer = game.players[oppositePlayerOf(game.turn)]
 
-  const canGiveSelf = currentPlayer.city.reduce((acc, curr) => acc || curr.name === "Undertaker", false);
-  const canGiveOpponent =
-    currentPlayer.city.reduce((acc, curr) => acc || curr.name === "Post Office" || curr.name === "Teacher", false) ||
-    oppositePlayer.city.reduce((acc, curr) => acc || curr.name === "Post Office", false);
+  const canGiveSelf = canGiveToSelf(currentPlayer);
+  const canGiveOpponent = canGiveToOpponent(currentPlayer, oppositePlayer);
 
   return (
     <div

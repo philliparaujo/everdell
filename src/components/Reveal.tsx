@@ -2,7 +2,7 @@ import { COLORS } from "../colors";
 import { MAX_REVEAL_SIZE } from "../engine/gameConstants";
 import { useGame } from "../engine/GameContext";
 import { Card } from "../engine/gameTypes";
-import { getPlayerId, isNotYourTurn } from "../engine/helpers";
+import { canRevealDeck, canRevealDiscard, getPlayerId, isNotYourTurn, oppositePlayerOf } from "../engine/helpers";
 import Button from "./Button";
 import CardPreview from "./CardPreview";
 
@@ -18,6 +18,8 @@ function Reveal() {
   const isDiscarding = currentPlayer.discarding;
   const isPlaying = currentPlayer.playing;
 
+  const oppositePlayer = game.players[oppositePlayerOf(game.turn)];
+
   const storedId = getPlayerId();
   const disabled = isNotYourTurn(game, storedId);
 
@@ -29,17 +31,17 @@ function Reveal() {
     }
   }
 
-  const canRevealDeck = currentPlayer.city.reduce((acc, curr) => acc || curr.name === "Cemetery" || curr.name === "Postal Pigeon", false);
-  const canRevealDiscard = currentPlayer.city.reduce((acc, curr) => acc || curr.name === "Cemetery", false);
+  const revealDeck = canRevealDeck(currentPlayer, oppositePlayer);
+  const revealDiscard = canRevealDiscard(currentPlayer);
   const revealEmpty = game.reveal.length === 0;
 
   return (
     <>
-      {(canRevealDeck || canRevealDiscard || !revealEmpty) && <>
+      {(revealDeck || revealDiscard || !revealEmpty) && <>
         <hr />
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-          {canRevealDeck && <Button disabled={disabled} style={{ backgroundColor: COLORS.rareButton }} onClick={() => revealCard(storedId, "deck")}>Reveal deck</Button>}
-          {canRevealDiscard && <Button disabled={disabled} style={{ backgroundColor: COLORS.rareButton }} onClick={() => revealCard(storedId, "discard")}>Reveal discard</Button>}
+          {revealDeck && <Button disabled={disabled} style={{ backgroundColor: COLORS.rareButton }} onClick={() => revealCard(storedId, "deck")}>Reveal deck</Button>}
+          {revealDiscard && <Button disabled={disabled} style={{ backgroundColor: COLORS.rareButton }} onClick={() => revealCard(storedId, "discard")}>Reveal discard</Button>}
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
           {Array.from({ length: MAX_REVEAL_SIZE }).map((_, index) => {

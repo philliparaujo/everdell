@@ -104,13 +104,10 @@ export function isSafeToEndTurn(state: GameState): boolean {
 export function maxCitySize(city: Card[]) {
   const baseMaxCitySize = 15;
   const husbandWifePairs = Math.min(
-    city.reduce((acc, curr) => acc + (curr.name === "Husband" ? 1 : 0), 0),
-    city.reduce((acc, curr) => acc + (curr.name === "Wife" ? 1 : 0), 0)
+    countCardInCity(city, "Husband"),
+    countCardInCity(city, "Wife")
   );
-  const wanderers = city.reduce(
-    (acc, curr) => acc + (curr.name === "Wanderer" ? 1 : 0),
-    0
-  );
+  const wanderers = countCardInCity(city, "Wanderer");
 
   return baseMaxCitySize + husbandWifePairs + wanderers;
 }
@@ -192,4 +189,42 @@ export function canVisitEvent(
   if (requirementCount < event.effectTypeCount) return false;
 
   return true;
+}
+
+export function countCardInCity(city: Card[], cardName: string): number {
+  return city.reduce((acc, curr) => acc + (curr.name === cardName ? 1 : 0), 0);
+}
+
+export function hasCardInCity(city: Card[], cardName: string): boolean {
+  return city.some((card) => card.name === cardName);
+}
+
+export function canGiveToSelf(player: Player): boolean {
+  return hasCardInCity(player.city, "Undertaker");
+}
+
+export function canGiveToOpponent(
+  player: Player,
+  oppositePlayer: Player
+): boolean {
+  return (
+    hasCardInCity(player.city, "Post Office") ||
+    hasCardInCity(player.city, "Teacher") ||
+    hasCardInCity(oppositePlayer.city, "Post Office") ||
+    (hasCardInCity(player.city, "Miner Mole") &&
+      hasCardInCity(oppositePlayer.city, "Teacher"))
+  );
+}
+
+export function canRevealDeck(player: Player, oppositePlayer: Player): boolean {
+  return (
+    hasCardInCity(player.city, "Cemetery") ||
+    hasCardInCity(player.city, "Postal Pigeon") ||
+    (hasCardInCity(player.city, "Miner Mole") &&
+      hasCardInCity(oppositePlayer.city, "Postal Pigeon"))
+  );
+}
+
+export function canRevealDiscard(player: Player): boolean {
+  return hasCardInCity(player.city, "Cemetery");
 }

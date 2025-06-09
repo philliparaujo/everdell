@@ -13,14 +13,14 @@ import { useGame } from '../engine/GameContext';
 import { getPlayerColor, getPlayerId, oppositePlayerOf } from "../engine/helpers";
 
 const sideBarColumnStyling: React.CSSProperties = {
-  width: '250px',
+  width: '260px',
   flexShrink: 0,
   height: '100vh',
 }
 
 export const sideBarStyling: React.CSSProperties = {
   background: COLORS.sidebar,
-  width: '250px',
+  width: '260px',
   height: '100%',
   overflowY: 'auto',
   overflowX: 'hidden',
