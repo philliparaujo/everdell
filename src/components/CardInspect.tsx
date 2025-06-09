@@ -40,6 +40,7 @@ function CardInspect(
           borderRadius: '12px',
           maxWidth: '80%',
           maxHeight: '80%',
+          overflow: 'hidden',
         }}
         onClick={(e) => e.stopPropagation()} // prevent closing when clicking inside
       >
@@ -47,17 +48,20 @@ function CardInspect(
           src={require(`../assets/images/${card.imageKey}.jpg`)}
           alt={card.name}
           style={{
-            height: '500px',
+            maxHeight: '100%',
+            maxWidth: '50%',
             width: 'auto',
-            flexShrink: 0,
+            height: 'auto',
+            objectFit: 'contain',
             borderRadius: '8px',
-            border: `1px solid ${COLORS.cardInspectImageBorder}`,
           }}
         />
 
         <div
           style={{
-            maxWidth: '100%'
+            flex: 1,
+            overflowY: 'auto',
+            minWidth: 0,
           }}
         >
           <h2>{card.name}</h2>
