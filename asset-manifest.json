@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/everdell/static/css/main.a7a2b3f4.css",
-    "main.js": "/everdell/static/js/main.eb4377fa.js",
+    "main.js": "/everdell/static/js/main.34823845.js",
     "static/js/453.4ef6d67d.chunk.js": "/everdell/static/js/453.4ef6d67d.chunk.js",
     "static/media/postoffice.jpg": "/everdell/static/media/postoffice.864beee783c293333622.jpg",
     "static/media/cemetery.jpg": "/everdell/static/media/cemetery.882e3325553fe4e3edb8.jpg",
@@ -51,7 +51,7 @@
     "static/media/mine.jpg": "/everdell/static/media/mine.394e07f2fdc2f04d1b2a.jpg",
     "static/media/teacher.jpg": "/everdell/static/media/teacher.3dbea59c798f09ddf341.jpg",
     "static/media/historian.jpg": "/everdell/static/media/historian.f80cc77a493f6175f128.jpg",
-    "static/media/blueworker.png": "/everdell/static/media/blueworker.2b639cf1f0a2b1a5f93c.png",
+    "static/media/lightblueworker.png": "/everdell/static/media/lightblueworker.1a7bfd048a6d5805dc95.png",
     "static/media/redworker.png": "/everdell/static/media/redworker.a6297542e83216fdb2a5.png",
     "static/media/redtype.png": "/everdell/static/media/redtype.7e057881a4cc508a96c6.png",
     "static/media/bluetype.png": "/everdell/static/media/bluetype.e6fd79fe0ca5d51877c1.png",
@@ -64,11 +64,11 @@
     "static/media/resin.png": "/everdell/static/media/resin.cec5fd7d594d86eec2a3.png",
     "index.html": "/everdell/index.html",
     "main.a7a2b3f4.css.map": "/everdell/static/css/main.a7a2b3f4.css.map",
-    "main.eb4377fa.js.map": "/everdell/static/js/main.eb4377fa.js.map",
+    "main.34823845.js.map": "/everdell/static/js/main.34823845.js.map",
     "453.4ef6d67d.chunk.js.map": "/everdell/static/js/453.4ef6d67d.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.a7a2b3f4.css",
-    "static/js/main.eb4377fa.js"
+    "static/js/main.34823845.js"
   ]
 }
