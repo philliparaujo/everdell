@@ -11,8 +11,8 @@ import berry from "../assets/transparent-icons/berry.png";
 import coin from "../assets/transparent-icons/coin.png";
 import card from "../assets/transparent-icons/card.png";
 import wildcard from "../assets/transparent-icons/wildcard.png";
+import lightblueworker from "../assets/transparent-icons/lightblueworker.png";
 import redworker from "../assets/transparent-icons/redworker.png";
-import blueworker from "../assets/transparent-icons/blueworker.png";
 import { EffectType, PlayerColor, ResourceType } from "../engine/gameTypes";
 
 // Icons mappings
@@ -66,7 +66,7 @@ export function CustomResourceIcon({ path }: { path: string }) {
 export function WorkerIcon({ playerColor }: { playerColor: PlayerColor }) {
   return (
     <img
-      src={playerColor === "Red" ? redworker : blueworker}
+      src={playerColor === "Red" ? redworker : lightblueworker}
       alt={playerColor.toString()}
       style={iconStyle}
     />

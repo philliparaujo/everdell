@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { COLORS } from "../colors";
 import { useGame } from "../engine/GameContext";
 import { canGiveToOpponent, canGiveToSelf, getPlayerId, isNotYourTurn, isSafeToEndTurn, oppositePlayerOf } from "../engine/helpers";
@@ -32,6 +33,9 @@ function Controls() {
   const canGiveSelf = canGiveToSelf(currentPlayer);
   const canGiveOpponent = canGiveToOpponent(currentPlayer, oppositePlayer);
 
+  const [givingSelf, setGivingSelf] = useState<boolean>(false);
+  const [givingOpponent, setGivingOpponent] = useState<boolean>(false);
+
   return (
     <div
       style={controlsStyling}
@@ -60,17 +64,19 @@ function Controls() {
       <Button disabled={disabled || !isSafeToEndTurn(game)} style={{ backgroundColor: COLORS.importantButton }} onClick={() => harvest(storedId)}>
         Harvest
       </Button>
-      {canGiveSelf && <Button disabled={disabled || isDiscarding || isPlaying} style={{ backgroundColor: COLORS.rareButton }} onClick={() => {
+      {canGiveSelf && <Button disabled={disabled || isDiscarding || isPlaying || givingOpponent} style={{ backgroundColor: COLORS.rareButton }} onClick={() => {
         if (isGiving) giveSelectedCards(storedId, game.turn);
         setGiving(storedId, !isGiving);
+        setGivingSelf(!givingSelf);
       }}>
-        Give to self
+        {isGiving && givingSelf ? 'Confirm give' : 'Give to self'}
       </Button>}
-      {canGiveOpponent && <Button disabled={disabled || isDiscarding || isPlaying} style={{ backgroundColor: COLORS.rareButton }} onClick={() => {
+      {canGiveOpponent && <Button disabled={disabled || isDiscarding || isPlaying || givingSelf} style={{ backgroundColor: COLORS.rareButton }} onClick={() => {
         if (isGiving) giveSelectedCards(storedId, oppositePlayerOf(game.turn));
         setGiving(storedId, !isGiving);
+        setGivingOpponent(!givingOpponent);
       }}>
-        Give opponent
+        {isGiving && givingOpponent ? 'Confirm give' : 'Give opponent'}
       </Button>}
     </div>
   );
