@@ -4,6 +4,7 @@ import { Card, PlayerColor, ResourceType } from "../engine/gameTypes";
 import { mapOverResources } from "../engine/helpers";
 import CardInspect from "./CardInspect";
 import { ResourceIcon, WorkerIcon } from "./Icons";
+import { text } from "stream/consumers";
 
 function CardPreview({ card, index, onLeftClick, placedDown, cityColor }: { card: Card | null, index: number, onLeftClick?: () => void, placedDown: boolean, cityColor: PlayerColor | null }) {
   const [inspecting, setInspecting] = useState(false);
@@ -20,6 +21,7 @@ function CardPreview({ card, index, onLeftClick, placedDown, cityColor }: { card
   }
 
   const storable = card && (card.storage || card.maxDestinations != null) && placedDown;
+  const textColor = card?.occupied ? COLORS.cardPreviewOccupied : COLORS.text;
 
   return (
     <div
@@ -56,10 +58,11 @@ function CardPreview({ card, index, onLeftClick, placedDown, cityColor }: { card
                 height: '150px',
                 objectFit: 'cover',
                 borderRadius: '4px',
+                display: 'block'
               }}
               draggable={false}
             />
-            <strong style={{ fontSize: '12px' }}>{card.name}</strong>
+            <strong style={{ fontSize: '12px', color: textColor }}>{card.name}</strong>
           </div>
 
           {storable &&

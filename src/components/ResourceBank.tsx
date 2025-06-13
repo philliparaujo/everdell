@@ -6,8 +6,20 @@ import { resourceBankStyling } from "../screens/Game";
 import Button from "./Button";
 import { ResourceIcon } from "./Icons";
 
+export const resourceDisplayStyling: React.CSSProperties = {
+  width: '70px',
+  height: '20px',
+  background: COLORS.location,
+  padding: '4px',
+  borderRadius: '8px',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'space-around',
+  alignItems: 'center',
+  textAlign: 'center'
+}
 
-function ResourceDisplay({ resource }: { resource: ResourceType }) {
+export function ResourceDisplay({ resource }: { resource: ResourceType }) {
   const {
     game,
     addResourcesToSelf
@@ -24,20 +36,7 @@ function ResourceDisplay({ resource }: { resource: ResourceType }) {
   }
 
   return (
-    <div
-      style={{
-        width: '70px',
-        height: '20px',
-        background: COLORS.location,
-        padding: '4px',
-        borderRadius: '8px',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-around',
-        alignItems: 'center',
-        textAlign: 'center'
-      }}
-    >
+    <div style={resourceDisplayStyling}>
       <div>
         <ResourceIcon type={resource} />
         <Button disabled={disabled} onClick={decrementResources}>{"-"}</Button>

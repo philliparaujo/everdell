@@ -13,6 +13,7 @@ import {
   Season,
 } from "./gameTypes";
 import {
+  canVisitCardInCity,
   canVisitEvent,
   canVisitJourney,
   canVisitLocation,
@@ -750,30 +751,12 @@ export function visitCardInCity(
   const card = state.players[cityColor].city[index];
   const player = state.players[playerColor];
 
-  if (workersVisiting > 0) {
-    if (player.workers.workersLeft - workersVisiting < 0) return state;
-    if (
-      card.maxDestinations === null ||
-      card.activeDestinations === null ||
-      card.activeDestinations >= card.maxDestinations
-    )
-      return state;
-  } else {
-    if (
-      player.workers.workersLeft - workersVisiting >
-      player.workers.maxWorkers
-    )
-      return state;
-    if (
-      card.activeDestinations === null ||
-      card.activeDestinations + workersVisiting < 0
-    )
-      return state;
-  }
+  if (!canVisitCardInCity(state, card, playerColor, workersVisiting))
+    return state;
 
   const updatedCard: Card = {
     ...card,
-    activeDestinations: card.activeDestinations + workersVisiting,
+    activeDestinations: card.activeDestinations!! + workersVisiting,
     workers: {
       ...card.workers,
       [playerColor]: card.workers[playerColor] + workersVisiting,

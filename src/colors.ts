@@ -44,6 +44,7 @@ export const COLORS = {
   cardPreviewDiscarding: "#C0392B", // A deeper, more serious red for discarding
   cardPreviewPlaying: "#27AE60", // A deeper, more committed green for playing
   cardPreviewGiving: "#FFCC00",
+  cardPreviewOccupied: "#BB88DD",
   storage: mediumBackground, // Consistent with sidebar/location accents
 
   cardInspect: mediumBackground, // Slightly lighter background for the modal

@@ -191,6 +191,32 @@ export function canVisitEvent(
   return true;
 }
 
+export function canVisitCardInCity(
+  state: GameState,
+  card: Card,
+  playerColor: PlayerColor,
+  workersVisiting: 1 | -1
+): boolean {
+  const player = state.players[playerColor];
+  const newWorkersLeft = player.workers.workersLeft - workersVisiting;
+
+  // Cannot end with negative workers or more than max available
+  if (newWorkersLeft < 0 || newWorkersLeft > player.workers.maxWorkers)
+    return false;
+  // Cannot leave card that doesn't have your worker on it
+  if (workersVisiting < 0 && card.workers[playerColor] <= 0) return false;
+
+  // Cannot interact with card that doesn't have destinations
+  if (card.maxDestinations === null || card.activeDestinations == null)
+    return false;
+  // Cannot end with negative workers on card or more than max destinations
+  const newWorkersOnCard = card.activeDestinations + workersVisiting;
+  if (newWorkersOnCard < 0 || newWorkersOnCard > card.maxDestinations)
+    return false;
+
+  return true;
+}
+
 export function countCardInCity(city: Card[], cardName: string): number {
   return city.reduce((acc, curr) => acc + (curr.name === cardName ? 1 : 0), 0);
 }
