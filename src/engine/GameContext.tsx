@@ -145,14 +145,15 @@ export const GameProvider = ({
     return () => unsubscribe();
   }, [gameId]);
 
-  function wrapAction<T extends (...args: any[]) => GameState>(fn: T) {
+  function wrapAction<T extends (...args: any[]) => GameState>(fn: T, update: boolean = true) {
     return (...args: Tail<Parameters<T>>) => {
       // Chain this action onto the queue
       actionQueue = actionQueue.then(async () => {
         setLocalGame((prev) => {
           const updated = fn(prev, ...args);
-          // Update Firestore without awaiting inside setState
-          void setDoc(dbRef, updated);
+          if (update) {
+            void setDoc(dbRef, updated);
+          }
           return updated;
         });
       }).catch((err) => {
@@ -166,26 +167,31 @@ export const GameProvider = ({
   const contextValue = {
     game: localGame,
     endTurn: wrapAction(Actions.endTurn),
-    setDiscarding: wrapAction(Actions.setDiscarding),
-    setPlaying: wrapAction(Actions.setPlaying),
-    setGiving: wrapAction(Actions.setGiving),
-    toggleCardDiscarding: wrapAction(Actions.toggleCardDiscarding),
-    toggleCardPlaying: wrapAction(Actions.toggleCardPlaying),
-    toggleCardGiving: wrapAction(Actions.toggleCardGiving),
-    discardSelectedCards: wrapAction(Actions.discardSelectedCards),
-    playSelectedCards: wrapAction(Actions.playSelectedCards),
-    giveSelectedCards: wrapAction(Actions.giveSelectedCards),
-    drawCard: wrapAction(Actions.drawCard),
-    revealCard: wrapAction(Actions.revealCard),
-    refillMeadow: wrapAction(Actions.refillMeadow),
+
+    // 3 main actions (visit, play, harvest)
     visitLocation: wrapAction(Actions.visitLocation),
     visitJourney: wrapAction(Actions.visitJourney),
     visitEvent: wrapAction(Actions.visitEvent),
     visitCardInCity: wrapAction(Actions.visitCardInCity),
-    toggleOccupiedCardInCity: wrapAction(Actions.toggleOccupiedCardInCity),
-    addResourcesToCardInCity: wrapAction(Actions.addResourcesToCardInCity),
-    addResourcesToSelf: wrapAction(Actions.addResourcesToSelf),
+
+    setDiscarding: wrapAction(Actions.setDiscarding),
+    setPlaying: wrapAction(Actions.setPlaying),
+    setGiving: wrapAction(Actions.setGiving),
+    revealCard: wrapAction(Actions.revealCard),
+
     harvest: wrapAction(Actions.harvest),
+
+    toggleCardDiscarding: wrapAction(Actions.toggleCardDiscarding, false),
+    toggleCardPlaying: wrapAction(Actions.toggleCardPlaying, false),
+    toggleCardGiving: wrapAction(Actions.toggleCardGiving, false),
+    discardSelectedCards: wrapAction(Actions.discardSelectedCards, false),
+    playSelectedCards: wrapAction(Actions.playSelectedCards, false),
+    giveSelectedCards: wrapAction(Actions.giveSelectedCards, false),
+    drawCard: wrapAction(Actions.drawCard, false),
+    refillMeadow: wrapAction(Actions.refillMeadow, false),
+    toggleOccupiedCardInCity: wrapAction(Actions.toggleOccupiedCardInCity, false),
+    addResourcesToCardInCity: wrapAction(Actions.addResourcesToCardInCity, false),
+    addResourcesToSelf: wrapAction(Actions.addResourcesToSelf, false),
   };
 
   return <GameContext.Provider value={contextValue}>{children}</GameContext.Provider>;

@@ -38,6 +38,228 @@ export function endTurn(state: GameState, playerId: string | null): GameState {
   };
 }
 
+export function visitLocation(
+  state: GameState,
+  playerId: string | null,
+  index: number,
+  workersVisiting: 1 | -1
+): GameState {
+  const playerColor = getPlayerColor(state, playerId);
+  if (playerColor === null) return state;
+  if (playerColor !== state.turn) return state;
+
+  if (index >= state.locations.length) return state;
+
+  const location = state.locations[index];
+  const player = state.players[playerColor];
+
+  if (!canVisitLocation(state, location, playerColor, workersVisiting))
+    return state;
+
+  const updatedLocation = {
+    ...location,
+    workers: {
+      ...location.workers,
+      [playerColor]: location.workers[playerColor] + workersVisiting,
+    },
+  };
+
+  const newState: GameState = {
+    ...state,
+    locations: state.locations.map((loc, i) =>
+      i === index ? updatedLocation : loc
+    ),
+    players: {
+      ...state.players,
+      [playerColor]: {
+        ...player,
+        workers: {
+          ...player.workers,
+          workersLeft: player.workers.workersLeft - workersVisiting,
+        },
+        resources: {
+          ...player.resources,
+        },
+      },
+    },
+  };
+
+  if (workersVisiting > 0) {
+    return addResourcesToSelf(newState, playerId, location.resources);
+  }
+
+  return newState;
+}
+
+export function visitJourney(
+  state: GameState,
+  playerId: string | null,
+  index: number,
+  workersVisiting: 1 | -1
+): GameState {
+  const playerColor = getPlayerColor(state, playerId);
+  if (playerColor === null) return state;
+  if (playerColor !== state.turn) return state;
+
+  if (index >= state.journeys.length) return state;
+
+  const journey = state.journeys[index];
+  const player = state.players[playerColor];
+
+  if (!canVisitJourney(state, journey, playerColor, workersVisiting))
+    return state;
+
+  const updatedJourney = {
+    ...journey,
+    workers: {
+      ...journey.workers,
+      [playerColor]: journey.workers[playerColor] + workersVisiting,
+    },
+  };
+
+  const newState: GameState = {
+    ...state,
+    journeys: state.journeys.map((journey, i) =>
+      i === index ? updatedJourney : journey
+    ),
+    players: {
+      ...state.players,
+      [playerColor]: {
+        ...player,
+        workers: {
+          ...player.workers,
+          workersLeft: player.workers.workersLeft - workersVisiting,
+        },
+        resources: {
+          ...player.resources,
+        },
+      },
+    },
+  };
+
+  if (workersVisiting > 0) {
+    return addResourcesToSelf(newState, playerId, {
+      ...defaultResources,
+      coins: journey.value,
+    });
+  }
+
+  return newState;
+}
+
+export function visitEvent(
+  state: GameState,
+  playerId: string | null,
+  index: number,
+  workersVisiting: 1 | -1
+): GameState {
+  const playerColor = getPlayerColor(state, playerId);
+  if (playerColor === null) return state;
+  if (playerColor !== state.turn) return state;
+
+  if (index >= state.events.length) return state;
+
+  const event = state.events[index];
+  const player = state.players[playerColor];
+
+  if (!canVisitEvent(state, event, playerColor, workersVisiting)) return state;
+
+  const updatedEvent = {
+    ...event,
+    workers: {
+      ...event.workers,
+      [playerColor]: event.workers[playerColor] + workersVisiting,
+    },
+    used: true,
+  };
+
+  const newState: GameState = {
+    ...state,
+    events: state.events.map((event, i) =>
+      i === index ? updatedEvent : event
+    ),
+    players: {
+      ...state.players,
+      [playerColor]: {
+        ...player,
+        workers: {
+          ...player.workers,
+          workersLeft: player.workers.workersLeft - workersVisiting,
+        },
+        resources: {
+          ...player.resources,
+        },
+      },
+    },
+  };
+
+  if (workersVisiting > 0) {
+    return addResourcesToSelf(newState, playerId, {
+      ...defaultResources,
+      coins: event.value,
+    });
+  }
+
+  return newState;
+}
+
+export function visitCardInCity(
+  state: GameState,
+  playerId: string | null,
+  cityColor: PlayerColor,
+  index: number,
+  workersVisiting: 1 | -1
+): GameState {
+  const playerColor = getPlayerColor(state, playerId);
+  if (playerColor === null) return state;
+  if (playerColor !== state.turn) return state;
+
+  if (index >= state.players[cityColor].city.length) return state;
+
+  const card = state.players[cityColor].city[index];
+  const player = state.players[playerColor];
+
+  if (!canVisitCardInCity(state, card, playerColor, workersVisiting))
+    return state;
+
+  const updatedCard: Card = {
+    ...card,
+    activeDestinations: card.activeDestinations!! + workersVisiting,
+    workers: {
+      ...card.workers,
+      [playerColor]: card.workers[playerColor] + workersVisiting,
+    },
+  };
+  const updatedCity = state.players[cityColor].city.map((c, i) =>
+    i === index ? updatedCard : c
+  );
+
+  const updatedPlayer: Player = {
+    ...player,
+    ...(playerColor === cityColor && { city: updatedCity }),
+    workers: {
+      ...player.workers,
+      workersLeft: player.workers.workersLeft - workersVisiting,
+    },
+  };
+
+  const newState: GameState = {
+    ...state,
+    players: {
+      ...state.players,
+      [playerColor]: updatedPlayer,
+      ...(playerColor !== cityColor && {
+        [cityColor]: {
+          ...state.players[cityColor],
+          city: updatedCity,
+        },
+      }),
+    },
+  };
+
+  return newState;
+}
+
 export function setDiscarding(
   state: GameState,
   playerId: string | null,
@@ -114,38 +336,6 @@ export function setGiving(
   };
 }
 
-export function drawCard(state: GameState, playerId: string | null): GameState {
-  const playerColor = getPlayerColor(state, playerId);
-  if (playerColor === null) return state;
-  if (playerColor !== state.turn) return state;
-
-  const deck: Card[] = [...state.deck];
-
-  if (deck.length === 0) {
-    return state;
-  }
-  if (state.players[playerColor].hand.length >= MAX_HAND_SIZE) {
-    return state;
-  }
-
-  const topCard: Card | undefined = deck.pop();
-  if (!topCard) {
-    return state;
-  }
-
-  const players = { ...state.players };
-  players[playerColor] = {
-    ...players[playerColor],
-    hand: [...players[playerColor].hand, topCard],
-  };
-
-  return {
-    ...state,
-    deck,
-    players,
-  };
-}
-
 export function revealCard(
   state: GameState,
   playerId: string | null,
@@ -186,6 +376,48 @@ export function revealCard(
   }
 
   return state;
+}
+
+export function harvest(state: GameState, playerId: string | null): GameState {
+  const playerColor = getPlayerColor(state, playerId);
+  if (playerColor === null) return state;
+  if (playerColor !== state.turn) return state;
+
+  const player = state.players[playerColor];
+  const { season } = player;
+
+  let newSeason: Season = season;
+  let additionalWorkers = 0;
+
+  if (season === "Winter") {
+    newSeason = "Spring";
+    additionalWorkers = 1;
+  } else if (season === "Spring") {
+    newSeason = "Summer";
+    additionalWorkers = 1;
+  } else if (season === "Summer") {
+    newSeason = "Autumn";
+    additionalWorkers = 2;
+  } else {
+    return state;
+  }
+
+  const updatedPlayer: Player = {
+    ...player,
+    season: newSeason,
+    workers: {
+      maxWorkers: player.workers.maxWorkers + additionalWorkers,
+      workersLeft: player.workers.workersLeft + additionalWorkers,
+    },
+  };
+
+  return {
+    ...state,
+    players: {
+      ...state.players,
+      [playerColor]: updatedPlayer,
+    },
+  };
 }
 
 export function toggleCardDiscarding(
@@ -541,6 +773,38 @@ export function giveSelectedCards(
   };
 }
 
+export function drawCard(state: GameState, playerId: string | null): GameState {
+  const playerColor = getPlayerColor(state, playerId);
+  if (playerColor === null) return state;
+  if (playerColor !== state.turn) return state;
+
+  const deck: Card[] = [...state.deck];
+
+  if (deck.length === 0) {
+    return state;
+  }
+  if (state.players[playerColor].hand.length >= MAX_HAND_SIZE) {
+    return state;
+  }
+
+  const topCard: Card | undefined = deck.pop();
+  if (!topCard) {
+    return state;
+  }
+
+  const players = { ...state.players };
+  players[playerColor] = {
+    ...players[playerColor],
+    hand: [...players[playerColor].hand, topCard],
+  };
+
+  return {
+    ...state,
+    deck,
+    players,
+  };
+}
+
 export function refillMeadow(
   state: GameState,
   playerId: string | null
@@ -568,228 +832,6 @@ export function refillMeadow(
     deck,
     meadow: [...state.meadow, ...topCards],
   };
-}
-
-export function visitLocation(
-  state: GameState,
-  playerId: string | null,
-  index: number,
-  workersVisiting: 1 | -1
-): GameState {
-  const playerColor = getPlayerColor(state, playerId);
-  if (playerColor === null) return state;
-  if (playerColor !== state.turn) return state;
-
-  if (index >= state.locations.length) return state;
-
-  const location = state.locations[index];
-  const player = state.players[playerColor];
-
-  if (!canVisitLocation(state, location, playerColor, workersVisiting))
-    return state;
-
-  const updatedLocation = {
-    ...location,
-    workers: {
-      ...location.workers,
-      [playerColor]: location.workers[playerColor] + workersVisiting,
-    },
-  };
-
-  const newState: GameState = {
-    ...state,
-    locations: state.locations.map((loc, i) =>
-      i === index ? updatedLocation : loc
-    ),
-    players: {
-      ...state.players,
-      [playerColor]: {
-        ...player,
-        workers: {
-          ...player.workers,
-          workersLeft: player.workers.workersLeft - workersVisiting,
-        },
-        resources: {
-          ...player.resources,
-        },
-      },
-    },
-  };
-
-  if (workersVisiting > 0) {
-    return addResourcesToSelf(newState, playerId, location.resources);
-  }
-
-  return newState;
-}
-
-export function visitJourney(
-  state: GameState,
-  playerId: string | null,
-  index: number,
-  workersVisiting: 1 | -1
-): GameState {
-  const playerColor = getPlayerColor(state, playerId);
-  if (playerColor === null) return state;
-  if (playerColor !== state.turn) return state;
-
-  if (index >= state.journeys.length) return state;
-
-  const journey = state.journeys[index];
-  const player = state.players[playerColor];
-
-  if (!canVisitJourney(state, journey, playerColor, workersVisiting))
-    return state;
-
-  const updatedJourney = {
-    ...journey,
-    workers: {
-      ...journey.workers,
-      [playerColor]: journey.workers[playerColor] + workersVisiting,
-    },
-  };
-
-  const newState: GameState = {
-    ...state,
-    journeys: state.journeys.map((journey, i) =>
-      i === index ? updatedJourney : journey
-    ),
-    players: {
-      ...state.players,
-      [playerColor]: {
-        ...player,
-        workers: {
-          ...player.workers,
-          workersLeft: player.workers.workersLeft - workersVisiting,
-        },
-        resources: {
-          ...player.resources,
-        },
-      },
-    },
-  };
-
-  if (workersVisiting > 0) {
-    return addResourcesToSelf(newState, playerId, {
-      ...defaultResources,
-      coins: journey.value,
-    });
-  }
-
-  return newState;
-}
-
-export function visitEvent(
-  state: GameState,
-  playerId: string | null,
-  index: number,
-  workersVisiting: 1 | -1
-): GameState {
-  const playerColor = getPlayerColor(state, playerId);
-  if (playerColor === null) return state;
-  if (playerColor !== state.turn) return state;
-
-  if (index >= state.events.length) return state;
-
-  const event = state.events[index];
-  const player = state.players[playerColor];
-
-  if (!canVisitEvent(state, event, playerColor, workersVisiting)) return state;
-
-  const updatedEvent = {
-    ...event,
-    workers: {
-      ...event.workers,
-      [playerColor]: event.workers[playerColor] + workersVisiting,
-    },
-    used: true,
-  };
-
-  const newState: GameState = {
-    ...state,
-    events: state.events.map((event, i) =>
-      i === index ? updatedEvent : event
-    ),
-    players: {
-      ...state.players,
-      [playerColor]: {
-        ...player,
-        workers: {
-          ...player.workers,
-          workersLeft: player.workers.workersLeft - workersVisiting,
-        },
-        resources: {
-          ...player.resources,
-        },
-      },
-    },
-  };
-
-  if (workersVisiting > 0) {
-    return addResourcesToSelf(newState, playerId, {
-      ...defaultResources,
-      coins: event.value,
-    });
-  }
-
-  return newState;
-}
-
-export function visitCardInCity(
-  state: GameState,
-  playerId: string | null,
-  cityColor: PlayerColor,
-  index: number,
-  workersVisiting: 1 | -1
-): GameState {
-  const playerColor = getPlayerColor(state, playerId);
-  if (playerColor === null) return state;
-  if (playerColor !== state.turn) return state;
-
-  if (index >= state.players[cityColor].city.length) return state;
-
-  const card = state.players[cityColor].city[index];
-  const player = state.players[playerColor];
-
-  if (!canVisitCardInCity(state, card, playerColor, workersVisiting))
-    return state;
-
-  const updatedCard: Card = {
-    ...card,
-    activeDestinations: card.activeDestinations!! + workersVisiting,
-    workers: {
-      ...card.workers,
-      [playerColor]: card.workers[playerColor] + workersVisiting,
-    },
-  };
-  const updatedCity = state.players[cityColor].city.map((c, i) =>
-    i === index ? updatedCard : c
-  );
-
-  const updatedPlayer: Player = {
-    ...player,
-    ...(playerColor === cityColor && { city: updatedCity }),
-    workers: {
-      ...player.workers,
-      workersLeft: player.workers.workersLeft - workersVisiting,
-    },
-  };
-
-  const newState: GameState = {
-    ...state,
-    players: {
-      ...state.players,
-      [playerColor]: updatedPlayer,
-      ...(playerColor !== cityColor && {
-        [cityColor]: {
-          ...state.players[cityColor],
-          city: updatedCity,
-        },
-      }),
-    },
-  };
-
-  return newState;
 }
 
 export function addResourcesToCardInCity(
@@ -913,48 +955,6 @@ export function addResourcesToSelf(
         ...updatedState.players[playerColor],
         resources: updatedResources,
       },
-    },
-  };
-}
-
-export function harvest(state: GameState, playerId: string | null): GameState {
-  const playerColor = getPlayerColor(state, playerId);
-  if (playerColor === null) return state;
-  if (playerColor !== state.turn) return state;
-
-  const player = state.players[playerColor];
-  const { season } = player;
-
-  let newSeason: Season = season;
-  let additionalWorkers = 0;
-
-  if (season === "Winter") {
-    newSeason = "Spring";
-    additionalWorkers = 1;
-  } else if (season === "Spring") {
-    newSeason = "Summer";
-    additionalWorkers = 1;
-  } else if (season === "Summer") {
-    newSeason = "Autumn";
-    additionalWorkers = 2;
-  } else {
-    return state;
-  }
-
-  const updatedPlayer: Player = {
-    ...player,
-    season: newSeason,
-    workers: {
-      maxWorkers: player.workers.maxWorkers + additionalWorkers,
-      workersLeft: player.workers.workersLeft + additionalWorkers,
-    },
-  };
-
-  return {
-    ...state,
-    players: {
-      ...state.players,
-      [playerColor]: updatedPlayer,
     },
   };
 }
