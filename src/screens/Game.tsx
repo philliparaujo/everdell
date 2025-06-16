@@ -95,6 +95,7 @@ export const cardRowStyle: React.CSSProperties = {
 function Game() {
   const {
     game,
+    previousTurn
   } = useGame();
   const { gameId } = useParams();
 
@@ -115,7 +116,7 @@ function Game() {
       {/* --- Left Sidebar --- */}
       <div style={sideBarColumnStyling}>
         {/* Sidebar */}
-        <Sidebar gameId={gameId} />
+        <Sidebar gameId={gameId} previousTurn={previousTurn} />
       </div>
 
       {/* --- Right Content Area --- */}

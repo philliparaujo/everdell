@@ -1,12 +1,14 @@
 import { useGame } from "../engine/GameContext";
+import { GameState } from "../engine/gameTypes";
 import { getPlayerColor, getPlayerId, oppositePlayerOf } from "../engine/helpers";
 import { headingStyling, idStyle, sideBarStyling } from "../screens/Game";
 import Controls from "./Controls";
+import Log from "./Log";
 import PlayerStatus from "./PlayerStatus";
 import ResourceBank from "./ResourceBank";
 import Reveal from "./Reveal";
 
-function Sidebar({ gameId }: { gameId: string | undefined }) {
+function Sidebar({ gameId, previousTurn }: { gameId: string | undefined, previousTurn: GameState }) {
   const {
     game
   } = useGame();
@@ -46,6 +48,8 @@ function Sidebar({ gameId }: { gameId: string | undefined }) {
         <p style={{ margin: 0 }}>{`Deck size: ${game.deck.length}`}</p>
         <ResourceBank />
         <Reveal />
+        <hr />
+        <Log playerColor={topStatusColor} previousTurn={previousTurn} />
         <hr />
         <div style={idStyle}>{gameId}</div>
       </div>

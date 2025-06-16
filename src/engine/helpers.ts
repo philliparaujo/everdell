@@ -1,6 +1,7 @@
 import { MAX_MEADOW_SIZE } from "./gameConstants";
 import {
   Card,
+  defaultResources,
   Event,
   GameState,
   Journey,
@@ -85,16 +86,66 @@ export function mapOverResources(
   onNoResources?: () => React.ReactNode
 ) {
   const resourceCount = RESOURCE_ORDER.reduce(
-    (acc, curr) => acc + resources[curr],
+    (acc, curr) => acc + Math.abs(resources[curr]),
     0
   );
   if (resourceCount === 0 && onNoResources) {
     return onNoResources();
   }
 
-  return RESOURCE_ORDER.filter((key) => resources[key] > 0 || !filter).map(
+  return RESOURCE_ORDER.filter((key) => resources[key] !== 0 || !filter).map(
     (key) => onMap(key, resources[key])
   );
+}
+
+export function computeResourceDelta(
+  oldResources: Resources,
+  newResources: Resources
+): Resources {
+  const delta = { ...defaultResources };
+
+  for (const type of RESOURCE_ORDER) {
+    delta[type] = newResources[type] - oldResources[type];
+  }
+  return delta;
+}
+
+export function computeCardsDelta(
+  oldCards: Card[],
+  newCards: Card[]
+): { added: string[]; removed: string[] } {
+  const oldCardCounts = new Map<string, number>();
+  oldCards.forEach((card) => {
+    oldCardCounts.set(card.name, (oldCardCounts.get(card.name) || 0) + 1);
+  });
+
+  const newCardCounts = new Map<string, number>();
+  newCards.forEach((card) => {
+    newCardCounts.set(card.name, (newCardCounts.get(card.name) || 0) + 1);
+  });
+
+  const added: string[] = [];
+  const removed: string[] = [];
+
+  newCardCounts.forEach((newCount, cardName) => {
+    const oldCount = oldCardCounts.get(cardName) || 0;
+    if (newCount > oldCount) {
+      for (let i = 0; i < newCount - oldCount; i++) {
+        added.push(cardName);
+      }
+    }
+  });
+
+  oldCardCounts.forEach((oldCount, cardName) => {
+    const newCount = newCardCounts.get(cardName) || 0;
+    if (oldCount > newCount) {
+      for (let i = 0; i < oldCount - newCount; i++) {
+        removed.push(cardName);
+      }
+    }
+  });
+
+  return { added, removed };
 }
 
 export function isSafeToEndTurn(state: GameState): boolean {

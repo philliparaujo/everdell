@@ -60,6 +60,7 @@ const noop = (..._: any[]) => { };
 
 const GameContext = createContext<{
   game: GameState;
+  previousTurn: GameState;
   endTurn: (playerId: string | null) => void;
   setDiscarding: (playerId: string | null, discarding: boolean) => void;
   setPlaying: (playerId: string | null, playing: boolean) => void;
@@ -83,6 +84,7 @@ const GameContext = createContext<{
   harvest: (playerId: string | null) => void;
 }>({
   game: defaultState,
+  previousTurn: defaultState,
   endTurn: noop,
   setDiscarding: noop,
   setPlaying: noop,
@@ -135,6 +137,7 @@ export const GameProvider = ({
   gameId: string;
 }) => {
   const [localGame, setLocalGame] = useState(game);
+  const [localPrevTurn, setLocalPrevTurn] = useState(game);
   const dbRef = doc(getFirestore(), `games/${gameId}`);
 
   useEffect(() => {
@@ -154,6 +157,9 @@ export const GameProvider = ({
           if (update) {
             void setDoc(dbRef, updated);
           }
+          if (fn === Actions.endTurn) {
+            setLocalPrevTurn(updated);
+          }
           return updated;
         });
       }).catch((err) => {
@@ -166,6 +172,7 @@ export const GameProvider = ({
 
   const contextValue = {
     game: localGame,
+    previousTurn: localPrevTurn,
     endTurn: wrapAction(Actions.endTurn),
 
     // 3 main actions (visit, play, harvest)
