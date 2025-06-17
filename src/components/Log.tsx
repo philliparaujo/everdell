@@ -84,12 +84,16 @@ function PlayerLog({ previousTurn, color }: { previousTurn: GameState, color: Pl
   );
 }
 
-function Log({ previousTurn, playerColor }: { previousTurn: GameState, playerColor: PlayerColor }) {
+function Log({ playerColor }: { playerColor: PlayerColor }) {
+  const {
+    gameLog
+  } = useGame();
+
   return (
     <div>
-      <PlayerLog previousTurn={previousTurn} color={playerColor} />
+      <PlayerLog previousTurn={gameLog.state} color={playerColor} />
       <br />
-      <PlayerLog previousTurn={previousTurn} color={oppositePlayerOf(playerColor)} />
+      <PlayerLog previousTurn={gameLog.state} color={oppositePlayerOf(playerColor)} />
     </div>
   )
 }

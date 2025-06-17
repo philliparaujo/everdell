@@ -96,6 +96,18 @@ export type GameState = {
   turn: PlayerColor;
 };
 
+export type History = {
+  discarded: Card[];
+  cityDiscarded: Card[];
+  drew: Card[];
+  played: Card[];
+};
+
+export type GameLog = {
+  state: GameState;
+  histories: Record<PlayerColor, History>;
+};
+
 export const defaultResources: Resources = {
   twigs: 0,
   resin: 0,

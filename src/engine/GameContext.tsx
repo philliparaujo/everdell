@@ -5,7 +5,7 @@ import { cardFrequencies, rawCards } from '../assets/data/cards';
 import { events } from '../assets/data/events';
 import { locations } from '../assets/data/locations';
 import * as Actions from "./gameActions";
-import { Card, defaultPlayer, GameState, PlayerColor, Resources } from './gameTypes';
+import { Card, defaultPlayer, GameLog, GameState, History, PlayerColor, Resources } from './gameTypes';
 import { shuffleArray } from './helpers';
 import { MAX_MEADOW_SIZE } from './gameConstants';
 import { journeys } from '../assets/data/journey';
@@ -55,12 +55,25 @@ export function setupGame(firstPlayer: PlayerColor): GameState {
   };
 }
 const defaultState = setupGame("Red");
+const defaultHistory: History = {
+  discarded: [],
+  cityDiscarded: [],
+  drew: [],
+  played: []
+}
+const defaultLog: GameLog = {
+  state: defaultState,
+  histories: {
+    Red: { ...defaultHistory },
+    Blue: { ...defaultHistory },
+  }
+};
 
 const noop = (..._: any[]) => { };
 
 const GameContext = createContext<{
   game: GameState;
-  previousTurn: GameState;
+  gameLog: GameLog;
   endTurn: (playerId: string | null) => void;
   setDiscarding: (playerId: string | null, discarding: boolean) => void;
   setPlaying: (playerId: string | null, playing: boolean) => void;
@@ -84,7 +97,7 @@ const GameContext = createContext<{
   harvest: (playerId: string | null) => void;
 }>({
   game: defaultState,
-  previousTurn: defaultState,
+  gameLog: defaultLog,
   endTurn: noop,
   setDiscarding: noop,
   setPlaying: noop,
@@ -137,7 +150,13 @@ export const GameProvider = ({
   gameId: string;
 }) => {
   const [localGame, setLocalGame] = useState(game);
-  const [localPrevTurn, setLocalPrevTurn] = useState(game);
+  const [localGameLog, setLocalGameLog] = useState<GameLog>({
+    state: game,
+    histories: {
+      Red: { ...defaultHistory },
+      Blue: { ...defaultHistory },
+    }
+  });
   const dbRef = doc(getFirestore(), `games/${gameId}`);
 
   useEffect(() => {
@@ -157,8 +176,12 @@ export const GameProvider = ({
           if (update) {
             void setDoc(dbRef, updated);
           }
+          // When the turn ends, update the previousTurn attribute of the game log.
           if (fn === Actions.endTurn) {
-            setLocalPrevTurn(updated);
+            setLocalGameLog(prevLog => ({
+              state: updated,
+              histories: { ...defaultLog.histories }
+            }));
           }
           return updated;
         });
@@ -172,7 +195,7 @@ export const GameProvider = ({
 
   const contextValue = {
     game: localGame,
-    previousTurn: localPrevTurn,
+    gameLog: localGameLog,
     endTurn: wrapAction(Actions.endTurn),
 
     // 3 main actions (visit, play, harvest)
