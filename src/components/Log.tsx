@@ -1,30 +1,57 @@
 import { useGame } from "../engine/GameContext";
-import { GameState, PlayerColor, ResourceType } from "../engine/gameTypes";
-import { computeCardsDelta, computeResourceDelta, mapOverResources, oppositePlayerOf } from "../engine/helpers";
+import { Card, History, PlayerColor, ResourceType } from "../engine/gameTypes";
+import { computeResourceDelta, mapOverResources, oppositePlayerOf } from "../engine/helpers";
 import { ResourceIcon, WorkerIcon } from "./Icons";
 
-function PlayerLog({ previousTurn, color }: { previousTurn: GameState, color: PlayerColor }) {
+function PlayerLog({ history, color }: { history: History, color: PlayerColor }) {
   const {
     game
   } = useGame();
 
-  const previousPlayer = previousTurn.players[color];
   const player = game.players[color];
 
-  const seasonChange = player.season !== previousPlayer.season;
-  const deltaResources = computeResourceDelta(previousPlayer.resources, player.resources);
-  const deltaWorkers = player.workers.workersLeft - previousPlayer.workers.workersLeft;
-  const deltaHand = computeCardsDelta(previousPlayer.hand, player.hand);
-  const deltaCity = computeCardsDelta(previousPlayer.city, player.city);
+  const seasonChange = player.season !== history.season;
+  const deltaResources = computeResourceDelta(history.resources, player.resources);
+  const deltaWorkers = player.workers.workersLeft - history.workers.workersLeft;
 
-  const hasHandChanges = deltaHand.added.length > 0 || deltaHand.removed.length > 0;
-  const hasCityChanges = deltaCity.added.length > 0 || deltaCity.removed.length > 0;
+  // Helper to create a comma-separated list of card names
+  const cardList = (cards: Card[]): string => {
+    return cards.map(c => c.name).join(', ');
+  }
 
   return (
     <div>
       {color}
       {": "}
 
+      {/* --- Card Actions --- */}
+      {history.played?.length > 0 && (
+        <div>
+          Played: {cardList(history.played)}
+        </div>
+      )}
+      {history.drew?.length > 0 && (
+        <div>
+          Drew: {cardList(history.drew)}
+        </div>
+      )}
+      {history.gave?.length > 0 && (
+        <div>
+          Gave: {cardList(history.gave)}
+        </div>
+      )}
+      {history.discarded?.length > 0 && (
+        <div>
+          Discarded: {cardList(history.discarded)}
+        </div>
+      )}
+      {history.cityDiscarded?.length > 0 && (
+        <div>
+          Discarded from city: {cardList(history.cityDiscarded)}
+        </div>
+      )}
+
+      {/* --- Other Turn Events --- */}
       {/* Harvest */}
       {seasonChange && (<div>
         {`Harvest to ${player.season}`}
@@ -43,57 +70,20 @@ function PlayerLog({ previousTurn, color }: { previousTurn: GameState, color: Pl
           </div>
         ), true)}
       </div>
-
-      {/* Hand */}
-      {hasHandChanges && (
-        <div>
-          <span>Hand: </span>
-          {deltaHand.added.length > 0 && (
-            <span>
-              Added: {deltaHand.added.join(', ')}
-              {deltaHand.removed.length > 0 && '; '}
-            </span>
-          )}
-          {deltaHand.removed.length > 0 && (
-            <span>
-              Removed: {deltaHand.removed.join(', ')}
-            </span>
-          )}
-        </div>
-      )}
-
-      {/* City */}
-      {hasCityChanges && (
-        <div>
-          <span>City: </span>
-          {deltaCity.added.length > 0 && (
-            <span>
-              Added: {deltaCity.added.join(', ')}
-              {deltaCity.removed.length > 0 && '; '}
-            </span>
-          )}
-          {deltaCity.removed.length > 0 && (
-            <span>
-              Removed: {deltaCity.removed.join(', ')}
-            </span>
-          )}
-        </div>
-      )}
-
     </div>
   );
 }
 
 function Log({ playerColor }: { playerColor: PlayerColor }) {
   const {
-    gameLog
+    game
   } = useGame();
 
   return (
     <div>
-      <PlayerLog previousTurn={gameLog.state} color={playerColor} />
+      <PlayerLog history={game.players[playerColor].history} color={playerColor} />
       <br />
-      <PlayerLog previousTurn={gameLog.state} color={oppositePlayerOf(playerColor)} />
+      <PlayerLog history={game.players[oppositePlayerOf(playerColor)].history} color={oppositePlayerOf(playerColor)} />
     </div>
   )
 }

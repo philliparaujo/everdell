@@ -66,6 +66,20 @@ export type Event = {
   used: boolean;
 };
 
+export type History = {
+  // This turn
+  discarded: Card[];
+  cityDiscarded: Card[];
+  drew: Card[];
+  played: Card[];
+  gave: Card[];
+
+  // From last turn
+  resources: Resources;
+  workers: Workers;
+  season: Season;
+};
+
 export type PlayerColor = "Red" | "Blue";
 export type Player = {
   name: string;
@@ -82,6 +96,8 @@ export type Player = {
   giving: boolean;
   revealingDeck: boolean;
   revealingDiscard: boolean;
+
+  history: History;
 };
 
 export type GameState = {
@@ -94,18 +110,6 @@ export type GameState = {
   journeys: Journey[];
   events: Event[];
   turn: PlayerColor;
-};
-
-export type History = {
-  discarded: Card[];
-  cityDiscarded: Card[];
-  drew: Card[];
-  played: Card[];
-};
-
-export type GameLog = {
-  state: GameState;
-  histories: Record<PlayerColor, History>;
 };
 
 export const defaultResources: Resources = {
@@ -138,4 +142,16 @@ export const defaultPlayer: Player = {
   giving: false,
   revealingDeck: false,
   revealingDiscard: false,
+
+  history: {
+    discarded: [],
+    cityDiscarded: [],
+    drew: [],
+    played: [],
+    gave: [],
+
+    resources: defaultResources,
+    workers: defaultWorkers,
+    season: "Winter",
+  },
 };

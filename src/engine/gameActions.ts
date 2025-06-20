@@ -35,6 +35,22 @@ export function endTurn(state: GameState, playerId: string | null): GameState {
   return {
     ...state,
     turn: oppositePlayerOf(state.turn),
+    players: {
+      ...state.players,
+      [oppositePlayerOf(state.turn)]: {
+        ...state.players[oppositePlayerOf(state.turn)],
+        history: {
+          discarded: [],
+          cityDiscarded: [],
+          drew: [],
+          played: [],
+          gave: [],
+          resources: state.players[oppositePlayerOf(state.turn)].resources,
+          workers: state.players[oppositePlayerOf(state.turn)].workers,
+          season: state.players[oppositePlayerOf(state.turn)].season,
+        },
+      },
+    },
   };
 }
 
@@ -637,6 +653,19 @@ export function discardSelectedCards(
         ...player,
         hand: handKeep,
         city: cityKeep,
+        history: {
+          ...state.players[playerColor].history,
+          discarded: [
+            ...state.players[playerColor].history.discarded,
+            ...handDiscard,
+            ...meadowDiscard,
+            ...revealDiscard,
+          ],
+          cityDiscarded: [
+            ...state.players[playerColor].history.cityDiscarded,
+            ...cityDiscard,
+          ],
+        },
       },
     },
     discard: discard.map((card) => ({
@@ -707,6 +736,16 @@ export function playSelectedCards(
           ...card,
           playing: false,
         })),
+        history: {
+          ...state.players[playerColor].history,
+          played: [
+            ...state.players[playerColor].history.played,
+            ...handPlay,
+            ...meadowPlay,
+            ...discardPlay,
+            ...revealPlay,
+          ],
+        },
       },
       [oppositePlayerOf(playerColor)]: {
         ...oppositePlayer,
@@ -758,6 +797,14 @@ export function giveSelectedCards(
           ...card,
           giving: false,
         })),
+        history: {
+          ...state.players[playerColor].history,
+          gave: [
+            ...state.players[playerColor].history.gave,
+            ...handGive,
+            ...meadowGive,
+          ],
+        },
       },
       ...(playerColor !== toColor && {
         [toColor]: {
@@ -796,6 +843,10 @@ export function drawCard(state: GameState, playerId: string | null): GameState {
   players[playerColor] = {
     ...players[playerColor],
     hand: [...players[playerColor].hand, topCard],
+    history: {
+      ...players[playerColor].history,
+      drew: [...players[playerColor].history.drew, topCard],
+    },
   };
 
   return {
