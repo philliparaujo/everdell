@@ -670,7 +670,9 @@ export function discardSelectedCards(
     },
     discard: discard.map((card) => ({
       ...card,
+      playing: false,
       discarding: false,
+      giving: false,
     })),
     meadow: meadowKeep,
     reveal: revealKeep,
@@ -735,6 +737,8 @@ export function playSelectedCards(
         city: mySortedCity.map((card) => ({
           ...card,
           playing: false,
+          discarding: false,
+          giving: false,
         })),
         history: {
           ...state.players[playerColor].history,
@@ -752,6 +756,8 @@ export function playSelectedCards(
         city: oppositeCity.map((card) => ({
           ...card,
           playing: false,
+          discarding: false,
+          giving: false,
         })),
       },
     },
@@ -795,6 +801,8 @@ export function giveSelectedCards(
         ...player,
         hand: updatePlayerHand.map((card) => ({
           ...card,
+          playing: false,
+          discarding: false,
           giving: false,
         })),
         history: {
@@ -811,6 +819,8 @@ export function giveSelectedCards(
           ...playerTo,
           hand: playerToHand.map((card) => ({
             ...card,
+            playing: false,
+            discarding: false,
             giving: false,
           })),
         },
