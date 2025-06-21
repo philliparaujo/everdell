@@ -117,16 +117,20 @@ function HavenDisplay() {
   const { game, visitLocation } = useGame();
 
   const storedId = getPlayerId();
-  const disabled = isNotYourTurn(game, storedId);
+  const playerColor = getPlayerColor(game, storedId);
 
   const havenLocation = game.locations[game.locations.length - 1];
+
+  const disabled = isNotYourTurn(game, storedId);
+  const canVisit = playerColor === null ? false : canVisitLocation(game, havenLocation, playerColor, 1);
+  const canLeave = playerColor === null ? false : canVisitLocation(game, havenLocation, playerColor, -1);
 
   return (
     <BaseLocationDisplay
       buttonChildren={
         renderButtons(
-          disabled,
-          disabled,
+          disabled || !canVisit,
+          disabled || !canLeave,
           () => visitLocation(storedId, game.locations.length - 1, 1),
           () => visitLocation(storedId, game.locations.length - 1, -1)
         )
