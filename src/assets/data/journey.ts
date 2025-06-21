@@ -2,7 +2,7 @@ import { Journey } from "../../engine/gameTypes";
 
 export const journeys: Journey[] = [
   {
-    exclusive: true,
+    exclusive: false,
     discardCount: 2,
     value: 2,
     workers: { Red: 0, Blue: 0 },
