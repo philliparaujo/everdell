@@ -85,6 +85,7 @@ const scrollStyle: React.CSSProperties = {
 
 export const cardRowStyle: React.CSSProperties = {
   ...scrollStyle,
+  width: '100%',
   gap: '4px',
   padding: '4px',
   paddingInlineStart: 0,
@@ -146,27 +147,25 @@ function Game() {
           </section>}
         </div>
 
-        {/* --- Two Column Row --- */}
-        <div style={twoColumnRowStyling}>
-          {/* Column 1 */}
-          {!spectating && <section style={halfColumnStyling}>
+        {/* --- Full Width Rows --- */}
+        {!spectating && (
+          <section style={fullRowStyling}>
             <h4 style={{ ...headingStyling, color: PLAYER_COLORS[playerColor] }}>
               Hand
             </h4>
             <div>
               <Hand color={playerColor} />
             </div>
-          </section>}
-          {/* Column 2 */}
-          <section style={halfColumnStyling}>
-            <h4 style={headingStyling}>Meadow</h4>
-            <div>
-              <Meadow />
-            </div>
           </section>
-        </div>
+        )}
 
-        {/* --- Full Width Rows --- */}
+        <section style={fullRowStyling}>
+          <h4 style={headingStyling}>Meadow</h4>
+          <div>
+            <Meadow />
+          </div>
+        </section>
+
         <section style={fullRowStyling}>
           <h4 style={{ ...headingStyling, color: PLAYER_COLORS[playerColor] }}>
             {spectating ? `${playerColor}'s` : "My"} City (
