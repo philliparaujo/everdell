@@ -13,6 +13,15 @@ function Discard() {
 
   const storedId = getPlayerId();
 
+  // Check if the discard pile is empty
+  if (game.discard.length === 0) {
+    return (
+      <div style={{ fontStyle: 'italic', padding: '10px 0' }}>
+        No cards in discard pile
+      </div>
+    );
+  }
+
   return (
     <CardRow
       cards={game.discard}
@@ -25,7 +34,7 @@ function Discard() {
         }
       }}
     />
-  )
+  );
 }
 
 export default Discard;

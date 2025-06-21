@@ -55,7 +55,10 @@ const playAreaStyling: React.CSSProperties = {
 }
 
 export const headingStyling: React.CSSProperties = {
-  margin: 0
+  margin: 0,
+  display: 'flex', /* Make it a flex container */
+  alignItems: 'center', /* Vertically center items */
+  gap: '2px'
 }
 
 export const idStyle: React.CSSProperties = {
