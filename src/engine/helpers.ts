@@ -1,3 +1,4 @@
+import { COLORS } from "../colors";
 import { MAX_MEADOW_SIZE } from "./gameConstants";
 import {
   Card,
@@ -10,6 +11,7 @@ import {
   PlayerColor,
   Resources,
   ResourceType,
+  Season,
 } from "./gameTypes";
 
 export const shuffleArray = (array: any[]) => {
@@ -47,6 +49,19 @@ export function getPlayerName(): string | null {
 
 export function getPlayerId(): string | null {
   return sessionStorage.getItem("playerId");
+}
+
+export function seasonColor(season: Season) {
+  switch (season) {
+    case "Winter":
+      return COLORS.seasonWinter;
+    case "Spring":
+      return COLORS.seasonSpring;
+    case "Summer":
+      return COLORS.seasonSummer;
+    case "Autumn":
+      return COLORS.seasonFall;
+  }
 }
 
 export function getPlayerColor(

@@ -1,23 +1,10 @@
-import { COLORS, PLAYER_COLORS } from "../colors";
+import { PLAYER_COLORS } from "../colors";
 import { MAX_HAND_SIZE } from "../engine/gameConstants";
 import { useGame } from "../engine/GameContext";
-import { PlayerColor, ResourceType, Season } from "../engine/gameTypes";
-import { getPlayerId, mapOverResources, maxCitySize } from "../engine/helpers";
+import { PlayerColor, ResourceType } from "../engine/gameTypes";
+import { getPlayerId, mapOverResources, maxCitySize, seasonColor } from "../engine/helpers";
 import { headingStyling, idStyle } from "../screens/Game";
 import { ResourceIcon, WorkerIcon } from "./Icons";
-
-function seasonColor(season: Season) {
-  switch (season) {
-    case "Winter":
-      return COLORS.seasonWinter;
-    case "Spring":
-      return COLORS.seasonSpring;
-    case "Summer":
-      return COLORS.seasonSummer;
-    case "Autumn":
-      return COLORS.seasonFall;
-  }
-}
 
 function PlayerStatus({ playerColor }: { playerColor: PlayerColor }) {
   const {
@@ -36,7 +23,7 @@ function PlayerStatus({ playerColor }: { playerColor: PlayerColor }) {
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
         <div>
           <div>
-            <strong style={{ color: seasonColor(player.season) }}>{player.season.toString()}</strong>
+            <strong style={{ color: seasonColor(player.season) }}>{player.season}</strong>
           </div>
           <span><WorkerIcon playerColor={playerColor} /> {player.workers.workersLeft} / {player.workers.maxWorkers}</span>
         </div>
