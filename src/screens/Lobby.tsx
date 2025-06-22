@@ -17,7 +17,6 @@ import Button from "../components/Button";
 import Navigation from "../components/Navigation";
 import { COLORS, PLAYER_COLORS } from "../colors";
 import { idStyle } from "./Game";
-import BackgroundContainer from "../components/BackgroundContainer";
 
 // Helper component to render player info consistent with the sidebar style
 const GamePlayerDisplay = ({
@@ -93,7 +92,28 @@ function Lobby() {
     navigate(`/game/${gameId}`);
   };
 
-  const handleRejoinGame = (gameId: string) => {
+  const handleRejoinGame = async (gameId: string) => {
+    if (isDisabled) return;
+
+    const gameRef = doc(db, "games", gameId);
+    const snapshot = await getDoc(gameRef);
+    const game = snapshot.data() as GameState;
+
+    if (!game) return alert("Game not found");
+
+    let targetColor: PlayerColor | null = null;
+    if (game.players.Red.id === playerId) {
+      targetColor = "Red";
+    } else if (game.players.Blue.id === playerId) {
+      targetColor = "Blue";
+    }
+
+    if (targetColor === null) {
+      return alert(`Could not rejoin game.`);
+    }
+
+    game.players[targetColor].name = name;
+    await setDoc(gameRef, game);
     navigate(`/game/${gameId}`);
   };
 
