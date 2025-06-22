@@ -10,6 +10,7 @@ import Log from "./Log";
 import PlayerStatus from "./PlayerStatus";
 import ResourceBank from "./ResourceBank";
 import Reveal from "./Reveal";
+import Navigation from "./Navigation";
 
 function Sidebar({ gameId }: { gameId: string | undefined }) {
   const { game } = useGame();
@@ -31,6 +32,11 @@ function Sidebar({ gameId }: { gameId: string | undefined }) {
   return (
     <div style={sideBarStyling}>
       <div style={{ padding: "8px" }}>
+        <Navigation
+          link="/lobby"
+          displayText="Back to Lobby"
+          arrow="backward"
+        />
         <h3>
           {game.turn}'s Turn{" "}
           {turnStatusText && (

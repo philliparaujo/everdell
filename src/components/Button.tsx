@@ -4,6 +4,7 @@ import { COLORS } from "../colors";
 type ButtonProps = {
   onClick: () => void;
   children: React.ReactNode;
+  color?: string;
   disabled?: boolean;
   style?: React.CSSProperties;
 };
@@ -11,11 +12,12 @@ type ButtonProps = {
 const Button: React.FC<ButtonProps> = ({
   onClick,
   children,
+  color = COLORS.buttonColor,
   disabled = false,
   style,
 }) => {
   const baseStyle: React.CSSProperties = {
-    backgroundColor: COLORS.buttonColor,
+    backgroundColor: color,
     color: COLORS.buttonText,
     border: `solid 1px ${COLORS.buttonBorder}`,
     borderRadius: "4px",

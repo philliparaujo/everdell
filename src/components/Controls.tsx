@@ -67,14 +67,14 @@ function Controls() {
       </Button>
       <Button
         disabled={disabled || !isSafeToEndTurn(game)}
-        style={{ backgroundColor: COLORS.importantButton }}
+        color={COLORS.importantButton}
         onClick={() => endTurn(storedId)}
       >
         End Turn
       </Button>
       <Button
         disabled={disabled || !isSafeToEndTurn(game)}
-        style={{ backgroundColor: COLORS.importantButton }}
+        color={COLORS.importantButton}
         onClick={() => harvest(storedId)}
       >
         Harvest
@@ -82,7 +82,7 @@ function Controls() {
       {canGiveSelf && (
         <Button
           disabled={disabled || isDiscarding || isPlaying}
-          style={{ backgroundColor: COLORS.rareButton }}
+          color={COLORS.rareButton}
           onClick={() => {
             if (isGiving) giveSelectedCards(storedId, game.turn);
             setGiving(storedId, !isGiving);
@@ -94,7 +94,7 @@ function Controls() {
       {canGiveOpponent && (
         <Button
           disabled={disabled || isDiscarding || isPlaying}
-          style={{ backgroundColor: COLORS.rareButton }}
+          color={COLORS.rareButton}
           onClick={() => {
             if (isGiving)
               giveSelectedCards(storedId, oppositePlayerOf(game.turn));

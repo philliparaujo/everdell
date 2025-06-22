@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import {
   getPlayerId,
@@ -7,6 +6,7 @@ import {
   storePlayerId,
   storePlayerName,
 } from "../engine/helpers";
+import Navigation from "../components/Navigation";
 
 function Home() {
   const [name, setName] = useState("Guest");
@@ -54,9 +54,7 @@ function Home() {
           <input value={name} onChange={handleNameChange} />
         </label>
       </div>
-      <div>
-        <Link to="/lobby">Go to lobby</Link>
-      </div>
+      <Navigation link="/lobby" displayText="Go to Lobby" arrow="forward" />
     </div>
   );
 }

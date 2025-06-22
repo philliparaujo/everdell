@@ -58,6 +58,9 @@ export const COLORS = {
 
   importantButton: "#484", // Gold-like yellow for emphasis
   rareButton: "#a60",
+
+  // Navigation
+  navigationText: "#ABA3FF",
 };
 
 export const PLAYER_COLORS: Record<PlayerColor, string> = {

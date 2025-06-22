@@ -52,7 +52,7 @@ function Reveal() {
             {revealDeck && (
               <Button
                 disabled={disabled}
-                style={{ backgroundColor: COLORS.rareButton }}
+                color={COLORS.rareButton}
                 onClick={() => revealCard(storedId, "deck")}
               >
                 Reveal deck
@@ -61,7 +61,7 @@ function Reveal() {
             {revealDiscard && (
               <Button
                 disabled={disabled}
-                style={{ backgroundColor: COLORS.rareButton }}
+                color={COLORS.rareButton}
                 onClick={() => revealCard(storedId, "discard")}
               >
                 Reveal discard
