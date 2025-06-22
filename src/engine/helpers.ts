@@ -25,7 +25,7 @@ export const shuffleArray = (array: any[]) => {
 
 export function partition<T>(
   arr: T[],
-  predicate: (item: T) => boolean
+  predicate: (item: T) => boolean,
 ): [T[], T[]] {
   const keep: T[] = [];
   const discard: T[] = [];
@@ -66,7 +66,7 @@ export function seasonColor(season: Season) {
 
 export function getPlayerColor(
   game: GameState,
-  playerId: string | null
+  playerId: string | null,
 ): PlayerColor | null {
   if (playerId === null) return null;
   if (playerId === game.players.Red.id) return "Red";
@@ -80,7 +80,7 @@ export function oppositePlayerOf(playerColor: PlayerColor): PlayerColor {
 
 export function isNotYourTurn(
   game: GameState,
-  playerId: string | null
+  playerId: string | null,
 ): boolean {
   return getPlayerColor(game, playerId) !== game.turn;
 }
@@ -98,24 +98,24 @@ export function mapOverResources(
   resources: Resources,
   onMap: (key: ResourceType, val: number) => React.ReactNode,
   filter: boolean = true,
-  onNoResources?: () => React.ReactNode
+  onNoResources?: () => React.ReactNode,
 ) {
   const resourceCount = RESOURCE_ORDER.reduce(
     (acc, curr) => acc + Math.abs(resources[curr]),
-    0
+    0,
   );
   if (resourceCount === 0 && onNoResources) {
     return onNoResources();
   }
 
   return RESOURCE_ORDER.filter((key) => resources[key] !== 0 || !filter).map(
-    (key) => onMap(key, resources[key])
+    (key) => onMap(key, resources[key]),
   );
 }
 
 export function computeResourceDelta(
   oldResources: Resources,
-  newResources: Resources
+  newResources: Resources,
 ): Resources {
   const delta = { ...defaultResources };
 
@@ -127,7 +127,7 @@ export function computeResourceDelta(
 
 export function computeCardsDelta(
   oldCards: Card[],
-  newCards: Card[]
+  newCards: Card[],
 ): { added: string[]; removed: string[] } {
   const oldCardCounts = new Map<string, number>();
   oldCards.forEach((card) => {
@@ -180,7 +180,7 @@ export function maxCitySize(city: Card[]) {
   const baseMaxCitySize = 15;
   const husbandWifePairs = Math.min(
     countCardInCity(city, "Husband"),
-    countCardInCity(city, "Wife")
+    countCardInCity(city, "Wife"),
   );
   const wanderers = countCardInCity(city, "Wanderer");
 
@@ -191,7 +191,7 @@ export function canVisitLocation(
   state: GameState,
   location: Location,
   playerColor: PlayerColor,
-  workersVisiting: 1 | -1
+  workersVisiting: 1 | -1,
 ): boolean {
   const player = state.players[playerColor];
   const newWorkersLeft = player.workers.workersLeft - workersVisiting;
@@ -215,7 +215,7 @@ export function canVisitJourney(
   state: GameState,
   journey: Journey,
   playerColor: PlayerColor,
-  workersVisiting: 1 | -1
+  workersVisiting: 1 | -1,
 ): boolean {
   const player = state.players[playerColor];
   const newWorkersLeft = player.workers.workersLeft - workersVisiting;
@@ -241,7 +241,7 @@ export function canVisitEvent(
   state: GameState,
   event: Event,
   playerColor: PlayerColor,
-  workersVisiting: 1 | -1
+  workersVisiting: 1 | -1,
 ): boolean {
   const player = state.players[playerColor];
   const newWorkersLeft = player.workers.workersLeft - workersVisiting;
@@ -255,7 +255,7 @@ export function canVisitEvent(
   const requirementCount = player.city.reduce(
     (acc, curr) =>
       acc + (curr.effectType === event.effectTypeRequirement ? 1 : 0),
-    0
+    0,
   );
 
   // Cannot visit event that is already used
@@ -270,7 +270,7 @@ export function canVisitCardInCity(
   state: GameState,
   card: Card,
   playerColor: PlayerColor,
-  workersVisiting: 1 | -1
+  workersVisiting: 1 | -1,
 ): boolean {
   const player = state.players[playerColor];
   const newWorkersLeft = player.workers.workersLeft - workersVisiting;
@@ -306,7 +306,7 @@ export function canGiveToSelf(player: Player): boolean {
 
 export function canGiveToOpponent(
   player: Player,
-  oppositePlayer: Player
+  oppositePlayer: Player,
 ): boolean {
   return (
     hasCardInCity(player.city, "Post Office") ||

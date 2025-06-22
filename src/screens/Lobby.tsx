@@ -1,18 +1,25 @@
-import { collection, deleteDoc, doc, getDoc, getDocs, setDoc } from 'firebase/firestore';
-import { Link, useNavigate } from 'react-router-dom';
-import { v4 as uuidv4 } from 'uuid';
-import { setupGame } from '../engine/GameContext';
-import { GameState } from '../engine/gameTypes';
-import { db } from '../firebase';
-import { useEffect, useState } from 'react';
-import { getPlayerId, getPlayerName } from '../engine/helpers';
-import Button from '../components/Button';
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  getDocs,
+  setDoc,
+} from "firebase/firestore";
+import { Link, useNavigate } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
+import { setupGame } from "../engine/GameContext";
+import { GameState } from "../engine/gameTypes";
+import { db } from "../firebase";
+import { useEffect, useState } from "react";
+import { getPlayerId, getPlayerName } from "../engine/helpers";
+import Button from "../components/Button";
 
 function Lobby() {
   const navigate = useNavigate();
   const [gameList, setGameList] = useState<{ id: string }[]>([]);
 
-  const [name] = useState(() => getPlayerName() || '');
+  const [name] = useState(() => getPlayerName() || "");
   const [playerId] = useState(() => getPlayerId() || null);
 
   const startGame = async () => {
@@ -32,13 +39,14 @@ function Lobby() {
   const handleJoinGame = async (gameId: string) => {
     if (playerId === null) return;
 
-    const gameDocRef = doc(db, 'games', gameId);
+    const gameDocRef = doc(db, "games", gameId);
     const snapshot = await getDoc(gameDocRef);
     const game = snapshot.data() as GameState;
 
     if (!game) return alert("Game not found");
     if (game.players.Blue.id) return alert("Blue player already taken");
-    if (game.players.Red.id === playerId) return alert("Cannot join with same ID as red player");
+    if (game.players.Red.id === playerId)
+      return alert("Cannot join with same ID as red player");
 
     game.players.Blue.id = playerId;
     game.players.Blue.name = name;
@@ -46,18 +54,20 @@ function Lobby() {
     await setDoc(gameDocRef, game);
 
     navigate(`/game/${gameId}`);
-  }
+  };
 
   const handleRejoinGame = async (gameId: string) => {
     if (playerId === null) return;
 
-    const gameDocRef = doc(db, 'games', gameId);
+    const gameDocRef = doc(db, "games", gameId);
     const snapshot = await getDoc(gameDocRef);
     const game = snapshot.data() as GameState;
 
     if (!game) return alert("Game not found");
-    if (game.players.Red.id === game.players.Blue.id) return alert("Red and Blue have same ID, AHH");
-    if (game.players.Red.id !== playerId && game.players.Blue.id !== playerId) return alert("Player IDs do not match");
+    if (game.players.Red.id === game.players.Blue.id)
+      return alert("Red and Blue have same ID, AHH");
+    if (game.players.Red.id !== playerId && game.players.Blue.id !== playerId)
+      return alert("Player IDs do not match");
 
     if (game.players.Red.id === playerId) {
       game.players.Red.name = name;
@@ -68,16 +78,16 @@ function Lobby() {
     await setDoc(gameDocRef, game);
 
     navigate(`/game/${gameId}`);
-  }
+  };
 
   const handleDeleteGame = async (gameId: string) => {
-    await deleteDoc(doc(db, 'games', gameId));
+    await deleteDoc(doc(db, "games", gameId));
     setGameList((prev) => prev.filter((game) => game.id !== gameId));
   };
 
   useEffect(() => {
     const fetchGames = async () => {
-      const snapshot = await getDocs(collection(db, 'games'));
+      const snapshot = await getDocs(collection(db, "games"));
       const games = snapshot.docs.map((doc) => ({ id: doc.id }));
       setGameList(games);
     };
@@ -106,9 +116,13 @@ function Lobby() {
           {gameList.map((game) => (
             <li key={game.id}>
               {game.id}
-              <Button onClick={() => handleJoinGame(game.id)}>Join as Blue</Button>
+              <Button onClick={() => handleJoinGame(game.id)}>
+                Join as Blue
+              </Button>
               <Button onClick={() => handleDeleteGame(game.id)}>Delete</Button>
-              <Button onClick={() => handleRejoinGame(game.id)}>Rejoin game</Button>
+              <Button onClick={() => handleRejoinGame(game.id)}>
+                Rejoin game
+              </Button>
             </li>
           ))}
         </ul>

@@ -4,10 +4,7 @@ import { getPlayerId } from "../engine/helpers";
 import CardRow from "./CardRow";
 
 function City({ color }: { color: PlayerColor }) {
-  const {
-    game,
-    toggleCardDiscarding,
-  } = useGame();
+  const { game, toggleCardDiscarding } = useGame();
   const cityOwner = game.players[color];
   const isDiscarding = cityOwner.discarding;
 
@@ -24,7 +21,7 @@ function City({ color }: { color: PlayerColor }) {
         }
       }}
     />
-  )
+  );
 }
 
 export default City;

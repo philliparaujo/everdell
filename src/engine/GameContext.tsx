@@ -1,14 +1,20 @@
-import { doc, getFirestore, onSnapshot, setDoc } from 'firebase/firestore';
-import { createContext, useContext, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { cardFrequencies, rawCards } from '../assets/data/cards';
-import { events } from '../assets/data/events';
-import { locations } from '../assets/data/locations';
+import { doc, getFirestore, onSnapshot, setDoc } from "firebase/firestore";
+import { createContext, useContext, useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { cardFrequencies, rawCards } from "../assets/data/cards";
+import { events } from "../assets/data/events";
+import { locations } from "../assets/data/locations";
 import * as Actions from "./gameActions";
-import { Card, defaultPlayer, GameState, PlayerColor, Resources } from './gameTypes';
-import { shuffleArray } from './helpers';
-import { MAX_MEADOW_SIZE } from './gameConstants';
-import { journeys } from '../assets/data/journey';
+import {
+  Card,
+  defaultPlayer,
+  GameState,
+  PlayerColor,
+  Resources,
+} from "./gameTypes";
+import { shuffleArray } from "./helpers";
+import { MAX_MEADOW_SIZE } from "./gameConstants";
+import { journeys } from "../assets/data/journey";
 
 let actionQueue = Promise.resolve();
 
@@ -24,9 +30,9 @@ export function setupGame(firstPlayer: PlayerColor): GameState {
   });
   const deck = shuffleArray(cards);
 
-  const meadow = deck.slice(0, MAX_MEADOW_SIZE);  // 8 cards
-  const firstHand = deck.slice(8, 13);  // 5 cards
-  const secondHand = deck.slice(13, 19);  // 6 cards
+  const meadow = deck.slice(0, MAX_MEADOW_SIZE); // 8 cards
+  const firstHand = deck.slice(8, 13); // 5 cards
+  const secondHand = deck.slice(13, 19); // 6 cards
   const remainingDeck = deck.slice(19);
 
   console.log("DECK SIZE IS ", remainingDeck.length);
@@ -35,13 +41,13 @@ export function setupGame(firstPlayer: PlayerColor): GameState {
     players: {
       Red: {
         ...defaultPlayer,
-        color: 'Red',
-        hand: firstPlayer === 'Red' ? firstHand : secondHand,
+        color: "Red",
+        hand: firstPlayer === "Red" ? firstHand : secondHand,
       },
       Blue: {
         ...defaultPlayer,
-        color: 'Blue',
-        hand: firstPlayer === 'Blue' ? firstHand : secondHand,
+        color: "Blue",
+        hand: firstPlayer === "Blue" ? firstHand : secondHand,
       },
     },
     deck: remainingDeck,
@@ -56,7 +62,7 @@ export function setupGame(firstPlayer: PlayerColor): GameState {
 }
 const defaultState = setupGame("Red");
 
-const noop = (..._: any[]) => { };
+const noop = (..._: any[]) => {};
 
 const GameContext = createContext<{
   game: GameState;
@@ -64,21 +70,60 @@ const GameContext = createContext<{
   setDiscarding: (playerId: string | null, discarding: boolean) => void;
   setPlaying: (playerId: string | null, playing: boolean) => void;
   setGiving: (playerId: string | null, giving: boolean) => void;
-  toggleCardDiscarding: (playerId: string | null, location: "hand" | "city" | "meadow" | "reveal", index: number) => void;
-  toggleCardPlaying: (playerId: string | null, location: "hand" | "meadow" | "discard" | "reveal", index: number) => void;
-  toggleCardGiving: (playerId: string | null, location: "hand" | "meadow", index: number) => void;
+  toggleCardDiscarding: (
+    playerId: string | null,
+    location: "hand" | "city" | "meadow" | "reveal",
+    index: number,
+  ) => void;
+  toggleCardPlaying: (
+    playerId: string | null,
+    location: "hand" | "meadow" | "discard" | "reveal",
+    index: number,
+  ) => void;
+  toggleCardGiving: (
+    playerId: string | null,
+    location: "hand" | "meadow",
+    index: number,
+  ) => void;
   discardSelectedCards: (playerId: string | null) => void;
   playSelectedCards: (playerId: string | null) => void;
   giveSelectedCards: (playerId: string | null, toColor: PlayerColor) => void;
   drawCard: (playerId: string | null) => void;
   revealCard: (playerId: string | null, location: "deck" | "discard") => void;
   refillMeadow: (playerId: string | null) => void;
-  visitLocation: (playerId: string | null, index: number, workersVisiting: 1 | -1) => void;
-  visitJourney: (playerId: string | null, index: number, workersVisiting: 1 | -1) => void;
-  visitEvent: (playerId: string | null, index: number, workersVisiting: 1 | -1) => void;
-  visitCardInCity: (playerId: string | null, cityColor: PlayerColor, index: number, workersVisiting: 1 | -1) => void;
-  toggleOccupiedCardInCity: (playerId: string | null, cityColor: PlayerColor, index: number, occupied: boolean) => void;
-  addResourcesToCardInCity: (playerId: string | null, cityColor: PlayerColor, index: number, resources: Resources) => void;
+  visitLocation: (
+    playerId: string | null,
+    index: number,
+    workersVisiting: 1 | -1,
+  ) => void;
+  visitJourney: (
+    playerId: string | null,
+    index: number,
+    workersVisiting: 1 | -1,
+  ) => void;
+  visitEvent: (
+    playerId: string | null,
+    index: number,
+    workersVisiting: 1 | -1,
+  ) => void;
+  visitCardInCity: (
+    playerId: string | null,
+    cityColor: PlayerColor,
+    index: number,
+    workersVisiting: 1 | -1,
+  ) => void;
+  toggleOccupiedCardInCity: (
+    playerId: string | null,
+    cityColor: PlayerColor,
+    index: number,
+    occupied: boolean,
+  ) => void;
+  addResourcesToCardInCity: (
+    playerId: string | null,
+    cityColor: PlayerColor,
+    index: number,
+    resources: Resources,
+  ) => void;
   addResourcesToSelf: (playerId: string | null, resources: Resources) => void;
   harvest: (playerId: string | null) => void;
 }>({
@@ -106,7 +151,11 @@ const GameContext = createContext<{
   harvest: noop,
 });
 
-export const GameProviderLoader = ({ children }: { children: React.ReactNode }) => {
+export const GameProviderLoader = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
   const { gameId } = useParams();
   const [game, setGame] = useState<GameState | null>(null);
 
@@ -122,7 +171,11 @@ export const GameProviderLoader = ({ children }: { children: React.ReactNode }) 
 
   if (!game || !gameId) return <div>Loading game...</div>;
 
-  return <GameProvider game={game} gameId={gameId}>{children}</GameProvider>;
+  return (
+    <GameProvider game={game} gameId={gameId}>
+      {children}
+    </GameProvider>
+  );
 };
 
 export const GameProvider = ({
@@ -145,20 +198,25 @@ export const GameProvider = ({
     return () => unsubscribe();
   }, [gameId]);
 
-  function wrapAction<T extends (...args: any[]) => GameState>(fn: T, update: boolean = true) {
+  function wrapAction<T extends (...args: any[]) => GameState>(
+    fn: T,
+    update: boolean = true,
+  ) {
     return (...args: Tail<Parameters<T>>) => {
       // Chain this action onto the queue
-      actionQueue = actionQueue.then(async () => {
-        setLocalGame((prev) => {
-          const updated = fn(prev, ...args);
-          if (update) {
-            void setDoc(dbRef, updated);
-          }
-          return updated;
+      actionQueue = actionQueue
+        .then(async () => {
+          setLocalGame((prev) => {
+            const updated = fn(prev, ...args);
+            if (update) {
+              void setDoc(dbRef, updated);
+            }
+            return updated;
+          });
+        })
+        .catch((err) => {
+          console.error("Action failed:", err);
         });
-      }).catch((err) => {
-        console.error("Action failed:", err);
-      });
     };
   }
 
@@ -189,12 +247,20 @@ export const GameProvider = ({
     giveSelectedCards: wrapAction(Actions.giveSelectedCards, false),
     drawCard: wrapAction(Actions.drawCard, false),
     refillMeadow: wrapAction(Actions.refillMeadow, false),
-    toggleOccupiedCardInCity: wrapAction(Actions.toggleOccupiedCardInCity, false),
-    addResourcesToCardInCity: wrapAction(Actions.addResourcesToCardInCity, false),
+    toggleOccupiedCardInCity: wrapAction(
+      Actions.toggleOccupiedCardInCity,
+      false,
+    ),
+    addResourcesToCardInCity: wrapAction(
+      Actions.addResourcesToCardInCity,
+      false,
+    ),
     addResourcesToSelf: wrapAction(Actions.addResourcesToSelf, false),
   };
 
-  return <GameContext.Provider value={contextValue}>{children}</GameContext.Provider>;
+  return (
+    <GameContext.Provider value={contextValue}>{children}</GameContext.Provider>
+  );
 };
 
 export const useGame = () => useContext(GameContext);

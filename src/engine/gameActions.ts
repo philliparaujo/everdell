@@ -58,7 +58,7 @@ export function visitLocation(
   state: GameState,
   playerId: string | null,
   index: number,
-  workersVisiting: 1 | -1
+  workersVisiting: 1 | -1,
 ): GameState {
   const playerColor = getPlayerColor(state, playerId);
   if (playerColor === null) return state;
@@ -83,7 +83,7 @@ export function visitLocation(
   const newState: GameState = {
     ...state,
     locations: state.locations.map((loc, i) =>
-      i === index ? updatedLocation : loc
+      i === index ? updatedLocation : loc,
     ),
     players: {
       ...state.players,
@@ -111,7 +111,7 @@ export function visitJourney(
   state: GameState,
   playerId: string | null,
   index: number,
-  workersVisiting: 1 | -1
+  workersVisiting: 1 | -1,
 ): GameState {
   const playerColor = getPlayerColor(state, playerId);
   if (playerColor === null) return state;
@@ -136,7 +136,7 @@ export function visitJourney(
   const newState: GameState = {
     ...state,
     journeys: state.journeys.map((journey, i) =>
-      i === index ? updatedJourney : journey
+      i === index ? updatedJourney : journey,
     ),
     players: {
       ...state.players,
@@ -167,7 +167,7 @@ export function visitEvent(
   state: GameState,
   playerId: string | null,
   index: number,
-  workersVisiting: 1 | -1
+  workersVisiting: 1 | -1,
 ): GameState {
   const playerColor = getPlayerColor(state, playerId);
   if (playerColor === null) return state;
@@ -192,7 +192,7 @@ export function visitEvent(
   const newState: GameState = {
     ...state,
     events: state.events.map((event, i) =>
-      i === index ? updatedEvent : event
+      i === index ? updatedEvent : event,
     ),
     players: {
       ...state.players,
@@ -224,7 +224,7 @@ export function visitCardInCity(
   playerId: string | null,
   cityColor: PlayerColor,
   index: number,
-  workersVisiting: 1 | -1
+  workersVisiting: 1 | -1,
 ): GameState {
   const playerColor = getPlayerColor(state, playerId);
   if (playerColor === null) return state;
@@ -247,7 +247,7 @@ export function visitCardInCity(
     },
   };
   const updatedCity = state.players[cityColor].city.map((c, i) =>
-    i === index ? updatedCard : c
+    i === index ? updatedCard : c,
   );
 
   const updatedPlayer: Player = {
@@ -279,7 +279,7 @@ export function visitCardInCity(
 export function setDiscarding(
   state: GameState,
   playerId: string | null,
-  discarding: boolean
+  discarding: boolean,
 ): GameState {
   const playerColor = getPlayerColor(state, playerId);
   if (playerColor === null) return state;
@@ -302,7 +302,7 @@ export function setDiscarding(
 export function setPlaying(
   state: GameState,
   playerId: string | null,
-  playing: boolean
+  playing: boolean,
 ): GameState {
   const playerColor = getPlayerColor(state, playerId);
   if (playerColor === null) return state;
@@ -328,7 +328,7 @@ export function setPlaying(
 export function setGiving(
   state: GameState,
   playerId: string | null,
-  giving: boolean
+  giving: boolean,
 ): GameState {
   const playerColor = getPlayerColor(state, playerId);
   if (playerColor === null) return state;
@@ -355,7 +355,7 @@ export function setGiving(
 export function revealCard(
   state: GameState,
   playerId: string | null,
-  location: "deck" | "discard"
+  location: "deck" | "discard",
 ): GameState {
   const playerColor = getPlayerColor(state, playerId);
   if (playerColor === null || playerColor !== state.turn) return state;
@@ -440,7 +440,7 @@ export function toggleCardDiscarding(
   state: GameState,
   playerId: string | null,
   location: "hand" | "city" | "meadow" | "reveal",
-  index: number
+  index: number,
 ): GameState {
   const playerColor = getPlayerColor(state, playerId);
   if (playerColor === null) return state;
@@ -503,7 +503,7 @@ export function toggleCardPlaying(
   state: GameState,
   playerId: string | null,
   location: "hand" | "meadow" | "discard" | "reveal",
-  index: number
+  index: number,
 ): GameState {
   const playerColor = getPlayerColor(state, playerId);
   if (playerColor === null) return state;
@@ -567,7 +567,7 @@ export function toggleCardGiving(
   state: GameState,
   playerId: string | null,
   location: "hand" | "meadow",
-  index: number
+  index: number,
 ): GameState {
   const playerColor = getPlayerColor(state, playerId);
   if (playerColor === null) return state;
@@ -612,7 +612,7 @@ export function toggleCardGiving(
 
 export function discardSelectedCards(
   state: GameState,
-  playerId: string | null
+  playerId: string | null,
 ): GameState {
   const playerColor = getPlayerColor(state, playerId);
   if (playerColor === null) return state;
@@ -622,19 +622,19 @@ export function discardSelectedCards(
 
   const [handKeep, handDiscard] = partition(
     player.hand,
-    (card) => !card.discarding
+    (card) => !card.discarding,
   );
   const [cityKeep, cityDiscard] = partition(
     player.city,
-    (card) => !card.discarding
+    (card) => !card.discarding,
   );
   const [meadowKeep, meadowDiscard] = partition(
     state.meadow,
-    (card) => !card.discarding
+    (card) => !card.discarding,
   );
   const [revealKeep, revealDiscard] = partition(
     state.reveal,
-    (card) => !card.discarding
+    (card) => !card.discarding,
   );
 
   const discard = [
@@ -681,7 +681,7 @@ export function discardSelectedCards(
 
 export function playSelectedCards(
   state: GameState,
-  playerId: string | null
+  playerId: string | null,
 ): GameState {
   const playerColor = getPlayerColor(state, playerId);
   if (playerColor === null) return state;
@@ -693,15 +693,15 @@ export function playSelectedCards(
   const [handKeep, handPlay] = partition(player.hand, (card) => !card.playing);
   const [meadowKeep, meadowPlay] = partition(
     state.meadow,
-    (card) => !card.playing
+    (card) => !card.playing,
   );
   const [discardKeep, discardPlay] = partition(
     state.discard,
-    (card) => !card.playing
+    (card) => !card.playing,
   );
   const [revealKeep, revealPlay] = partition(
     state.reveal,
-    (card) => !card.playing
+    (card) => !card.playing,
   );
 
   const city = [
@@ -713,7 +713,7 @@ export function playSelectedCards(
   ];
   const [otherPlayedCards, myCity] = partition(
     city,
-    (card) => card.name === "Fool" && card.playing
+    (card) => card.name === "Fool" && card.playing,
   );
 
   const oppositeCity = [...oppositePlayer.city, ...otherPlayedCards];
@@ -724,7 +724,7 @@ export function playSelectedCards(
   const mySortedCity = myCity
     .sort((a, b) => (a.name < b.name ? -1 : 1))
     .sort((a, b) =>
-      a.effectType.toString() < b.effectType.toString() ? -1 : 1
+      a.effectType.toString() < b.effectType.toString() ? -1 : 1,
     );
 
   return {
@@ -770,7 +770,7 @@ export function playSelectedCards(
 export function giveSelectedCards(
   state: GameState,
   playerId: string | null,
-  toColor: PlayerColor
+  toColor: PlayerColor,
 ): GameState {
   const playerColor = getPlayerColor(state, playerId);
   if (playerColor === null) return state;
@@ -782,7 +782,7 @@ export function giveSelectedCards(
   const [handKeep, handGive] = partition(player.hand, (card) => !card.giving);
   const [meadowKeep, meadowGive] = partition(
     state.meadow,
-    (card) => !card.giving
+    (card) => !card.giving,
   );
 
   const updatePlayerHand: Card[] =
@@ -868,7 +868,7 @@ export function drawCard(state: GameState, playerId: string | null): GameState {
 
 export function refillMeadow(
   state: GameState,
-  playerId: string | null
+  playerId: string | null,
 ): GameState {
   const playerColor = getPlayerColor(state, playerId);
   if (playerColor === null) return state;
@@ -900,7 +900,7 @@ export function addResourcesToCardInCity(
   playerId: string | null,
   cityColor: PlayerColor,
   index: number,
-  resources: Resources
+  resources: Resources,
 ): GameState {
   const playerColor = getPlayerColor(state, playerId);
   if (playerColor === null) return state;
@@ -927,7 +927,7 @@ export function addResourcesToCardInCity(
   };
 
   const updatedCity = state.players[cityColor].city.map((c, i) =>
-    i === index ? updatedCard : c
+    i === index ? updatedCard : c,
   );
 
   return {
@@ -947,7 +947,7 @@ export function toggleOccupiedCardInCity(
   playerId: string | null,
   cityColor: PlayerColor,
   index: number,
-  occupied: boolean
+  occupied: boolean,
 ): GameState {
   const playerColor = getPlayerColor(state, playerId);
   if (playerColor === null) return state;
@@ -964,7 +964,7 @@ export function toggleOccupiedCardInCity(
   };
 
   const updatedCity = state.players[cityColor].city.map((c, i) =>
-    i === index ? updatedCard : c
+    i === index ? updatedCard : c,
   );
 
   return {
@@ -982,7 +982,7 @@ export function toggleOccupiedCardInCity(
 export function addResourcesToSelf(
   state: GameState,
   playerId: string | null,
-  resources: Resources
+  resources: Resources,
 ): GameState {
   const playerColor = getPlayerColor(state, playerId);
   if (playerColor === null) return state;

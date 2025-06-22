@@ -4,12 +4,8 @@ import { getPlayerId } from "../engine/helpers";
 import CardRow from "./CardRow";
 
 function Meadow() {
-  const {
-    game,
-    toggleCardDiscarding,
-    toggleCardPlaying,
-    toggleCardGiving
-  } = useGame();
+  const { game, toggleCardDiscarding, toggleCardPlaying, toggleCardGiving } =
+    useGame();
   const currentPlayer = game.players[game.turn];
   const isDiscarding = currentPlayer.discarding;
   const isPlaying = currentPlayer.playing;
@@ -33,7 +29,7 @@ function Meadow() {
         }
       }}
     />
-  )
+  );
 }
 
 export default Meadow;

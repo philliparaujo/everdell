@@ -5,12 +5,8 @@ import { getPlayerId } from "../engine/helpers";
 import CardRow from "./CardRow";
 
 function Hand({ color }: { color: PlayerColor }) {
-  const {
-    game,
-    toggleCardDiscarding,
-    toggleCardPlaying,
-    toggleCardGiving
-  } = useGame();
+  const { game, toggleCardDiscarding, toggleCardPlaying, toggleCardGiving } =
+    useGame();
   const handOwner = game.players[color];
   const isDiscarding = handOwner.discarding;
   const isPlaying = handOwner.playing;
@@ -34,7 +30,7 @@ function Hand({ color }: { color: PlayerColor }) {
         }
       }}
     />
-  )
+  );
 }
 
 export default Hand;

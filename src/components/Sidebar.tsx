@@ -1,5 +1,9 @@
 import { useGame } from "../engine/GameContext";
-import { getPlayerColor, getPlayerId, oppositePlayerOf } from "../engine/helpers";
+import {
+  getPlayerColor,
+  getPlayerId,
+  oppositePlayerOf,
+} from "../engine/helpers";
 import { idStyle, sideBarStyling } from "../screens/Game";
 import Controls from "./Controls";
 import Log from "./Log";
@@ -8,9 +12,7 @@ import ResourceBank from "./ResourceBank";
 import Reveal from "./Reveal";
 
 function Sidebar({ gameId }: { gameId: string | undefined }) {
-  const {
-    game
-  } = useGame();
+  const { game } = useGame();
 
   const storedId = getPlayerId();
   const playerColor = getPlayerColor(game, storedId);
@@ -28,13 +30,11 @@ function Sidebar({ gameId }: { gameId: string | undefined }) {
 
   return (
     <div style={sideBarStyling}>
-      <div style={{ padding: '8px' }}>
+      <div style={{ padding: "8px" }}>
         <h3>
-          {game.turn}'s Turn{' '}
+          {game.turn}'s Turn{" "}
           {turnStatusText && (
-            <span style={{ fontSize: '14px' }}>
-              ({turnStatusText})
-            </span>
+            <span style={{ fontSize: "14px" }}>({turnStatusText})</span>
           )}
         </h3>
         <hr />

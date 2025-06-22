@@ -1,4 +1,3 @@
-
 import bluetype from "../assets/transparent-icons/bluetype.png";
 import greentype from "../assets/transparent-icons/greentype.png";
 import purpletype from "../assets/transparent-icons/purpletype.png";
@@ -21,8 +20,8 @@ const effectTypeIcons: Record<EffectType, string> = {
   Green: greentype,
   Purple: purpletype,
   Red: redtype,
-  Tan: tantype
-}
+  Tan: tantype,
+};
 
 const resourceIcons: Record<ResourceType, string> = {
   twigs: twig,
@@ -31,36 +30,26 @@ const resourceIcons: Record<ResourceType, string> = {
   berries: berry,
   coins: coin,
   cards: card,
-  wildcard: wildcard
-}
+  wildcard: wildcard,
+};
 
 // Styling
 export const iconStyle: React.CSSProperties = {
-  width: '16px',
-  height: '16px',
-  verticalAlign: 'middle',
-  marginLeft: '2px',
-  marginRight: '2px'
+  width: "16px",
+  height: "16px",
+  verticalAlign: "middle",
+  marginLeft: "2px",
+  marginRight: "2px",
 };
 
 export function ResourceIcon({ type }: { type: ResourceType }) {
   return (
-    <img
-      src={resourceIcons[type]}
-      alt={type.toString()}
-      style={iconStyle}
-    />
-  )
+    <img src={resourceIcons[type]} alt={type.toString()} style={iconStyle} />
+  );
 }
 
 export function CustomResourceIcon({ path }: { path: string }) {
-  return (
-    <img
-      src={path}
-      alt={path}
-      style={iconStyle}
-    />
-  )
+  return <img src={path} alt={path} style={iconStyle} />;
 }
 
 export function WorkerIcon({ playerColor }: { playerColor: PlayerColor }) {
@@ -70,15 +59,11 @@ export function WorkerIcon({ playerColor }: { playerColor: PlayerColor }) {
       alt={playerColor.toString()}
       style={iconStyle}
     />
-  )
+  );
 }
 
 export function EffectTypeIcon({ type }: { type: EffectType }) {
   return (
-    <img
-      src={effectTypeIcons[type]}
-      alt={type.toString()}
-      style={iconStyle}
-    />
-  )
+    <img src={effectTypeIcons[type]} alt={type.toString()} style={iconStyle} />
+  );
 }

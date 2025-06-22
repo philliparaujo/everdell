@@ -1,7 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { v4 as uuidv4 } from 'uuid';
-import { getPlayerId, getPlayerName, storePlayerId, storePlayerName } from '../engine/helpers';
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
+import {
+  getPlayerId,
+  getPlayerName,
+  storePlayerId,
+  storePlayerName,
+} from "../engine/helpers";
 
 function Home() {
   const [name, setName] = useState("Guest");
@@ -28,7 +33,7 @@ function Home() {
   const handlePlayerIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPlayerId(e.target.value);
     storePlayerId(e.target.value);
-  }
+  };
 
   return (
     <div>
@@ -36,7 +41,11 @@ function Home() {
       <div>
         <label>
           PlayerId:
-          <input value={playerId} onChange={handlePlayerIdChange} style={{ width: '300px' }} />
+          <input
+            value={playerId}
+            onChange={handlePlayerIdChange}
+            style={{ width: "300px" }}
+          />
         </label>
       </div>
       <div>
@@ -51,6 +60,5 @@ function Home() {
     </div>
   );
 }
-
 
 export default Home;
