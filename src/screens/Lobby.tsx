@@ -122,7 +122,16 @@ function Lobby() {
   }, []);
 
   return (
-    <div style={{ maxWidth: "1200px", padding: "24px", margin: "0 auto" }}>
+    <div
+      style={{
+        maxWidth: "1200px",
+        margin: "0 auto",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        minHeight: "100vh",
+      }}
+    >
       <div
         style={{
           display: "flex",
