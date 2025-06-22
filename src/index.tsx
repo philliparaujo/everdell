@@ -4,6 +4,7 @@ import { HashRouter as Router } from "react-router-dom";
 import App from "./App";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
+import BackgroundContainer from "./components/BackgroundContainer";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement,
@@ -12,7 +13,9 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <Router>
-      <App />
+      <BackgroundContainer>
+        <App />
+      </BackgroundContainer>
     </Router>
   </React.StrictMode>,
 );

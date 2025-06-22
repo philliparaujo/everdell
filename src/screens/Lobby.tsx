@@ -122,161 +122,156 @@ function Lobby() {
   }, []);
 
   return (
-    <BackgroundContainer>
-      {/* Player info and main actions */}
-      <div style={{ maxWidth: "1200px", padding: "24px", margin: "0 auto" }}>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            flexWrap: "wrap",
-            gap: "16px",
-            marginBottom: "32px",
-          }}
-        >
-          <div>
-            <span>
-              <strong>Display Name:</strong> {name || "Not Set"}
-            </span>
-            <span style={{ marginLeft: "24px" }}>
-              <strong>ID:</strong> {playerId || "Not Set"}
-            </span>
-          </div>
-          <div style={{ display: "flex", gap: "8px" }}>
-            <Button
-              onClick={startGame}
-              disabled={isDisabled}
-              color={COLORS.importantButton}
-            >
-              Start New Game
-            </Button>
-            <Navigation
-              link="/home"
-              displayText="Back to Home"
-              arrow="backward"
-            />
-          </div>
+    <div style={{ maxWidth: "1200px", padding: "24px", margin: "0 auto" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          flexWrap: "wrap",
+          gap: "16px",
+          marginBottom: "32px",
+        }}
+      >
+        <div>
+          <span>
+            <strong>Display Name:</strong> {name || "Not Set"}
+          </span>
+          <span style={{ marginLeft: "24px" }}>
+            <strong>ID:</strong> {playerId || "Not Set"}
+          </span>
         </div>
+        <div style={{ display: "flex", gap: "8px" }}>
+          <Button
+            onClick={startGame}
+            disabled={isDisabled}
+            color={COLORS.importantButton}
+          >
+            Start New Game
+          </Button>
+          <Navigation
+            link="/home"
+            displayText="Back to Home"
+            arrow="backward"
+          />
+        </div>
+      </div>
 
-        <h3>Available Games</h3>
-        {gameList.length === 0 && <p>No games found.</p>}
+      <h3>Available Games</h3>
+      {gameList.length === 0 && <p>No games found.</p>}
 
-        {/* Game List Grid */}
-        <ul
-          style={{
-            listStyle: "none",
-            padding: 0,
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(400px, 1fr))",
-            gap: "16px",
-          }}
-        >
-          {gameList.map(({ id, game }) => {
-            const redPlayer = game.players.Red;
-            const bluePlayer = game.players.Blue;
+      {/* Game List Grid */}
+      <ul
+        style={{
+          listStyle: "none",
+          padding: 0,
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(400px, 1fr))",
+          gap: "16px",
+        }}
+      >
+        {gameList.map(({ id, game }) => {
+          const redPlayer = game.players.Red;
+          const bluePlayer = game.players.Blue;
 
-            const isPlayerInGame =
-              playerId && [redPlayer.id, bluePlayer.id].includes(playerId);
-            const canJoinRed = !redPlayer.id;
-            const canJoinBlue = !bluePlayer.id;
+          const isPlayerInGame =
+            playerId && [redPlayer.id, bluePlayer.id].includes(playerId);
+          const canJoinRed = !redPlayer.id;
+          const canJoinBlue = !bluePlayer.id;
 
-            return (
-              <li
-                key={id}
+          return (
+            <li
+              key={id}
+              style={{
+                border: `1px solid ${COLORS.sidebarBorder}`,
+                backgroundColor: COLORS.sidebar,
+                borderRadius: "8px",
+                padding: "16px",
+                display: "flex",
+                flexDirection: "column",
+                gap: "16px",
+              }}
+            >
+              <div>
+                <strong>Game ID:</strong> {id}
+              </div>
+
+              {/* Player displays, evenly spaced */}
+              <div
                 style={{
-                  border: `1px solid ${COLORS.sidebarBorder}`,
-                  backgroundColor: COLORS.sidebar,
-                  borderRadius: "8px",
-                  padding: "16px",
                   display: "flex",
-                  flexDirection: "column",
-                  gap: "16px",
+                  justifyContent: "space-between",
+                  minHeight: "40px",
                 }}
               >
-                <div>
-                  <strong>Game ID:</strong> {id}
-                </div>
+                <GamePlayerDisplay
+                  player={redPlayer}
+                  isYou={playerId === redPlayer.id}
+                />
+                <GamePlayerDisplay
+                  player={bluePlayer}
+                  isYou={playerId === bluePlayer.id}
+                />
+              </div>
 
-                {/* Player displays, evenly spaced */}
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    minHeight: "40px",
-                  }}
-                >
-                  <GamePlayerDisplay
-                    player={redPlayer}
-                    isYou={playerId === redPlayer.id}
-                  />
-                  <GamePlayerDisplay
-                    player={bluePlayer}
-                    isYou={playerId === bluePlayer.id}
-                  />
-                </div>
-
-                {/* Action buttons */}
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "flex-end",
-                    gap: "12px",
-                    marginTop: "auto",
-                    paddingTop: "12px",
-                    borderTop: `1px solid ${COLORS.sidebarBorder}`,
-                  }}
-                >
-                  <div
-                    style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}
-                  >
-                    {canJoinRed && !isPlayerInGame && (
-                      <Button
-                        onClick={() => handleJoinGame(id, "Red")}
-                        disabled={isDisabled}
-                        color={COLORS.importantButton}
-                      >
-                        Join as Red
-                      </Button>
-                    )}
-                    {canJoinBlue && !isPlayerInGame && (
-                      <Button
-                        onClick={() => handleJoinGame(id, "Blue")}
-                        disabled={isDisabled}
-                        color={COLORS.importantButton}
-                      >
-                        Join as Blue
-                      </Button>
-                    )}
-                    {isPlayerInGame && (
-                      <Button
-                        onClick={() => handleRejoinGame(id)}
-                        color={COLORS.importantButton}
-                      >
-                        Rejoin
-                      </Button>
-                    )}
-                    {!isPlayerInGame && (
-                      <Button onClick={() => handleSpectateGame(id)}>
-                        Spectate
-                      </Button>
-                    )}
+              {/* Action buttons */}
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "flex-end",
+                  gap: "12px",
+                  marginTop: "auto",
+                  paddingTop: "12px",
+                  borderTop: `1px solid ${COLORS.sidebarBorder}`,
+                }}
+              >
+                <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+                  {canJoinRed && !isPlayerInGame && (
                     <Button
-                      onClick={() => handleDeleteGame(id)}
+                      onClick={() => handleJoinGame(id, "Red")}
                       disabled={isDisabled}
-                      color={COLORS.dangerButton}
+                      color={COLORS.importantButton}
                     >
-                      Delete
+                      Join as Red
                     </Button>
-                  </div>
+                  )}
+                  {canJoinBlue && !isPlayerInGame && (
+                    <Button
+                      onClick={() => handleJoinGame(id, "Blue")}
+                      disabled={isDisabled}
+                      color={COLORS.importantButton}
+                    >
+                      Join as Blue
+                    </Button>
+                  )}
+                  {isPlayerInGame && (
+                    <Button
+                      onClick={() => handleRejoinGame(id)}
+                      color={COLORS.importantButton}
+                    >
+                      Rejoin
+                    </Button>
+                  )}
+                  {!isPlayerInGame && (
+                    <Button onClick={() => handleSpectateGame(id)}>
+                      Spectate
+                    </Button>
+                  )}
+                  <Button
+                    onClick={() => handleDeleteGame(id)}
+                    disabled={isDisabled}
+                    color={COLORS.dangerButton}
+                  >
+                    Delete
+                  </Button>
                 </div>
-              </li>
-            );
-          })}
-        </ul>
-      </div>
-    </BackgroundContainer>
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
   );
 }
 

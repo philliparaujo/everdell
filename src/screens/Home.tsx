@@ -7,7 +7,6 @@ import {
   storePlayerName,
 } from "../engine/helpers";
 import Navigation from "../components/Navigation";
-import BackgroundContainer from "../components/BackgroundContainer";
 
 function Home() {
   // Use lazy initializers for name and playerId
@@ -66,56 +65,46 @@ function Home() {
   };
 
   return (
-    <BackgroundContainer>
-      <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
-        <h2>Home Screen</h2> {/* Changed to h2 for better semantic structure */}
-        <p>Welcome, {name}!</p> {/* Display current name */}
-        <div style={{ marginBottom: "15px" }}>
-          <label
-            style={{
-              display: "block",
-              marginBottom: "5px",
-              fontWeight: "bold",
-            }}
-          >
-            Player ID:
-          </label>
-          <input
-            type="text"
-            value={playerId}
-            onChange={handlePlayerIdChange}
-            style={{
-              width: "300px",
-              padding: "8px",
-              borderRadius: "4px",
-              border: "1px solid #ccc",
-            }}
-          />
-        </div>
-        <div style={{ marginBottom: "20px" }}>
-          <label
-            style={{
-              display: "block",
-              marginBottom: "5px",
-              fontWeight: "bold",
-            }}
-          >
-            Display Name:
-          </label>
-          <input
-            type="text"
-            value={name}
-            onChange={handleNameChange}
-            style={{
-              padding: "8px",
-              borderRadius: "4px",
-              border: "1px solid #ccc",
-            }}
-          />
-        </div>
-        <Navigation link="/lobby" displayText="Go to Lobby" arrow="forward" />
+    <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
+      <h2>Home Screen</h2> {/* Changed to h2 for better semantic structure */}
+      <p>Welcome, {name}!</p> {/* Display current name */}
+      <div style={{ marginBottom: "15px" }}>
+        <label
+          style={{ display: "block", marginBottom: "5px", fontWeight: "bold" }}
+        >
+          Player ID:
+        </label>
+        <input
+          type="text"
+          value={playerId}
+          onChange={handlePlayerIdChange}
+          style={{
+            width: "300px",
+            padding: "8px",
+            borderRadius: "4px",
+            border: "1px solid #ccc",
+          }}
+        />
       </div>
-    </BackgroundContainer>
+      <div style={{ marginBottom: "20px" }}>
+        <label
+          style={{ display: "block", marginBottom: "5px", fontWeight: "bold" }}
+        >
+          Display Name:
+        </label>
+        <input
+          type="text"
+          value={name}
+          onChange={handleNameChange}
+          style={{
+            padding: "8px",
+            borderRadius: "4px",
+            border: "1px solid #ccc",
+          }}
+        />
+      </div>
+      <Navigation link="/lobby" displayText="Go to Lobby" arrow="forward" />
+    </div>
   );
 }
 
