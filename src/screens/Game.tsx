@@ -66,7 +66,7 @@ export const headingStyling: React.CSSProperties = {
 };
 
 export const idStyle: React.CSSProperties = {
-  fontSize: "10px",
+  fontSize: "11px",
   fontStyle: "italic",
 };
 

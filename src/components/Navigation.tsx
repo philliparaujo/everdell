@@ -14,7 +14,7 @@ function Navigation({
     arrow === "backward" ? "← " : arrow === "forward" ? "→ " : "";
 
   return (
-    <div style={{ marginTop: "12px", fontSize: "0.9em" }}>
+    <div>
       <Link
         to={link}
         style={{ textDecoration: "none", color: COLORS.navigationText }}

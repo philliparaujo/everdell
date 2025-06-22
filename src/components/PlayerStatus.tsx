@@ -19,8 +19,8 @@ function PlayerStatus({ playerColor }: { playerColor: PlayerColor }) {
 
   return (
     <div key={playerColor}>
-      <div style={{ color: PLAYER_COLORS[playerColor] }}>
-        <strong>
+      <div>
+        <strong style={{ color: PLAYER_COLORS[playerColor] }}>
           {storedId === player.id ? "(Me) " : ""}
           {player.name || "Guest"}
         </strong>

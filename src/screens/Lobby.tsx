@@ -9,12 +9,48 @@ import {
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { setupGame } from "../engine/GameContext";
-import { GameState } from "../engine/gameTypes";
+import { GameState, Player, PlayerColor } from "../engine/gameTypes";
 import { db } from "../firebase";
 import { useEffect, useState } from "react";
 import { getPlayerId, getPlayerName } from "../engine/helpers";
 import Button from "../components/Button";
 import Navigation from "../components/Navigation";
+import { COLORS, PLAYER_COLORS } from "../colors";
+import { idStyle } from "./Game";
+
+// Helper component to render player info consistent with the sidebar style
+const GamePlayerDisplay = ({
+  player,
+  isYou,
+}: {
+  player: Player;
+  isYou: boolean;
+}) => {
+  const color = player.color;
+
+  // Render a styled "Open" slot
+  if (!player.id) {
+    return (
+      <div>
+        <div style={{ color: PLAYER_COLORS[color], fontWeight: "bold" }}>
+          {color}
+        </div>
+        <div style={{ ...idStyle }}>Open Slot</div>
+      </div>
+    );
+  }
+
+  // Render a filled player slot
+  return (
+    <div>
+      <div style={{ color: PLAYER_COLORS[color], fontWeight: "bold" }}>
+        {isYou ? "(Me) " : ""}
+        {player.name}
+      </div>
+      <div style={idStyle}>{player.id}</div>
+    </div>
+  );
+};
 
 function Lobby() {
   const navigate = useNavigate();
@@ -24,18 +60,21 @@ function Lobby() {
   const [name] = useState(() => getPlayerName() || "");
   const [playerId] = useState(() => getPlayerId() || null);
 
+  // Buttons will be disabled if the user has no name or ID
+  const isDisabled = !playerId || !name;
+
   const startGame = async () => {
-    if (playerId === null) return;
+    if (isDisabled) return;
     const gameId = uuidv4();
     const gameState: GameState = setupGame("Red");
-    gameState.players.Red.id = playerId;
+    gameState.players.Red.id = playerId!;
     gameState.players.Red.name = name;
     await setDoc(doc(db, `games/${gameId}`), gameState);
     navigate(`/game/${gameId}`);
   };
 
-  const handleJoinGame = async (gameId: string, color: "Red" | "Blue") => {
-    if (playerId === null) return;
+  const handleJoinGame = async (gameId: string, color: PlayerColor) => {
+    if (isDisabled) return;
 
     const gameRef = doc(db, "games", gameId);
     const snapshot = await getDoc(gameRef);
@@ -47,7 +86,7 @@ function Lobby() {
     if (targetPlayer.id && targetPlayer.id !== playerId)
       return alert(`${color} player slot is already taken.`);
 
-    game.players[color].id = playerId;
+    game.players[color].id = playerId!;
     game.players[color].name = name;
     await setDoc(gameRef, game);
     navigate(`/game/${gameId}`);
@@ -62,6 +101,7 @@ function Lobby() {
   };
 
   const handleDeleteGame = async (gameId: string) => {
+    if (isDisabled) return;
     await deleteDoc(doc(db, "games", gameId));
     setGameList((prev) => prev.filter((g) => g.id !== gameId));
   };
@@ -81,83 +121,160 @@ function Lobby() {
   }, []);
 
   return (
-    <div style={{ padding: "24px", maxWidth: "800px", margin: "0 auto" }}>
-      <h2>Lobby</h2>
-      <p>
-        <strong>Player ID:</strong> {playerId}
-      </p>
-      <p>
-        <strong>Display Name:</strong> {name}
-      </p>
-
-      <div style={{ marginTop: "16px", marginBottom: "32px" }}>
-        <Button onClick={startGame}>Start New Game</Button>
-        <Navigation link="/home" displayText="Back to Home" arrow="backward" />
+    <div
+      style={{
+        padding: "24px",
+        maxWidth: "1200px",
+        margin: "0 auto",
+        minHeight: "100vh",
+        backgroundColor: COLORS.playArea,
+        color: "#e0e0e0",
+      }}
+    >
+      {/* Player info and main actions */}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          flexWrap: "wrap",
+          gap: "16px",
+          marginBottom: "32px",
+        }}
+      >
+        <div>
+          <span>
+            <strong>Display Name:</strong> {name || "Not Set"}
+          </span>
+          <span style={{ marginLeft: "24px" }}>
+            <strong>ID:</strong> {playerId || "Not Set"}
+          </span>
+        </div>
+        <div style={{ display: "flex", gap: "8px" }}>
+          <Button
+            onClick={startGame}
+            disabled={isDisabled}
+            color={COLORS.importantButton}
+          >
+            Start New Game
+          </Button>
+          <Navigation
+            link="/home"
+            displayText="Back to Home"
+            arrow="backward"
+          />
+        </div>
       </div>
 
       <h3>Available Games</h3>
       {gameList.length === 0 && <p>No games found.</p>}
-      <ul style={{ listStyle: "none", padding: 0 }}>
+
+      {/* Game List Grid */}
+      <ul
+        style={{
+          listStyle: "none",
+          padding: 0,
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(400px, 1fr))",
+          gap: "16px",
+        }}
+      >
         {gameList.map(({ id, game }) => {
-          const red = game.players.Red;
-          const blue = game.players.Blue;
+          const redPlayer = game.players.Red;
+          const bluePlayer = game.players.Blue;
 
           const isPlayerInGame =
-            playerId && [red.id, blue.id].includes(playerId);
-          const canJoinRed = !red.id;
-          const canJoinBlue = !blue.id;
+            playerId && [redPlayer.id, bluePlayer.id].includes(playerId);
+          const canJoinRed = !redPlayer.id;
+          const canJoinBlue = !bluePlayer.id;
 
           return (
             <li
               key={id}
               style={{
-                border: "1px solid #ccc",
+                border: `1px solid ${COLORS.sidebarBorder}`,
+                backgroundColor: COLORS.sidebar,
                 borderRadius: "8px",
                 padding: "16px",
-                marginBottom: "12px",
+                display: "flex",
+                flexDirection: "column",
+                gap: "16px",
               }}
             >
-              <div style={{ marginBottom: "8px" }}>
+              <div>
                 <strong>Game ID:</strong> {id}
               </div>
-              <div style={{ display: "flex", gap: "24px" }}>
-                <div>
-                  <strong>Red:</strong>{" "}
-                  {red.name ? `${red.name} (${red.id})` : "Open"}
-                </div>
-                <div>
-                  <strong>Blue:</strong>{" "}
-                  {blue.name ? `${blue.name} (${blue.id})` : "Open"}
-                </div>
-              </div>
 
+              {/* Player displays, evenly spaced */}
               <div
                 style={{
                   display: "flex",
-                  gap: "12px",
-                  marginTop: "12px",
-                  flexWrap: "wrap",
+                  justifyContent: "space-between",
+                  minHeight: "40px",
                 }}
               >
-                {canJoinRed && !isPlayerInGame && (
-                  <Button onClick={() => handleJoinGame(id, "Red")}>
-                    Join as Red
+                <GamePlayerDisplay
+                  player={redPlayer}
+                  isYou={playerId === redPlayer.id}
+                />
+                <GamePlayerDisplay
+                  player={bluePlayer}
+                  isYou={playerId === bluePlayer.id}
+                />
+              </div>
+
+              {/* Action buttons */}
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "flex-end",
+                  gap: "12px",
+                  marginTop: "auto",
+                  paddingTop: "12px",
+                  borderTop: `1px solid ${COLORS.sidebarBorder}`,
+                }}
+              >
+                <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+                  {canJoinRed && !isPlayerInGame && (
+                    <Button
+                      onClick={() => handleJoinGame(id, "Red")}
+                      disabled={isDisabled}
+                      color={COLORS.importantButton}
+                    >
+                      Join as Red
+                    </Button>
+                  )}
+                  {canJoinBlue && !isPlayerInGame && (
+                    <Button
+                      onClick={() => handleJoinGame(id, "Blue")}
+                      disabled={isDisabled}
+                      color={COLORS.importantButton}
+                    >
+                      Join as Blue
+                    </Button>
+                  )}
+                  {isPlayerInGame && (
+                    <Button
+                      onClick={() => handleRejoinGame(id)}
+                      color={COLORS.importantButton}
+                    >
+                      Rejoin
+                    </Button>
+                  )}
+                  {!isPlayerInGame && (
+                    <Button onClick={() => handleSpectateGame(id)}>
+                      Spectate
+                    </Button>
+                  )}
+                  <Button
+                    onClick={() => handleDeleteGame(id)}
+                    disabled={isDisabled}
+                    color={COLORS.dangerButton}
+                  >
+                    Delete
                   </Button>
-                )}
-                {canJoinBlue && !isPlayerInGame && (
-                  <Button onClick={() => handleJoinGame(id, "Blue")}>
-                    Join as Blue
-                  </Button>
-                )}
-                {isPlayerInGame && (
-                  <Button onClick={() => handleRejoinGame(id)}>Rejoin</Button>
-                )}
-                {!isPlayerInGame && (
-                  <Button onClick={() => handleSpectateGame(id)}>
-                    Spectate
-                  </Button>
-                )}
-                <Button onClick={() => handleDeleteGame(id)}>Delete</Button>
+                </div>
               </div>
             </li>
           );

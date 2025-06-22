@@ -36,10 +36,12 @@ export function partition<T>(
 }
 
 export function storePlayerName(name: string) {
+  console.log("Storing", name);
   sessionStorage.setItem("playerName", name);
 }
 
 export function storePlayerId(id: string) {
+  console.log("Storing", id);
   sessionStorage.setItem("playerId", id);
 }
 
