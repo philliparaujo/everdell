@@ -56,6 +56,7 @@ const playAreaStyling: React.CSSProperties = {
   flexDirection: "column",
   gap: "16px",
   minWidth: 0,
+  background: COLORS.playArea,
 };
 
 export const headingStyling: React.CSSProperties = {
@@ -126,12 +127,7 @@ function Game() {
       </div>
 
       {/* --- Right Content Area --- */}
-      <div
-        style={{
-          ...playAreaStyling,
-          background: COLORS.playArea,
-        }}
-      >
+      <div style={playAreaStyling}>
         <section>
           <h4 style={headingStyling}>Locations</h4>
           <div style={scrollStyle}>
