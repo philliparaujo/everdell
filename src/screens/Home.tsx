@@ -48,6 +48,7 @@ function Home() {
       style={{
         maxWidth: "600px",
         margin: "0 auto",
+        padding: "0 16px",
         justifyContent: "center",
         display: "flex",
         flexDirection: "column",
