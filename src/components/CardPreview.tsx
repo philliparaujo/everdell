@@ -20,6 +20,7 @@ function CardPreview({
   cityColor: PlayerColor | null;
 }) {
   const [inspecting, setInspecting] = useState(false);
+  const [hovered, setHovered] = useState(false);
 
   let borderStyle: string;
   if (card?.discarding) {
@@ -36,6 +37,8 @@ function CardPreview({
     card && (card.storage || card.maxDestinations != null) && placedDown;
   const textColor = card?.occupied ? COLORS.cardPreviewOccupied : COLORS.text;
 
+  const isInteractive = card && onLeftClick;
+
   return (
     <div
       style={{
@@ -51,6 +54,8 @@ function CardPreview({
         display: "flex",
         flexDirection: "column",
       }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
       onMouseDown={(e) => {
         if (e.button !== 0 || inspecting || onLeftClick === undefined) return;
         onLeftClick();
@@ -58,6 +63,7 @@ function CardPreview({
       onContextMenu={(e) => {
         e.preventDefault();
         setInspecting(true);
+        setHovered(false);
       }}
     >
       {card ? (
@@ -72,6 +78,13 @@ function CardPreview({
                 objectFit: "cover",
                 borderRadius: "4px",
                 display: "block",
+                transition: "transform 0.1s ease, filter 0.1s ease",
+                transform:
+                  hovered && isInteractive ? "scale(1.02)" : "scale(1)",
+                filter:
+                  hovered && isInteractive
+                    ? "brightness(1.05)"
+                    : "brightness(1)",
               }}
               draggable={false}
             />
