@@ -61,97 +61,92 @@ function PlayerLog({
     deltaWorkers !== 0 ||
     Object.values(deltaResources).some((v) => v !== 0);
 
+  if (!player.name) return null;
+
   return (
-    <div style={{ fontSize: "0.9em" }}>
-      {!player.name ? null : (
-        <>
-          {/* CHANGE: Use player's name instead of just their color */}
-          <strong style={{ color: PLAYER_COLORS[color] }}>{player.name}</strong>
-          <ul style={{ margin: "8px 0 0 5px", padding: 0 }}>
-            {seasonChange && (
-              <LogEntry>
-                Advanced to{" "}
-                <strong style={{ color: seasonColor(player.season) }}>
-                  {player.season}
-                </strong>
-              </LogEntry>
-            )}
-            {history.played?.length > 0 && (
-              <LogEntry>
-                <strong>Played:</strong> {publicCardList(history.played)}
-              </LogEntry>
-            )}
-            {history.cityDiscarded?.length > 0 && (
-              <LogEntry>
-                <strong>City discarded:</strong>{" "}
-                {publicCardList(history.cityDiscarded)}
-              </LogEntry>
-            )}
-            {history.gave?.length > 0 && (
-              <LogEntry>
-                <strong>Gave:</strong> {publicCardList(history.gave)}
-              </LogEntry>
-            )}
-            {history.drew?.length > 0 && (
-              <LogEntry>
-                <strong>Drew:</strong> {history.drew.length} card
-                {history.drew.length !== 1 ? "s" : ""}
-              </LogEntry>
-            )}
-            {history.discarded?.length > 0 && (
-              <LogEntry>
-                <strong>Discarded:</strong> {history.discarded.length} card
-                {history.discarded.length !== 1 ? "s" : ""}
-              </LogEntry>
-            )}
-            {deltaWorkers !== 0 && (
-              <LogEntry>
-                <span
-                  style={{ display: "flex", alignItems: "center", gap: "4px" }}
-                >
-                  <WorkerIcon playerColor={color} />{" "}
-                  {deltaWorkers > 0 ? "+" : ""}
-                  {deltaWorkers}
-                </span>
-              </LogEntry>
-            )}
-            {Object.values(deltaResources).some((v) => v !== 0) && (
-              <LogEntry>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: "8px",
-                  }}
-                >
-                  {mapOverResources(
-                    deltaResources,
-                    (key, val) => (
-                      <div
-                        key={key}
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "4px",
-                        }}
-                      >
-                        <ResourceIcon type={key as ResourceType} />{" "}
-                        {val > 0 ? "+" : ""}
-                        {val}
-                      </div>
-                    ),
-                    true,
-                  )}
-                </div>
-              </LogEntry>
-            )}
-            {!hasContent && (
-              <div style={{ fontStyle: "italic" }}>No actions made</div>
-            )}
-          </ul>
-        </>
-      )}
+    <div style={{ fontSize: "0.9em", padding: "8px" }}>
+      {/* CHANGE: Use player's name instead of just their color */}
+      <strong style={{ color: PLAYER_COLORS[color] }}>{player.name}</strong>
+      <ul style={{ margin: "8px 0 0 5px", padding: 0 }}>
+        {seasonChange && (
+          <LogEntry>
+            Advanced to{" "}
+            <strong style={{ color: seasonColor(player.season) }}>
+              {player.season}
+            </strong>
+          </LogEntry>
+        )}
+        {history.played?.length > 0 && (
+          <LogEntry>
+            <strong>Played:</strong> {publicCardList(history.played)}
+          </LogEntry>
+        )}
+        {history.cityDiscarded?.length > 0 && (
+          <LogEntry>
+            <strong>City discarded:</strong>{" "}
+            {publicCardList(history.cityDiscarded)}
+          </LogEntry>
+        )}
+        {history.gave?.length > 0 && (
+          <LogEntry>
+            <strong>Gave:</strong> {publicCardList(history.gave)}
+          </LogEntry>
+        )}
+        {history.drew?.length > 0 && (
+          <LogEntry>
+            <strong>Drew:</strong> {history.drew.length} card
+            {history.drew.length !== 1 ? "s" : ""}
+          </LogEntry>
+        )}
+        {history.discarded?.length > 0 && (
+          <LogEntry>
+            <strong>Discarded:</strong> {history.discarded.length} card
+            {history.discarded.length !== 1 ? "s" : ""}
+          </LogEntry>
+        )}
+        {deltaWorkers !== 0 && (
+          <LogEntry>
+            <span style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+              <WorkerIcon playerColor={color} /> {deltaWorkers > 0 ? "+" : ""}
+              {deltaWorkers}
+            </span>
+          </LogEntry>
+        )}
+        {Object.values(deltaResources).some((v) => v !== 0) && (
+          <LogEntry>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                gap: "8px",
+              }}
+            >
+              {mapOverResources(
+                deltaResources,
+                (key, val) => (
+                  <div
+                    key={key}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "4px",
+                    }}
+                  >
+                    <ResourceIcon type={key as ResourceType} />{" "}
+                    {val > 0 ? "+" : ""}
+                    {val}
+                  </div>
+                ),
+                true,
+              )}
+            </div>
+          </LogEntry>
+        )}
+        {!hasContent && (
+          <div style={{ fontStyle: "italic" }}>No actions made</div>
+        )}
+      </ul>
     </div>
   );
 }
@@ -160,18 +155,15 @@ function Log({ playerColor }: { playerColor: PlayerColor }) {
   const { game } = useGame();
 
   return (
-    // CHANGE: Added styling to create a visual "panel" for the log
     <div
       style={{
         display: "flex",
         flexDirection: "column",
-        gap: "12px",
+        gap: "4px",
         backgroundColor: "#212121",
-        padding: "8px",
         borderRadius: "4px",
       }}
     >
-      {/* CHANGE: Removed "Turn Log" title */}
       <PlayerLog
         history={game.players[playerColor].history}
         color={playerColor}

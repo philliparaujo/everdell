@@ -37,6 +37,21 @@ function Reveal() {
   const revealDiscard = canRevealDiscard(currentPlayer);
   const revealEmpty = game.reveal.length === 0;
 
+  const displayRevealCard = (index: number) => {
+    const card = game.reveal[index] ?? null;
+
+    return (
+      <CardPreview
+        key={index}
+        index={index}
+        card={card}
+        placedDown={false}
+        cityColor={null}
+        onLeftClick={() => onLeftClick(index, card)}
+      />
+    );
+  };
+
   return (
     <>
       {(revealDeck || revealDiscard || !revealEmpty) && (
@@ -68,21 +83,17 @@ function Reveal() {
               </Button>
             )}
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
-            {Array.from({ length: MAX_REVEAL_SIZE }).map((_, index) => {
-              const card = game.reveal[index] ?? null;
-
-              return (
-                <CardPreview
-                  key={index}
-                  index={index}
-                  card={card}
-                  placedDown={false}
-                  cityColor={null}
-                  onLeftClick={() => onLeftClick(index, card)}
-                />
-              );
-            })}
+          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              {Array.from({ length: 2 }).map((_, index) =>
+                displayRevealCard(index),
+              )}
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              {Array.from({ length: 2 }).map((_, index) =>
+                displayRevealCard(index + 2),
+              )}
+            </div>
           </div>
         </>
       )}

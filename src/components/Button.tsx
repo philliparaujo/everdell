@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { COLORS } from "../colors";
 
 type ButtonProps = {
@@ -16,29 +16,31 @@ const Button: React.FC<ButtonProps> = ({
   disabled = false,
   style,
 }) => {
+  const [hovered, setHovered] = useState(false);
+
   const baseStyle: React.CSSProperties = {
     backgroundColor: color,
     color: COLORS.buttonText,
     border: `solid 1px ${COLORS.buttonBorder}`,
     borderRadius: "4px",
-    cursor: "pointer",
-    opacity: 1,
+    cursor: disabled ? "auto" : "pointer",
+    opacity: disabled ? 0.4 : 1,
+    transition: "transform 0.1s ease, filter 0.1s ease",
+    transform: hovered && !disabled ? "scale(1.02)" : "scale(1)",
+    filter: hovered && !disabled ? "brightness(1.05)" : "none",
     ...style,
   };
 
-  const disabledStyle: React.CSSProperties = {
-    backgroundColor: "#555", // dim background
-    color: "#999", // faded text
-    border: `solid 1px #666`,
-    opacity: 0.6,
-    cursor: "auto",
-  };
+  const handleMouseEnter = () => setHovered(true);
+  const handleMouseLeave = () => setHovered(false);
 
   return (
     <button
       onClick={onClick}
       disabled={disabled}
-      style={disabled ? { ...baseStyle, ...disabledStyle } : baseStyle}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      style={baseStyle}
     >
       {children}
     </button>

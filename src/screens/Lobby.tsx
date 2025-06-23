@@ -5,6 +5,7 @@ import {
   getDoc,
   getDocs,
   setDoc,
+  updateDoc,
 } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
@@ -86,9 +87,10 @@ function Lobby() {
     if (targetPlayer.id && targetPlayer.id !== playerId)
       return alert(`${color} player slot is already taken.`);
 
-    game.players[color].id = playerId!;
-    game.players[color].name = name;
-    await setDoc(gameRef, game);
+    await updateDoc(gameRef, {
+      [`players.${color}.id`]: playerId,
+      [`players.${color}.name`]: name,
+    });
     navigate(`/game/${gameId}`);
   };
 
@@ -101,19 +103,20 @@ function Lobby() {
 
     if (!game) return alert("Game not found");
 
-    let targetColor: PlayerColor | null = null;
+    let color: PlayerColor | null = null;
     if (game.players.Red.id === playerId) {
-      targetColor = "Red";
+      color = "Red";
     } else if (game.players.Blue.id === playerId) {
-      targetColor = "Blue";
+      color = "Blue";
     }
 
-    if (targetColor === null) {
+    if (color === null) {
       return alert(`Could not rejoin game.`);
     }
 
-    game.players[targetColor].name = name;
-    await setDoc(gameRef, game);
+    await updateDoc(gameRef, {
+      [`players.${color}.name`]: name,
+    });
     navigate(`/game/${gameId}`);
   };
 
@@ -171,13 +174,6 @@ function Lobby() {
           </span>
         </div>
         <div style={{ display: "flex", gap: "8px" }}>
-          <Button
-            onClick={startGame}
-            disabled={isDisabled}
-            color={COLORS.importantButton}
-          >
-            Start New Game
-          </Button>
           <Navigation
             link="/home"
             displayText="Back to Home"
@@ -187,6 +183,17 @@ function Lobby() {
       </div>
 
       <h3>Available Games</h3>
+
+      <div>
+        <Button
+          onClick={startGame}
+          disabled={isDisabled}
+          color={COLORS.importantButton}
+        >
+          Start New Game
+        </Button>
+      </div>
+
       {gameList.length === 0 && <p>No games found.</p>}
 
       {/* Game List Grid */}

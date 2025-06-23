@@ -32,17 +32,20 @@ function Sidebar({ gameId }: { gameId: string | undefined }) {
   return (
     <div style={sideBarStyling}>
       <div style={{ padding: "8px" }}>
-        <Navigation
-          link="/lobby"
-          displayText="Back to Lobby"
-          arrow="backward"
-        />
-        <h3>
-          {game.turn}'s Turn{" "}
-          {turnStatusText && (
-            <span style={{ fontSize: "14px" }}>({turnStatusText})</span>
-          )}
-        </h3>
+        <div style={{ display: "flex", gap: "8px", flexDirection: "column" }}>
+          <Navigation
+            link="/lobby"
+            displayText="Back to Lobby"
+            arrow="backward"
+          />
+          <div style={idStyle}>{gameId}</div>
+          <h3 style={{ margin: 0 }}>
+            {game.turn}'s Turn{" "}
+            {turnStatusText && (
+              <span style={{ fontSize: "14px" }}>({turnStatusText})</span>
+            )}
+          </h3>
+        </div>
         <hr />
         <PlayerStatus playerColor={topStatusColor} />
         <hr />
@@ -55,8 +58,6 @@ function Sidebar({ gameId }: { gameId: string | undefined }) {
         <Reveal />
         <hr />
         <Log playerColor={topStatusColor} />
-        <hr />
-        <div style={idStyle}>{gameId}</div>
       </div>
     </div>
   );

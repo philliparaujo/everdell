@@ -56,8 +56,8 @@ export const COLORS = {
   buttonColor: "#444", // A dark grey for button background
   buttonText: lightText, // Use the softened light text color
 
-  importantButton: "#484", // Gold-like yellow for emphasis
-  rareButton: "#a60",
+  importantButton: "#363", // Gold-like yellow for emphasis
+  rareButton: "#950",
   dangerButton: "#844",
 
   // Navigation
