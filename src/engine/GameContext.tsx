@@ -239,6 +239,14 @@ export const GameProvider = ({
 
     harvest: wrapAction(Actions.harvest),
 
+    // Minor actions that are inexpensive
+    refillMeadow: wrapAction(Actions.refillMeadow, true),
+    toggleOccupiedCardInCity: wrapAction(
+      Actions.toggleOccupiedCardInCity,
+      true,
+    ),
+
+    // More expensive minor actions
     toggleCardDiscarding: wrapAction(Actions.toggleCardDiscarding, false),
     toggleCardPlaying: wrapAction(Actions.toggleCardPlaying, false),
     toggleCardGiving: wrapAction(Actions.toggleCardGiving, false),
@@ -246,11 +254,6 @@ export const GameProvider = ({
     playSelectedCards: wrapAction(Actions.playSelectedCards, false),
     giveSelectedCards: wrapAction(Actions.giveSelectedCards, false),
     drawCard: wrapAction(Actions.drawCard, false),
-    refillMeadow: wrapAction(Actions.refillMeadow, false),
-    toggleOccupiedCardInCity: wrapAction(
-      Actions.toggleOccupiedCardInCity,
-      false,
-    ),
     addResourcesToCardInCity: wrapAction(
       Actions.addResourcesToCardInCity,
       false,

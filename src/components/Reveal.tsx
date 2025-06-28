@@ -1,5 +1,4 @@
 import { COLORS } from "../colors";
-import { MAX_REVEAL_SIZE } from "../engine/gameConstants";
 import { useGame } from "../engine/GameContext";
 import { Card } from "../engine/gameTypes";
 import {

@@ -8,7 +8,6 @@ import {
 } from "../engine/gameTypes";
 import {
   canVisitCardInCity,
-  canVisitEvent,
   getPlayerColor,
   getPlayerId,
   isNotYourTurn,

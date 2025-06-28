@@ -171,7 +171,10 @@ function Lobby() {
             <strong>Display Name:</strong> {name || "Not Set"}
           </span>
           <span style={{ marginLeft: "24px" }}>
-            <strong>ID:</strong> {playerId || "Not Set"}
+            <strong>ID:</strong>{" "}
+            <span style={{ fontFamily: "monospace" }}>
+              {playerId || "Not Set"}
+            </span>
           </span>
         </div>
         <div style={{ display: "flex", gap: "8px" }}>
@@ -195,7 +198,9 @@ function Lobby() {
         </Button>
       </div>
 
-      {gameList.length === 0 && <p>No games found.</p>}
+      {gameList.length === 0 && (
+        <p style={{ fontStyle: "italic" }}>No games found.</p>
+      )}
 
       {/* Game List Grid */}
       <ul
@@ -230,7 +235,8 @@ function Lobby() {
               }}
             >
               <div>
-                <strong>Game ID:</strong> {id}
+                <strong>Game ID:</strong>{" "}
+                <span style={{ fontFamily: "monospace" }}>{id}</span>
               </div>
 
               {/* Player displays, evenly spaced */}

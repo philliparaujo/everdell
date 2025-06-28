@@ -68,7 +68,7 @@ export const headingStyling: React.CSSProperties = {
 
 export const idStyle: React.CSSProperties = {
   fontSize: "11px",
-  fontStyle: "italic",
+  fontFamily: "monospace",
 };
 
 const fullRowStyling: React.CSSProperties = {};

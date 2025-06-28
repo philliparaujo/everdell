@@ -4,7 +4,6 @@ import { Card, PlayerColor, ResourceType } from "../engine/gameTypes";
 import { mapOverResources } from "../engine/helpers";
 import CardInspect from "./CardInspect";
 import { ResourceIcon, WorkerIcon } from "./Icons";
-import { text } from "stream/consumers";
 
 function CardPreview({
   card,
