@@ -70,7 +70,7 @@ function CardPreview({
         <>
           <div>
             <img
-              src={require(`../assets/images/${card.imageKey}.jpg`)}
+              src={require(`../assets/cards/${card.imageKey}.jpg`)}
               alt={card.name}
               style={{
                 width: "100%",

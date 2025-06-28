@@ -83,7 +83,7 @@ function CardInspect({
         onClick={(e) => e.stopPropagation()} // prevent closing when clicking inside
       >
         <img
-          src={require(`../assets/images/${card.imageKey}.jpg`)}
+          src={require(`../assets/cards/${card.imageKey}.jpg`)}
           alt={card.name}
           style={{
             maxHeight: "100%",
