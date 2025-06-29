@@ -10,7 +10,6 @@ function Discard() {
 
   const storedId = getPlayerId();
 
-  // Check if the discard pile is empty
   if (game.discard.length === 0) {
     return (
       <div style={{ fontStyle: "italic", padding: "10px 0" }}>

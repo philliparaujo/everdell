@@ -1,10 +1,13 @@
 import { PlayerColor } from "./engine/gameTypes";
 
 // Base Hues (adjust slightly for your preference)
-const darkBackground = "#1A1A1A"; // Very dark grey, slightly darker than #222 for more depth
-const mediumBackground = "#2A2A2A"; // A slightly lighter grey for differentiation (e.g., sidebar)
-const lightText = "#E0E0E0"; // Softer white for general text, reduces eye strain
-const subtleAccent = "#555555"; // Darker, less obtrusive accent grey
+const darkBackground = "#1A1A1A";
+const mediumBackground = "#2A2A2A";
+const lightBackground = "#444";
+const inspectBackground = "rgba(0, 0, 0, 0.8)";
+
+const lightText = "#E0E0E0";
+const subtleAccent = "#555555";
 
 export const COLORS = {
   // General
@@ -12,56 +15,55 @@ export const COLORS = {
   text: lightText,
   colorScheme: "dark",
 
-  // Player Colors (slightly desaturated/darker to fit dark theme)
-  red: "#FF1C1C", // A slightly muted red
-  blue: "#2478FF", // A vibrant but not overpowering blue
-  green: "#2ECC71", // A pleasant green (if you add green players)
-  yellow: "#F1C40F", // A warm, clear yellow (if you add yellow players)
-  purple: "#9B59B6", // Example additional player color
-  orange: "#E67E22", // Example additional player color
+  // Component main colors
+  playArea: darkBackground,
+  cardPreview: darkBackground,
 
-  // Sidebar
-  sidebar: mediumBackground, // Differentiates from main background
-  sidebarBorder: subtleAccent, // Softer border
+  container: mediumBackground,
+  location: mediumBackground,
+  storage: mediumBackground,
+  inspect: mediumBackground,
 
-  // Seasons (giving them distinct, thematic, and muted colors)
-  seasonWinter: "#A7C7E7", // Muted light blue/grey for cold
-  seasonSpring: "#8BC681", // Muted light green for new growth
-  seasonSummer: "#FFD74D", // Muted warm orange/yellow for sun
-  seasonFall: "#D0A25D", // Muted earthy brown/orange for autumn leaves
+  buttonColor: lightBackground,
 
-  // Play area
-  playArea: darkBackground, // Consistent with main background
+  // Component borders
+  containerBorder: subtleAccent,
+  cardPreviewBorder: subtleAccent,
+  buttonBorder: subtleAccent,
 
-  // Locations (using a subtle accent or slightly lighter background)
-  location: mediumBackground, // Makes locations stand out subtly
-  locationExclusive: "#8A8A8A", // A slightly darker shade for exclusive locations
+  // Component text
+  buttonText: lightText,
+  navigationText: "#ABA3FF",
+
+  // Player Colors
+  red: "#FF1C1C",
+  blue: "#2478FF",
+  green: "#2ECC71",
+  yellow: "#F1C40F",
+
+  // Seasons
+  seasonWinter: "#A7C7E7",
+  seasonSpring: "#8BC681",
+  seasonSummer: "#FFD74D",
+  seasonFall: "#D0A25D",
+
+  // Location alternate borders
+  locationExclusive: "#8A8A8A",
   locationUsed: "#DD8A8A",
 
-  // Card Previews/Inspect
-  cardPreview: darkBackground, // Keep consistent
-  cardPreviewOutline: subtleAccent, // Softer outline
-  cardPreviewDiscarding: "#C0392B", // A deeper, more serious red for discarding
-  cardPreviewPlaying: "#27AE60", // A deeper, more committed green for playing
+  // Card Preview alternate borders
+  cardPreviewDiscarding: "#C0392B",
+  cardPreviewPlaying: "#27AE60",
   cardPreviewGiving: "#FFCC00",
   cardPreviewOccupied: "#BB88DD",
-  storage: mediumBackground, // Consistent with sidebar/location accents
 
-  inspect: mediumBackground, // Slightly lighter background for the modal
-  inspectBackground: "rgba(0, 0, 0, 0.8)", // More opaque overlay
-  cardInspectImageBorder: "#444", // A slightly visible border for images
-
-  // Button
-  buttonBorder: subtleAccent, // Soft border for buttons
-  buttonColor: "#444", // A dark grey for button background
-  buttonText: lightText, // Use the softened light text color
-
-  importantButton: "#363", // Gold-like yellow for emphasis
+  // Button alternate colors
+  importantButton: "#363",
   rareButton: "#950",
   dangerButton: "#844",
 
-  // Navigation
-  navigationText: "#ABA3FF",
+  // Card inspect
+  inspectBackground: inspectBackground,
 };
 
 export const PLAYER_COLORS: Record<PlayerColor, string> = {

@@ -3,15 +3,13 @@ import { useGame } from "../engine/GameContext";
 import { Card, History, PlayerColor, ResourceType } from "../engine/gameTypes";
 import {
   computeResourceDelta,
+  listCardNames,
   mapOverResources,
   oppositePlayerOf,
   seasonColor,
 } from "../engine/helpers";
 import { ResourceIcon, WorkerIcon } from "./Icons";
 
-/**
- * A single, styled entry in a player's log.
- */
 function LogEntry({ children }: { children: React.ReactNode }) {
   return (
     <li
@@ -26,9 +24,6 @@ function LogEntry({ children }: { children: React.ReactNode }) {
   );
 }
 
-/**
- * Displays the turn summary for a single player.
- */
 function PlayerLog({
   history,
   color,
@@ -46,9 +41,8 @@ function PlayerLog({
   );
   const deltaWorkers = player.workers.workersLeft - history.workers.workersLeft;
 
-  // Publicly reveals card names for actions visible to all players.
-  const publicCardList = (cards: Card[]): string => {
-    return cards.map((c) => c.name).join(", ");
+  const listCards = (cards: Card[]): string => {
+    return listCardNames(cards.map((c) => c.name));
   };
 
   const hasContent =
@@ -65,7 +59,6 @@ function PlayerLog({
 
   return (
     <div style={{ fontSize: "0.9em", padding: "8px" }}>
-      {/* CHANGE: Use player's name instead of just their color */}
       <strong style={{ color: PLAYER_COLORS[color] }}>{player.name}</strong>
       <ul style={{ margin: "8px 0 0 5px", padding: 0 }}>
         {seasonChange && (
@@ -78,18 +71,17 @@ function PlayerLog({
         )}
         {history.played?.length > 0 && (
           <LogEntry>
-            <strong>Played:</strong> {publicCardList(history.played)}
+            <strong>Played:</strong> {listCards(history.played)}
           </LogEntry>
         )}
         {history.cityDiscarded?.length > 0 && (
           <LogEntry>
-            <strong>City discarded:</strong>{" "}
-            {publicCardList(history.cityDiscarded)}
+            <strong>City discarded:</strong> {listCards(history.cityDiscarded)}
           </LogEntry>
         )}
         {history.gave?.length > 0 && (
           <LogEntry>
-            <strong>Gave:</strong> {publicCardList(history.gave)}
+            <strong>Gave:</strong> {listCards(history.gave)}
           </LogEntry>
         )}
         {history.drew?.length > 0 && (

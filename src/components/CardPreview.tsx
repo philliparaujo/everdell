@@ -30,7 +30,7 @@ function CardPreview({
   } else if (card?.giving) {
     borderStyle = `2px solid ${COLORS.cardPreviewGiving}`;
   } else {
-    borderStyle = `2px solid ${COLORS.cardPreviewOutline}`;
+    borderStyle = `2px solid ${COLORS.cardPreviewBorder}`;
   }
 
   const storable =

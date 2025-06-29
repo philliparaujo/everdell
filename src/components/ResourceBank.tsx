@@ -3,7 +3,6 @@ import { useGame } from "../engine/GameContext";
 import { defaultResources, ResourceType } from "../engine/gameTypes";
 import {
   canGiveResources,
-  getPlayerColor,
   getPlayerId,
   isNotYourTurn,
   mapOverResources,

@@ -24,13 +24,13 @@ const sideBarColumnStyling: React.CSSProperties = {
 };
 
 export const sideBarStyling: React.CSSProperties = {
-  background: COLORS.sidebar,
+  background: COLORS.container,
   width: "260px",
   height: "100%",
   overflowY: "auto",
   overflowX: "hidden",
   position: "fixed",
-  borderRight: `1px solid ${COLORS.sidebarBorder}`,
+  borderRight: `1px solid ${COLORS.containerBorder}`,
 };
 
 export const controlsStyling: React.CSSProperties = {
@@ -62,8 +62,8 @@ const playAreaStyling: React.CSSProperties = {
 
 export const headingStyling: React.CSSProperties = {
   margin: 0,
-  display: "flex" /* Make it a flex container */,
-  alignItems: "center" /* Vertically center items */,
+  display: "flex",
+  alignItems: "center",
   gap: "2px",
 };
 
@@ -80,9 +80,9 @@ const twoColumnRowStyling: React.CSSProperties = {
 };
 
 const halfColumnStyling: React.CSSProperties = {
-  flex: "0 1 auto", // Do not grow, allow shrinking, base size on content
-  minWidth: 0, // Allows the item to shrink smaller than its content
-  overflowX: "auto", // Enable horizontal scrolling when content overflows
+  flex: "0 1 auto",
+  minWidth: 0,
+  overflowX: "auto",
 };
 
 const scrollStyle: React.CSSProperties = {
@@ -123,12 +123,12 @@ function Game() {
     >
       {/* --- Left Sidebar --- */}
       <div style={sideBarColumnStyling}>
-        {/* Sidebar */}
         <Sidebar gameId={gameId} />
       </div>
 
       {/* --- Right Content Area --- */}
       <div style={playAreaStyling}>
+        {/* --- Two Column Rows --- */}
         <div style={twoColumnRowStyling}>
           <section style={halfColumnStyling}>
             <h4 style={headingStyling}>Locations</h4>

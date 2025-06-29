@@ -1,6 +1,6 @@
 import { SpecialEvent } from "../../engine/gameTypes";
 
-export const specialEvents: SpecialEvent[] = [
+export const specialEvents: Omit<SpecialEvent, "used" | "workers">[] = [
   {
     name: "Under New Management",
     cardRequirement: ["Peddler", "General Store"],
@@ -8,8 +8,6 @@ export const specialEvents: SpecialEvent[] = [
     specialDescription: "You may place up to 3 wildcards here",
     specialReward: "Each berry twig = 1 coin, each resin pebble = 2 coins",
     value: null,
-    workers: { Red: 0, Blue: 0 },
-    used: false,
   },
   {
     name: "A Well Run City",
@@ -18,8 +16,6 @@ export const specialEvents: SpecialEvent[] = [
     specialDescription: "Bring back one of your deployed workers",
     specialReward: null,
     value: 4,
-    workers: { Red: 0, Blue: 0 },
-    used: false,
   },
   {
     name: "Path of the Pilgrims",
@@ -28,8 +24,6 @@ export const specialEvents: SpecialEvent[] = [
     specialDescription: null,
     specialReward: "3 coins for each worker in your Monastery",
     value: null,
-    workers: { Red: 0, Blue: 0 },
-    used: false,
   },
   {
     name: "Remembering the Fallen",
@@ -38,8 +32,6 @@ export const specialEvents: SpecialEvent[] = [
     specialDescription: null,
     specialReward: "3 coins for each buried worker in your Cemetery",
     value: null,
-    workers: { Red: 0, Blue: 0 },
-    used: false,
   },
   {
     name: "Performer in Residence",
@@ -48,8 +40,6 @@ export const specialEvents: SpecialEvent[] = [
     specialDescription: "You may place up to 3 berries here",
     specialReward: "2 coins for each berry on this Event",
     value: null,
-    workers: { Red: 0, Blue: 0 },
-    used: false,
   },
   {
     name: "Croak Wart Cure",
@@ -58,8 +48,6 @@ export const specialEvents: SpecialEvent[] = [
     specialDescription: "Pay 2 berries and discard 2 cards from your city",
     specialReward: null,
     value: 6,
-    workers: { Red: 0, Blue: 0 },
-    used: false,
   },
   {
     name: "Capture of the Acorn Thieves",
@@ -69,8 +57,6 @@ export const specialEvents: SpecialEvent[] = [
       "Place up to 2 Critters from your city face-down beneath this Event",
     specialReward: "3 coins for each Critter beneath this Event",
     value: null,
-    workers: { Red: 0, Blue: 0 },
-    used: false,
   },
   {
     name: "Tax Relief",
@@ -79,8 +65,6 @@ export const specialEvents: SpecialEvent[] = [
     specialDescription: "Activate your greens",
     specialReward: null,
     value: 3,
-    workers: { Red: 0, Blue: 0 },
-    used: false,
   },
   {
     name: "A Brilliant Marketing Plan",
@@ -89,8 +73,6 @@ export const specialEvents: SpecialEvent[] = [
     specialDescription: "You may give opponents up to a total of 3 wildcards",
     specialReward: "For each donation, gain 2 coins",
     value: null,
-    workers: { Red: 0, Blue: 0 },
-    used: false,
   },
   {
     name: "Ministering to Miscreants",
@@ -99,8 +81,6 @@ export const specialEvents: SpecialEvent[] = [
     specialDescription: null,
     specialReward: "3 coins for each prisoner in your Dungeon",
     value: null,
-    workers: { Red: 0, Blue: 0 },
-    used: false,
   },
   {
     name: "Graduation of Scholars",
@@ -110,8 +90,6 @@ export const specialEvents: SpecialEvent[] = [
       "You may place up to 3 Critters from your hand beneath this Event",
     specialReward: "2 coins for each Critter beneath this Event",
     value: null,
-    workers: { Red: 0, Blue: 0 },
-    used: false,
   },
   {
     name: "Pristine Chapel Ceiling",
@@ -121,8 +99,6 @@ export const specialEvents: SpecialEvent[] = [
       "Draw 1 card and receive 1 wildcard for each coin on your Chapel",
     specialReward: "2 coins for each coin on your Chapel",
     value: null,
-    workers: { Red: 0, Blue: 0 },
-    used: false,
   },
   {
     name: "The Everdell Games",
@@ -131,8 +107,6 @@ export const specialEvents: SpecialEvent[] = [
     specialDescription: null,
     specialReward: null,
     value: 9,
-    workers: { Red: 0, Blue: 0 },
-    used: false,
   },
   {
     name: "Ancient Scrolls Discovered",
@@ -142,8 +116,6 @@ export const specialEvents: SpecialEvent[] = [
       "Reveal 5 cards. You may draw any or place any beneath this Event",
     specialReward: "1 coin for each card beneath this Event",
     value: null,
-    workers: { Red: 0, Blue: 0 },
-    used: false,
   },
   {
     name: "An Evening of Fireworks",
@@ -152,8 +124,6 @@ export const specialEvents: SpecialEvent[] = [
     specialDescription: "You may place up to 3 twigs here",
     specialReward: "2 coins for each twig on this Event",
     value: null,
-    workers: { Red: 0, Blue: 0 },
-    used: false,
   },
   {
     name: "Flying Doctor Service",
@@ -162,7 +132,5 @@ export const specialEvents: SpecialEvent[] = [
     specialDescription: null,
     specialReward: "3 coins for each Husband/Wife pair in every city",
     value: null,
-    workers: { Red: 0, Blue: 0 },
-    used: false,
   },
 ];

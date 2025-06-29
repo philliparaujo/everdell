@@ -6,25 +6,24 @@ import {
   getPlayerColor,
   getPlayerId,
   isNotYourTurn,
+  listCardNames,
   mapOverEffectTypes,
   RESOURCE_ORDER,
 } from "../engine/helpers";
-import { EffectTypeIcon, ResourceIcon } from "./Icons"; // Assuming EffectTypeIcon is in your Icons file
+import { EffectTypeIcon, ResourceIcon } from "./Icons";
 import Inspectable from "./Inspectable";
 import {
   arrowResourceStyling,
   renderButtons,
   renderWorkers,
-} from "./LocationsDisplay"; // Assuming these are here
+} from "./LocationsDisplay";
 
-// Style for each labeled section
 const sectionStyle: React.CSSProperties = {
   display: "flex",
   flexDirection: "column",
   gap: "4px",
 };
 
-// Style for the container holding the effect type icons
 const iconContainerStyle: React.CSSProperties = {
   display: "flex",
   gap: "12px",
@@ -32,6 +31,7 @@ const iconContainerStyle: React.CSSProperties = {
   flexWrap: "wrap",
 };
 
+// Handle singular and plural words
 const RESOURCE_ALIASES: Record<string, ResourceType> = {
   twig: "twigs",
   pebble: "pebbles",
@@ -50,11 +50,9 @@ const EFFECT_ALIASES: Record<string, EffectType> = {
 };
 
 export function renderTextWithIcons(text: string): React.ReactNode[] {
-  // split but keep whitespace / punctuation
   const parts = text.split(/(\s+|[.,;!?]+)/);
 
   return parts.map((part, idx) => {
-    // normalise token for matching (strip non-letters, lower-case)
     const bare = part.toLowerCase().replace(/[^a-z]/g, "");
 
     if ((RESOURCE_ORDER as string[]).includes(bare)) {
@@ -74,7 +72,7 @@ export function renderTextWithIcons(text: string): React.ReactNode[] {
       return <EffectTypeIcon key={idx} type={EFFECT_ALIASES[bare]} />;
     }
 
-    // plain text or delimiter
+    // Plain text or delimeter
     return part;
   });
 }
@@ -103,7 +101,6 @@ function SpecialEventInspect({
       ? false
       : canVisitSpecialEvent(game, specialEvent, playerColor, -1);
 
-  // Filter for only the effect types that are actually required (count > 0)
   const requiredEffects = Object.entries(
     specialEvent.effectTypeRequirement,
   ).filter(([_, count]) => count > 0);
@@ -117,25 +114,23 @@ function SpecialEventInspect({
           minWidth: "400px",
           display: "flex",
           flexDirection: "column",
-          gap: "24px", // Increased gap for better section separation
+          gap: "24px",
           maxHeight: "100%",
           alignItems: "center",
         }}
       >
         <h2 style={{ margin: 0, textAlign: "center" }}>{specialEvent.name}</h2>
 
-        {/* --- Requirements Section --- */}
+        {/* --- Requirements --- */}
         {(specialEvent.cardRequirement?.length > 0 ||
           requiredEffects.length > 0) && (
           <div style={sectionStyle}>
-            {/* header */}
             <strong style={{ margin: 0, marginBottom: 4 }}>
               Requirements:
             </strong>
 
-            {/* body */}
             {specialEvent.cardRequirement?.length > 0 && (
-              <span>{specialEvent.cardRequirement.join(", ")}</span>
+              <span>{listCardNames(specialEvent.cardRequirement)}</span>
             )}
 
             {requiredEffects.length > 0 && (
@@ -153,7 +148,7 @@ function SpecialEventInspect({
           </div>
         )}
 
-        {/* --- Special Description --- */}
+        {/* --- Effects and rewards --- */}
         {specialEvent.specialDescription && (
           <div style={sectionStyle}>
             <strong>When achieved...</strong>
@@ -178,7 +173,7 @@ function SpecialEventInspect({
           )}
         </div>
 
-        {/* --- Interaction Section --- */}
+        {/* --- Visiting --- */}
         <div
           style={{
             display: "flex",

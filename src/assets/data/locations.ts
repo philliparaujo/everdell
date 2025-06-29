@@ -1,6 +1,6 @@
 import { Location } from "../../engine/gameTypes";
 
-export const locations: Location[] = [
+export const locations: Omit<Location, "workers">[] = [
   {
     exclusive: true,
     resources: {
@@ -12,7 +12,6 @@ export const locations: Location[] = [
       cards: 0,
       wildcards: 0,
     },
-    workers: { Red: 0, Blue: 0 },
   },
   {
     exclusive: false,
@@ -25,7 +24,6 @@ export const locations: Location[] = [
       cards: 1,
       wildcards: 0,
     },
-    workers: { Red: 0, Blue: 0 },
   },
   {
     exclusive: true,
@@ -38,7 +36,6 @@ export const locations: Location[] = [
       cards: 0,
       wildcards: 0,
     },
-    workers: { Red: 0, Blue: 0 },
   },
   {
     exclusive: false,
@@ -51,7 +48,6 @@ export const locations: Location[] = [
       cards: 1,
       wildcards: 0,
     },
-    workers: { Red: 0, Blue: 0 },
   },
   {
     exclusive: false,
@@ -64,7 +60,6 @@ export const locations: Location[] = [
       cards: 2,
       wildcards: 0,
     },
-    workers: { Red: 0, Blue: 0 },
   },
   {
     exclusive: true,
@@ -77,7 +72,6 @@ export const locations: Location[] = [
       cards: 0,
       wildcards: 0,
     },
-    workers: { Red: 0, Blue: 0 },
   },
   {
     exclusive: true,
@@ -90,7 +84,6 @@ export const locations: Location[] = [
       cards: 1,
       wildcards: 0,
     },
-    workers: { Red: 0, Blue: 0 },
   },
   {
     exclusive: false,
@@ -103,7 +96,6 @@ export const locations: Location[] = [
       cards: 0,
       wildcards: 0,
     },
-    workers: { Red: 0, Blue: 0 },
   },
   // Discard 2 cards -> 1 wildcard
   {
@@ -117,6 +109,5 @@ export const locations: Location[] = [
       cards: 0,
       wildcards: 0,
     },
-    workers: { Red: 0, Blue: 0 },
   },
 ];

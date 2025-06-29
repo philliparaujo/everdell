@@ -30,7 +30,6 @@ export function endTurn(state: GameState, playerId: string | null): GameState {
   if (playerColor === null) return state;
   if (playerColor !== state.turn) return state;
 
-  // Can't end turn if meadow not full
   if (!isSafeToEndTurn(state)) return state;
 
   return {

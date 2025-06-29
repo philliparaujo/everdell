@@ -29,7 +29,7 @@ export type Card = {
 
   imageKey: string;
 
-  occupied: boolean | null; // Constructions can be occupied for free critters
+  occupied: boolean | null; // Constructions can be occupied to play free critters
   constructionRequirement: string | null; // Critters can be played for free by occupying constructions
 
   // Some cards can be visited by workers

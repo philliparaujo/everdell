@@ -37,6 +37,10 @@ export function partition<T>(
   return [keep, discard];
 }
 
+export function listCardNames(cardNames: string[]): string {
+  return cardNames.join(", ");
+}
+
 export function storePlayerName(name: string) {
   console.log("Storing", name);
   sessionStorage.setItem("playerName", name);

@@ -14,7 +14,15 @@ import lightblueworker from "../assets/transparent-icons/lightblueworker.png";
 import redworker from "../assets/transparent-icons/redworker.png";
 import { EffectType, PlayerColor, ResourceType } from "../engine/gameTypes";
 
-// Icons mappings
+export const iconStyle: React.CSSProperties = {
+  width: "16px",
+  height: "16px",
+  verticalAlign: "middle",
+  marginLeft: "2px",
+  marginRight: "2px",
+};
+
+// Icon mappings
 const effectTypeIcons: Record<EffectType, string> = {
   Blue: bluetype,
   Green: greentype,
@@ -31,15 +39,6 @@ const resourceIcons: Record<ResourceType, string> = {
   coins: coin,
   cards: card,
   wildcards: wildcard,
-};
-
-// Styling
-export const iconStyle: React.CSSProperties = {
-  width: "16px",
-  height: "16px",
-  verticalAlign: "middle",
-  marginLeft: "2px",
-  marginRight: "2px",
 };
 
 export function ResourceIcon({ type }: { type: ResourceType }) {

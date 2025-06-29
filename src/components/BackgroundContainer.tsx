@@ -16,10 +16,8 @@ const panImage = keyframes`
 
 // 2. Create a styled div that uses the animation and styles
 const BackgroundContainer = styled.div`
-  /* All your other styles like padding, min-height, etc. */
   min-height: 100vh;
 
-  /* Just the image, no pseudo-element, no overlay */
   background-image:
     linear-gradient(rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.85)),
     url(${backgroundImage});

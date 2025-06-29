@@ -52,7 +52,7 @@ function Home() {
         justifyContent: "center",
         display: "flex",
         flexDirection: "column",
-        height: "100vh", // full viewport height
+        height: "100vh",
         fontFamily: "Arial, sans-serif",
         color: COLORS.text,
       }}
@@ -78,8 +78,8 @@ function Home() {
             width: "100%",
             padding: "10px",
             borderRadius: "6px",
-            border: `1px solid ${COLORS.sidebarBorder}`,
-            backgroundColor: COLORS.sidebar,
+            border: `1px solid ${COLORS.containerBorder}`,
+            backgroundColor: COLORS.container,
             color: COLORS.text,
           }}
         />
@@ -106,8 +106,8 @@ function Home() {
             width: "100%",
             padding: "10px",
             borderRadius: "6px",
-            border: `1px solid ${COLORS.sidebarBorder}`,
-            backgroundColor: COLORS.sidebar,
+            border: `1px solid ${COLORS.containerBorder}`,
+            backgroundColor: COLORS.container,
             color: COLORS.text,
             fontFamily: "monospace",
           }}

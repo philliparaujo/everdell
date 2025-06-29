@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { setupGame } from "../engine/GameContext";
 import { GameState, Player, PlayerColor } from "../engine/gameTypes";
-import { db } from "../firebase";
+import { db } from "../server/firebase";
 import { useEffect, useState } from "react";
 import { getPlayerId, getPlayerName } from "../engine/helpers";
 import Button from "../components/Button";
@@ -19,7 +19,6 @@ import Navigation from "../components/Navigation";
 import { COLORS, PLAYER_COLORS } from "../colors";
 import { idStyle } from "./Game";
 
-// Helper component to render player info consistent with the sidebar style
 const GamePlayerDisplay = ({
   player,
   isYou,
@@ -29,7 +28,6 @@ const GamePlayerDisplay = ({
 }) => {
   const color = player.color;
 
-  // Render a styled "Open" slot
   if (!player.id) {
     return (
       <div>
@@ -41,7 +39,6 @@ const GamePlayerDisplay = ({
     );
   }
 
-  // Render a filled player slot
   return (
     <div>
       <div style={{ color: PLAYER_COLORS[color], fontWeight: "bold" }}>
@@ -61,7 +58,6 @@ function Lobby() {
   const [name] = useState(() => getPlayerName() || "");
   const [playerId] = useState(() => getPlayerId() || null);
 
-  // Buttons will be disabled if the user has no name or ID
   const isDisabled = !playerId || !name;
 
   const startGame = async () => {
@@ -225,8 +221,8 @@ function Lobby() {
             <li
               key={id}
               style={{
-                border: `1px solid ${COLORS.sidebarBorder}`,
-                backgroundColor: COLORS.sidebar,
+                border: `1px solid ${COLORS.containerBorder}`,
+                backgroundColor: COLORS.container,
                 borderRadius: "8px",
                 padding: "16px",
                 display: "flex",
@@ -239,7 +235,6 @@ function Lobby() {
                 <span style={{ fontFamily: "monospace" }}>{id}</span>
               </div>
 
-              {/* Player displays, evenly spaced */}
               <div
                 style={{
                   display: "flex",
@@ -257,7 +252,6 @@ function Lobby() {
                 />
               </div>
 
-              {/* Action buttons */}
               <div
                 style={{
                   display: "flex",
@@ -266,7 +260,7 @@ function Lobby() {
                   gap: "12px",
                   marginTop: "auto",
                   paddingTop: "12px",
-                  borderTop: `1px solid ${COLORS.sidebarBorder}`,
+                  borderTop: `1px solid ${COLORS.containerBorder}`,
                 }}
               >
                 <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>

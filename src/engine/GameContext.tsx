@@ -8,18 +8,26 @@ import * as Actions from "./gameActions";
 import {
   Card,
   defaultPlayer,
+  Event,
   GameState,
+  Location,
   PlayerColor,
   Resources,
+  SpecialEvent,
 } from "./gameTypes";
 import { pickFourSpecialEvents, shuffleArray } from "./helpers";
-import { MAX_MEADOW_SIZE } from "./gameConstants";
 import { journeys } from "../assets/data/journey";
 import { specialEvents } from "../assets/data/specialEvents";
+import {
+  FIRST_PLAYER_HAND_SIZE,
+  MAX_MEADOW_SIZE,
+  SECOND_PLAYER_HAND_SIZE,
+} from "./gameConstants";
 
 let actionQueue = Promise.resolve();
 
 export function setupGame(firstPlayer: PlayerColor): GameState {
+  // Shuffle deck
   const cards: Card[] = rawCards.flatMap((card) => {
     const count = cardFrequencies[card.name] ?? 1;
     return Array.from({ length: count }, () => ({
@@ -31,12 +39,33 @@ export function setupGame(firstPlayer: PlayerColor): GameState {
   });
   const deck = shuffleArray(cards);
 
-  const meadow = deck.slice(0, MAX_MEADOW_SIZE); // 8 cards
-  const firstHand = deck.slice(8, 13); // 5 cards
-  const secondHand = deck.slice(13, 19); // 6 cards
-  const remainingDeck = deck.slice(19);
+  // Fill up meadow and deal cards
+  const MEADOW_END = MAX_MEADOW_SIZE;
+  const FIRST_END = MEADOW_END + FIRST_PLAYER_HAND_SIZE;
+  const SECOND_END = FIRST_END + SECOND_PLAYER_HAND_SIZE;
 
-  console.log("DECK SIZE IS ", remainingDeck.length);
+  const meadow = deck.slice(0, MEADOW_END);
+  const firstHand = deck.slice(MEADOW_END, FIRST_END);
+  const secondHand = deck.slice(FIRST_END, SECOND_END);
+  const remainingDeck = deck.slice(SECOND_END);
+
+  // Set up remaining objects
+  const newLocations: Location[] = locations.map((location) => ({
+    ...location,
+    workers: { Red: 0, Blue: 0 },
+  }));
+  const newEvents: Event[] = events.map((event) => ({
+    ...event,
+    used: false,
+    workers: { Red: 0, Blue: 0 },
+  }));
+  const newSpecialEvents: SpecialEvent[] = pickFourSpecialEvents(
+    specialEvents.map((se) => ({
+      ...se,
+      used: false,
+      workers: { Red: 0, Blue: 0 },
+    })),
+  );
 
   return {
     players: {
@@ -55,10 +84,10 @@ export function setupGame(firstPlayer: PlayerColor): GameState {
     discard: [],
     meadow: meadow,
     reveal: [],
-    locations: locations,
+    locations: newLocations,
     journeys: journeys,
-    events: events,
-    specialEvents: pickFourSpecialEvents(specialEvents),
+    events: newEvents,
+    specialEvents: newSpecialEvents,
     turn: firstPlayer,
   };
 }
