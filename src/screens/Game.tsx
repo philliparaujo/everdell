@@ -55,7 +55,7 @@ const playAreaStyling: React.CSSProperties = {
   padding: "16px",
   display: "flex",
   flexDirection: "column",
-  gap: "16px",
+  gap: "12px",
   minWidth: 0,
   background: COLORS.playArea,
 };
@@ -130,7 +130,6 @@ function Game() {
       {/* --- Right Content Area --- */}
       <div style={playAreaStyling}>
         <div style={twoColumnRowStyling}>
-          {/* APPLY halfColumnStyling HERE */}
           <section style={halfColumnStyling}>
             <h4 style={headingStyling}>Locations</h4>
             <div style={scrollStyle}>
@@ -139,7 +138,6 @@ function Game() {
           </section>
 
           {game.players[game.turn].season === "Autumn" && (
-            /* AND APPLY it HERE */
             <section style={halfColumnStyling}>
               <h4 style={headingStyling}>Journeys</h4>
               <div style={scrollStyle}>
@@ -150,7 +148,6 @@ function Game() {
         </div>
 
         <div style={twoColumnRowStyling}>
-          {/* AND APPLY it HERE */}
           <section style={halfColumnStyling}>
             <h4 style={headingStyling}>Basic Events</h4>
             <div style={scrollStyle}>
@@ -158,7 +155,6 @@ function Game() {
             </div>
           </section>
 
-          {/* AND APPLY it HERE */}
           <section style={halfColumnStyling}>
             <h4 style={headingStyling}>Special Events</h4>
             <div style={scrollStyle}>

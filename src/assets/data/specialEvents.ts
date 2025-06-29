@@ -147,7 +147,7 @@ export const specialEvents: SpecialEvent[] = [
   },
   {
     name: "An Evening of Fireworks",
-    cardRequirement: ["Tower", "Miner Mole"],
+    cardRequirement: ["Lookout", "Miner Mole"],
     effectTypeRequirement: { Blue: 0, Green: 0, Purple: 0, Red: 0, Tan: 0 },
     specialDescription: "You may place up to 3 twigs here",
     specialReward: "2 coins for each twig on this Event",

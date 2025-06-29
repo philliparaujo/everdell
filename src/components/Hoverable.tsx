@@ -5,11 +5,13 @@ function Hoverable({
   isInteractive,
   onLeftClick,
   onRightClick,
+  style,
 }: {
   children: React.ReactNode;
   isInteractive: boolean;
   onLeftClick?: () => void;
   onRightClick?: (setInspectingFalse: () => void) => void;
+  style?: React.CSSProperties;
 }) {
   const [inspecting, setInspecting] = useState(false);
   const [hovering, setHovering] = useState(false);
@@ -18,7 +20,7 @@ function Hoverable({
 
   return (
     <>
-      <div
+      <span
         onMouseEnter={() => setHovering(true && isInteractive)}
         onMouseLeave={() => setHovering(false)}
         onMouseDown={(e) => {
@@ -33,12 +35,14 @@ function Hoverable({
         style={{
           cursor: isInteractive ? "pointer" : "default",
           transition: "transform 0.1s ease, filter 0.1s ease",
-          transform: hovering ? "scale(1.02)" : "scale(1)",
-          filter: hovering ? "brightness(1.05)" : "brightness(1)",
+          transform: isInteractive && hovering ? "scale(1.02)" : "scale(1)",
+          filter:
+            isInteractive && hovering ? "brightness(1.10)" : "brightness(1)",
+          ...style,
         }}
       >
         {children}
-      </div>
+      </span>
 
       {inspecting && onRightClick && onRightClick(closeInspector)}
     </>

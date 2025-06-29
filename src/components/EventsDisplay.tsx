@@ -38,7 +38,7 @@ function EventDisplay({ event, index }: { event: Event; index: number }) {
       )}
       workerChildren={renderWorkers(event)}
       resourceChildren={
-        <div style={{ ...arrowResourceStyling, height: "35px" }}>
+        <div style={{ ...arrowResourceStyling, height: "40px" }}>
           <EffectTypeIcon type={event.effectTypeRequirement} />{" "}
           {event.effectTypeCount}
           {"→"}

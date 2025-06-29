@@ -292,7 +292,8 @@ export function canVisitEvent(
   // Cannot visit event that is already used
   if (event.used && workersVisiting > 0) return false;
   // Cannot visit event if requirement not met
-  if (requirementCount < event.effectTypeCount) return false;
+  if (requirementCount < event.effectTypeCount && workersVisiting > 0)
+    return false;
 
   return true;
 }
@@ -328,7 +329,8 @@ export function canVisitSpecialEvent(
   // Cannot visit special event that is already used
   if (specialEvent.used && workersVisiting > 0) return false;
   // Cannot visit special event if requirement not met
-  if (!cardRequirementMet || !effectTypeRequirementMet) return false;
+  if ((!cardRequirementMet || !effectTypeRequirementMet) && workersVisiting > 0)
+    return false;
 
   return true;
 }
@@ -386,6 +388,11 @@ export function canGiveToSelf(
     specialEvents.some(
       (specialEvent) =>
         specialEvent.name === "A Brilliant Marketing Plan" &&
+        specialEvent.workers[player.color] > 0,
+    ) ||
+    specialEvents.some(
+      (specialEvent) =>
+        specialEvent.name === "Ancient Scrolls Discovered" &&
         specialEvent.workers[player.color] > 0,
     )
   );
