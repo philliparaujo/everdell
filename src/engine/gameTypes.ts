@@ -1,5 +1,5 @@
 export type CardType = "Construction" | "Critter";
-export type EffectType = "Tan" | "Green" | "Red" | "Blue" | "Purple";
+export type EffectType = "Blue" | "Green" | "Purple" | "Red" | "Tan";
 
 export type Season = "Winter" | "Spring" | "Summer" | "Autumn";
 
@@ -66,6 +66,16 @@ export type Event = {
   used: boolean;
 };
 
+export type SpecialEvent = {
+  name: string;
+  cardRequirement: string[];
+  effectTypeRequirement: Record<EffectType, number>;
+  description: string;
+  value: number | null;
+  workers: Record<PlayerColor, number>;
+  used: boolean;
+};
+
 export type History = {
   // This turn
   discarded: Card[];
@@ -109,6 +119,7 @@ export type GameState = {
   locations: Location[];
   journeys: Journey[];
   events: Event[];
+  specialEvents: SpecialEvent[];
   turn: PlayerColor;
 };
 

@@ -15,6 +15,7 @@ import {
   getPlayerId,
   oppositePlayerOf,
 } from "../engine/helpers";
+import SpecialEventsDisplay from "../components/SpecialEventsDisplay";
 
 const sideBarColumnStyling: React.CSSProperties = {
   width: "260px",
@@ -128,29 +129,42 @@ function Game() {
 
       {/* --- Right Content Area --- */}
       <div style={playAreaStyling}>
-        <section>
-          <h4 style={headingStyling}>Locations</h4>
-          <div style={scrollStyle}>
-            <LocationsDisplay />
-          </div>
-        </section>
-
         <div style={twoColumnRowStyling}>
-          <section>
-            <h4 style={headingStyling}>Events</h4>
+          {/* APPLY halfColumnStyling HERE */}
+          <section style={halfColumnStyling}>
+            <h4 style={headingStyling}>Locations</h4>
             <div style={scrollStyle}>
-              <EventsDisplay />
+              <LocationsDisplay />
             </div>
           </section>
 
           {game.players[game.turn].season === "Autumn" && (
-            <section>
+            /* AND APPLY it HERE */
+            <section style={halfColumnStyling}>
               <h4 style={headingStyling}>Journeys</h4>
               <div style={scrollStyle}>
                 <JourneysDisplay />
               </div>
             </section>
           )}
+        </div>
+
+        <div style={twoColumnRowStyling}>
+          {/* AND APPLY it HERE */}
+          <section style={halfColumnStyling}>
+            <h4 style={headingStyling}>Basic Events</h4>
+            <div style={scrollStyle}>
+              <EventsDisplay />
+            </div>
+          </section>
+
+          {/* AND APPLY it HERE */}
+          <section style={halfColumnStyling}>
+            <h4 style={headingStyling}>Special Events</h4>
+            <div style={scrollStyle}>
+              <SpecialEventsDisplay />
+            </div>
+          </section>
         </div>
 
         {/* --- Full Width Rows --- */}

@@ -5,6 +5,10 @@ import { mapOverResources } from "../engine/helpers";
 import CardInspect from "./CardInspect";
 import { ResourceIcon, WorkerIcon } from "./Icons";
 
+export const cardNamePreviewStyling: React.CSSProperties = {
+  fontSize: "12px",
+};
+
 function CardPreview({
   card,
   index,
@@ -87,7 +91,7 @@ function CardPreview({
               }}
               draggable={false}
             />
-            <strong style={{ fontSize: "12px", color: textColor }}>
+            <strong style={{ ...cardNamePreviewStyling, color: textColor }}>
               {card.name}
             </strong>
           </div>

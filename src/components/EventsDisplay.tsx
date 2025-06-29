@@ -29,6 +29,7 @@ function EventDisplay({ event, index }: { event: Event; index: number }) {
 
   return (
     <BaseLocationDisplay
+      titleChildren={event.name}
       buttonChildren={renderButtons(
         disabled || !canVisit,
         disabled || !canLeave,
@@ -37,7 +38,7 @@ function EventDisplay({ event, index }: { event: Event; index: number }) {
       )}
       workerChildren={renderWorkers(event)}
       resourceChildren={
-        <div style={arrowResourceStyling}>
+        <div style={{ ...arrowResourceStyling, height: "35px" }}>
           <EffectTypeIcon type={event.effectTypeRequirement} />{" "}
           {event.effectTypeCount}
           {"→"}
@@ -45,6 +46,7 @@ function EventDisplay({ event, index }: { event: Event; index: number }) {
         </div>
       }
       used={event.used}
+      wide={true}
     />
   );
 }

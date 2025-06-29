@@ -15,6 +15,7 @@ import {
 import { shuffleArray } from "./helpers";
 import { MAX_MEADOW_SIZE } from "./gameConstants";
 import { journeys } from "../assets/data/journey";
+import { specialEvents } from "../assets/data/specialEvents";
 
 let actionQueue = Promise.resolve();
 
@@ -57,6 +58,7 @@ export function setupGame(firstPlayer: PlayerColor): GameState {
     locations: locations,
     journeys: journeys,
     events: events,
+    specialEvents: specialEvents,
     turn: firstPlayer,
   };
 }
@@ -106,6 +108,11 @@ const GameContext = createContext<{
     index: number,
     workersVisiting: 1 | -1,
   ) => void;
+  visitSpecialEvent: (
+    playerId: string | null,
+    index: number,
+    workersVisiting: 1 | -1,
+  ) => void;
   visitCardInCity: (
     playerId: string | null,
     cityColor: PlayerColor,
@@ -144,6 +151,7 @@ const GameContext = createContext<{
   visitLocation: noop,
   visitJourney: noop,
   visitEvent: noop,
+  visitSpecialEvent: noop,
   visitCardInCity: noop,
   toggleOccupiedCardInCity: noop,
   addResourcesToCardInCity: noop,
@@ -230,6 +238,7 @@ export const GameProvider = ({
     visitLocation: wrapAction(Actions.visitLocation),
     visitJourney: wrapAction(Actions.visitJourney),
     visitEvent: wrapAction(Actions.visitEvent),
+    visitSpecialEvent: wrapAction(Actions.visitSpecialEvent),
     visitCardInCity: wrapAction(Actions.visitCardInCity),
 
     setDiscarding: wrapAction(Actions.setDiscarding),

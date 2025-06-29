@@ -40,6 +40,11 @@ function JourneyDisplay({
   return (
     <BaseLocationDisplay
       exclusive={journey.exclusive}
+      titleChildren={
+        <div aria-hidden="true" style={{ visibility: "hidden" }}>
+          .
+        </div>
+      }
       buttonChildren={renderButtons(
         disabled || !canVisit,
         disabled || !canLeave,

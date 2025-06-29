@@ -1095,7 +1095,7 @@ export const rawCards: Omit<Card, "discarding" | "playing" | "giving">[] = [
     },
     value: 2,
     cardType: "Construction",
-    effectType: "Blue",
+    effectType: "Green",
     unique: false,
     constructionRequirement: null,
     workers: { Red: 0, Blue: 0 },

@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { useGame } from "../engine/GameContext";
-import { Card, Event, Journey } from "../engine/gameTypes";
+import { Card, Event, Journey, SpecialEvent } from "../engine/gameTypes";
 import { Location, ResourceType } from "../engine/gameTypes";
 import {
   canVisitLocation,
@@ -28,6 +28,11 @@ const locationStyling: React.CSSProperties = {
 export const locationsDisplayStyling: React.CSSProperties = {
   display: "flex",
   gap: "8px",
+};
+
+export const locationsTitleStyling: React.CSSProperties = {
+  fontSize: "10px",
+  paddingTop: "2px",
 };
 
 const workerStyling: React.CSSProperties = {
@@ -66,7 +71,9 @@ export function renderButtons(
   );
 }
 
-export function renderWorkers(location: Location | Journey | Event | Card) {
+export function renderWorkers(
+  location: Location | Journey | Event | SpecialEvent | Card,
+) {
   return (
     <div style={workerStyling}>
       {location.workers.Red > 0 && (
@@ -87,19 +94,24 @@ export function BaseLocationDisplay({
   buttonChildren,
   workerChildren,
   resourceChildren,
+  titleChildren = null,
   exclusive = false,
   used = false,
+  wide = false,
 }: {
   buttonChildren: ReactNode;
   workerChildren: ReactNode;
   resourceChildren: ReactNode;
+  titleChildren?: ReactNode;
   exclusive?: boolean;
   used?: boolean;
+  wide?: boolean;
 }) {
   return (
     <div
       style={{
         ...locationStyling,
+        ...(wide && { width: "150px" }),
         border: used
           ? `solid 2px ${COLORS.locationUsed}`
           : exclusive
@@ -108,6 +120,7 @@ export function BaseLocationDisplay({
       }}
     >
       {buttonChildren}
+      {<div style={locationsTitleStyling}>{titleChildren}</div>}
       {workerChildren}
       {resourceChildren}
     </div>
@@ -139,6 +152,11 @@ function LocationDisplay({
   return (
     <BaseLocationDisplay
       exclusive={location.exclusive}
+      titleChildren={
+        <div aria-hidden="true" style={{ visibility: "hidden" }}>
+          .
+        </div>
+      }
       buttonChildren={renderButtons(
         disabled || !canVisit,
         disabled || !canLeave,
@@ -179,6 +197,11 @@ function HavenDisplay() {
 
   return (
     <BaseLocationDisplay
+      titleChildren={
+        <div aria-hidden="true" style={{ visibility: "hidden" }}>
+          .
+        </div>
+      }
       buttonChildren={renderButtons(
         disabled || !canVisit,
         disabled || !canLeave,

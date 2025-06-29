@@ -3,6 +3,7 @@ import { MAX_MEADOW_SIZE } from "./gameConstants";
 import {
   Card,
   defaultResources,
+  EffectType,
   Event,
   GameState,
   Journey,
@@ -12,6 +13,7 @@ import {
   Resources,
   ResourceType,
   Season,
+  SpecialEvent,
 } from "./gameTypes";
 
 export const shuffleArray = (array: any[]) => {
@@ -251,7 +253,7 @@ export function canVisitEvent(
   // Cannot end with negative workers or more than max available
   if (newWorkersLeft < 0 || newWorkersLeft > player.workers.maxWorkers)
     return false;
-  // Canont leave event that doesn't have your worker on it
+  // Cannot leave event that doesn't have your worker on it
   if (workersVisiting < 0 && event.workers[playerColor] <= 0) return false;
 
   const requirementCount = player.city.reduce(
@@ -264,6 +266,42 @@ export function canVisitEvent(
   if (event.used && workersVisiting > 0) return false;
   // Cannot visit event if requirement not met
   if (requirementCount < event.effectTypeCount) return false;
+
+  return true;
+}
+
+export function canVisitSpecialEvent(
+  state: GameState,
+  specialEvent: SpecialEvent,
+  playerColor: PlayerColor,
+  workersVisiting: 1 | -1,
+): boolean {
+  const player = state.players[playerColor];
+  const newWorkersLeft = player.workers.workersLeft - workersVisiting;
+
+  // Cannot end with negative workers or more than max available
+  if (newWorkersLeft < 0 || newWorkersLeft > player.workers.maxWorkers)
+    return false;
+  // Cannot leave event that doesn't have your worker on it
+  if (workersVisiting < 0 && specialEvent.workers[playerColor] <= 0)
+    return false;
+
+  // Assumes cardRequirement list has no duplicate card names
+  const cardRequirementMet = specialEvent.cardRequirement
+    .map((cardName) => hasCardInCity(player.city, cardName))
+    .reduce((acc, curr) => acc && curr, true);
+
+  const effectTypeRequirementMet = Object.entries(
+    specialEvent.effectTypeRequirement,
+  ).every(
+    ([effectType, required]) =>
+      countEffectTypeInCity(player.city, effectType as EffectType) >= required,
+  );
+
+  // Cannot visit special event that is already used
+  if (specialEvent.used && workersVisiting > 0) return false;
+  // Cannot visit special event if requirement not met
+  if (!cardRequirementMet || !effectTypeRequirementMet) return false;
 
   return true;
 }
@@ -300,6 +338,16 @@ export function countCardInCity(city: Card[], cardName: string): number {
 
 export function hasCardInCity(city: Card[], cardName: string): boolean {
   return city.some((card) => card.name === cardName);
+}
+
+export function countEffectTypeInCity(
+  city: Card[],
+  effectType: EffectType,
+): number {
+  return city.reduce(
+    (acc, curr) => acc + (curr.effectType === effectType ? 1 : 0),
+    0,
+  );
 }
 
 export function canGiveToSelf(player: Player): boolean {

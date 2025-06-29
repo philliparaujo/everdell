@@ -17,6 +17,7 @@ import {
   canVisitEvent,
   canVisitJourney,
   canVisitLocation,
+  canVisitSpecialEvent,
   getPlayerColor,
   isSafeToEndTurn,
   maxCitySize,
@@ -202,9 +203,6 @@ export function visitEvent(
           ...player.workers,
           workersLeft: player.workers.workersLeft - workersVisiting,
         },
-        resources: {
-          ...player.resources,
-        },
       },
     },
   };
@@ -213,6 +211,60 @@ export function visitEvent(
     return addResourcesToSelf(newState, playerId, {
       ...defaultResources,
       coins: event.value,
+    });
+  }
+
+  return newState;
+}
+
+export function visitSpecialEvent(
+  state: GameState,
+  playerId: string | null,
+  index: number,
+  workersVisiting: 1 | -1,
+): GameState {
+  const playerColor = getPlayerColor(state, playerId);
+  if (playerColor === null) return state;
+  if (playerColor !== state.turn) return state;
+
+  if (index >= state.specialEvents.length) return state;
+
+  const specialEvent = state.specialEvents[index];
+  const player = state.players[playerColor];
+
+  if (!canVisitSpecialEvent(state, specialEvent, playerColor, workersVisiting))
+    return state;
+
+  const updatedSpecialEvent = {
+    ...specialEvent,
+    workers: {
+      ...specialEvent.workers,
+      [playerColor]: specialEvent.workers[playerColor] + workersVisiting,
+    },
+    used: true,
+  };
+
+  const newState: GameState = {
+    ...state,
+    specialEvents: state.specialEvents.map((specialEvent, i) =>
+      i === index ? updatedSpecialEvent : specialEvent,
+    ),
+    players: {
+      ...state.players,
+      [playerColor]: {
+        ...player,
+        workers: {
+          ...player.workers,
+          workersLeft: player.workers.workersLeft - workersVisiting,
+        },
+      },
+    },
+  };
+
+  if (workersVisiting > 0 && specialEvent.value) {
+    return addResourcesToSelf(newState, playerId, {
+      ...defaultResources,
+      coins: specialEvent.value,
     });
   }
 
