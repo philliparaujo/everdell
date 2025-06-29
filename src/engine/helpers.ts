@@ -89,15 +89,23 @@ export function isNotYourTurn(
   return getPlayerColor(game, playerId) !== game.turn;
 }
 
-const RESOURCE_ORDER: ResourceType[] = [
+export const RESOURCE_ORDER: ResourceType[] = [
   "twigs",
   "resin",
   "pebbles",
   "berries",
   "coins",
   "cards",
-  "wildcard",
+  "wildcards",
 ];
+export const EFFECT_ORDER: EffectType[] = [
+  "Blue",
+  "Green",
+  "Purple",
+  "Red",
+  "Tan",
+];
+
 export function mapOverResources(
   resources: Resources,
   onMap: (key: ResourceType, val: number) => React.ReactNode,
@@ -114,6 +122,25 @@ export function mapOverResources(
 
   return RESOURCE_ORDER.filter((key) => resources[key] !== 0 || !filter).map(
     (key) => onMap(key, resources[key]),
+  );
+}
+
+export function mapOverEffectTypes(
+  effectTypes: Record<EffectType, number>,
+  onMap: (key: EffectType, val: number) => React.ReactNode,
+  filter: boolean = true,
+  onNoEffectTypes?: () => React.ReactNode,
+) {
+  const effectTypeCount = EFFECT_ORDER.reduce(
+    (acc, curr) => acc + Math.abs(effectTypes[curr]),
+    0,
+  );
+  if (effectTypeCount === 0 && onNoEffectTypes) {
+    return onNoEffectTypes();
+  }
+
+  return EFFECT_ORDER.filter((key) => effectTypes[key] !== 0 || !filter).map(
+    (key) => onMap(key, effectTypes[key]),
   );
 }
 

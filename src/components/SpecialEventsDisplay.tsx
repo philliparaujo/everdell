@@ -1,18 +1,23 @@
 import { useGame } from "../engine/GameContext";
-import { SpecialEvent } from "../engine/gameTypes";
+import { EffectType, SpecialEvent } from "../engine/gameTypes";
 import {
   canVisitSpecialEvent,
   getPlayerColor,
   getPlayerId,
   isNotYourTurn,
+  mapOverEffectTypes,
 } from "../engine/helpers";
 import { cardNamePreviewStyling } from "./CardPreview";
+import Hoverable from "./Hoverable";
+import { EffectTypeIcon } from "./Icons";
 import {
   BaseLocationDisplay,
   locationsDisplayStyling,
   renderButtons,
   renderWorkers,
+  resourceStyling,
 } from "./LocationsDisplay";
+import SpecialEventInspect from "./SpecialEventInspect";
 
 function SpecialEventDisplay({
   specialEvent,
@@ -37,27 +42,48 @@ function SpecialEventDisplay({
       : canVisitSpecialEvent(game, specialEvent, playerColor, -1);
 
   return (
-    <BaseLocationDisplay
-      titleChildren={specialEvent.name}
-      buttonChildren={renderButtons(
-        disabled || !canVisit,
-        disabled || !canLeave,
-        () => visitSpecialEvent(storedId, index, 1),
-        () => visitSpecialEvent(storedId, index, -1),
+    <Hoverable
+      isInteractive={true}
+      onRightClick={(closeInspector) => (
+        <SpecialEventInspect
+          specialEvent={specialEvent}
+          onClose={closeInspector}
+          index={index}
+        />
       )}
-      workerChildren={renderWorkers(specialEvent)}
-      resourceChildren={
-        <div
-          style={{ display: "flex", flexDirection: "column", height: "35px" }}
-        >
-          {specialEvent.cardRequirement.map((cardName) => (
-            <strong style={cardNamePreviewStyling}>{cardName}</strong>
-          ))}
-        </div>
-      }
-      used={specialEvent.used}
-      wide={true}
-    />
+    >
+      <BaseLocationDisplay
+        titleChildren={specialEvent.name}
+        buttonChildren={renderButtons(
+          disabled || !canVisit,
+          disabled || !canLeave,
+          () => visitSpecialEvent(storedId, index, 1),
+          () => visitSpecialEvent(storedId, index, -1),
+        )}
+        workerChildren={renderWorkers(specialEvent)}
+        resourceChildren={
+          <div
+            style={{ display: "flex", flexDirection: "column", height: "40px" }}
+          >
+            {specialEvent.cardRequirement.map((cardName) => (
+              <strong style={cardNamePreviewStyling}>{cardName}</strong>
+            ))}
+            <div style={{ ...resourceStyling, fontSize: "9px" }}>
+              {mapOverEffectTypes(
+                specialEvent.effectTypeRequirement,
+                (key, val) => (
+                  <div key={key}>
+                    <EffectTypeIcon type={key as EffectType} /> {val}
+                  </div>
+                ),
+              )}
+            </div>
+          </div>
+        }
+        used={specialEvent.used}
+        wide={true}
+      />
+    </Hoverable>
   );
 }
 
@@ -66,12 +92,9 @@ function SpecialEventsDisplay() {
 
   return (
     <div style={locationsDisplayStyling}>
-      {game.specialEvents.map(
-        (specialEvent: SpecialEvent, index: number) =>
-          index < 4 && (
-            <SpecialEventDisplay specialEvent={specialEvent} index={index} />
-          ),
-      )}
+      {game.specialEvents.map((specialEvent: SpecialEvent, index: number) => (
+        <SpecialEventDisplay specialEvent={specialEvent} index={index} />
+      ))}
     </div>
   );
 }

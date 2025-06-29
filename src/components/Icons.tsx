@@ -30,7 +30,7 @@ const resourceIcons: Record<ResourceType, string> = {
   berries: berry,
   coins: coin,
   cards: card,
-  wildcard: wildcard,
+  wildcards: wildcard,
 };
 
 // Styling

@@ -10,7 +10,7 @@ export type ResourceType =
   | "berries"
   | "coins"
   | "cards"
-  | "wildcard";
+  | "wildcards";
 export type Resources = Record<ResourceType, number>;
 
 export type Workers = {
@@ -70,10 +70,13 @@ export type SpecialEvent = {
   name: string;
   cardRequirement: string[];
   effectTypeRequirement: Record<EffectType, number>;
-  description: string;
-  value: number | null;
   workers: Record<PlayerColor, number>;
   used: boolean;
+
+  specialDescription: string | null;
+  specialReward: string | null;
+
+  value: number | null;
 };
 
 export type History = {
@@ -130,7 +133,7 @@ export const defaultResources: Resources = {
   berries: 0,
   coins: 0,
   cards: 0,
-  wildcard: 0,
+  wildcards: 0,
 };
 
 export const defaultWorkers: Workers = {

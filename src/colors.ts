@@ -47,8 +47,8 @@ export const COLORS = {
   cardPreviewOccupied: "#BB88DD",
   storage: mediumBackground, // Consistent with sidebar/location accents
 
-  cardInspect: mediumBackground, // Slightly lighter background for the modal
-  cardInspectBackground: "rgba(0, 0, 0, 0.8)", // More opaque overlay
+  inspect: mediumBackground, // Slightly lighter background for the modal
+  inspectBackground: "rgba(0, 0, 0, 0.8)", // More opaque overlay
   cardInspectImageBorder: "#444", // A slightly visible border for images
 
   // Button

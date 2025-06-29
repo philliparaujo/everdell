@@ -41,7 +41,7 @@ const workerStyling: React.CSSProperties = {
   alignContent: "center",
   gap: "8px",
 };
-const resourceStyling: React.CSSProperties = {
+export const resourceStyling: React.CSSProperties = {
   display: "flex",
   flexWrap: "wrap",
   justifyContent: "center",
@@ -213,7 +213,7 @@ function HavenDisplay() {
         <div style={arrowResourceStyling}>
           <ResourceIcon type={"cards"} /> {-2}
           {"→"}
-          <ResourceIcon type={"wildcard"} /> {1}
+          <ResourceIcon type={"wildcards"} /> {1}
         </div>
       }
     />
