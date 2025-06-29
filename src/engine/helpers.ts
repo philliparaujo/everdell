@@ -377,8 +377,18 @@ export function countEffectTypeInCity(
   );
 }
 
-export function canGiveToSelf(player: Player): boolean {
-  return hasCardInCity(player.city, "Undertaker");
+export function canGiveToSelf(
+  player: Player,
+  specialEvents: SpecialEvent[],
+): boolean {
+  return (
+    hasCardInCity(player.city, "Undertaker") ||
+    specialEvents.some(
+      (specialEvent) =>
+        specialEvent.name === "A Brilliant Marketing Plan" &&
+        specialEvent.workers[player.color] > 0,
+    )
+  );
 }
 
 export function canGiveToOpponent(
@@ -394,15 +404,51 @@ export function canGiveToOpponent(
   );
 }
 
-export function canRevealDeck(player: Player, oppositePlayer: Player): boolean {
+export function canRevealDeck(
+  player: Player,
+  oppositePlayer: Player,
+  specialEvents: SpecialEvent[],
+): boolean {
   return (
     hasCardInCity(player.city, "Cemetery") ||
     hasCardInCity(player.city, "Postal Pigeon") ||
     (hasCardInCity(player.city, "Miner Mole") &&
-      hasCardInCity(oppositePlayer.city, "Postal Pigeon"))
+      hasCardInCity(oppositePlayer.city, "Postal Pigeon")) ||
+    specialEvents.some(
+      (specialEvent) =>
+        specialEvent.name === "Ancient Scrolls Discovered" &&
+        specialEvent.workers[player.color] > 0,
+    )
   );
 }
 
 export function canRevealDiscard(player: Player): boolean {
   return hasCardInCity(player.city, "Cemetery");
+}
+
+export function canGiveResources(
+  player: Player,
+  specialEvents: SpecialEvent[],
+): boolean {
+  return (
+    hasCardInCity(player.city, "Monk") ||
+    hasCardInCity(player.city, "Monastery") ||
+    hasCardInCity(player.city, "Shepherd") ||
+    specialEvents.some(
+      (specialEvent) =>
+        specialEvent.name === "A Brilliant Marketing Plan" &&
+        specialEvent.workers[player.color] > 0,
+    )
+  );
+}
+
+export function pickFourSpecialEvents(events: SpecialEvent[]): SpecialEvent[] {
+  const arr = [...events];
+
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+
+  return arr.slice(0, 4);
 }

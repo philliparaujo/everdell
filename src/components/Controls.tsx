@@ -36,7 +36,7 @@ function Controls() {
 
   const oppositePlayer = game.players[oppositePlayerOf(game.turn)];
 
-  const canGiveSelf = canGiveToSelf(currentPlayer);
+  const canGiveSelf = canGiveToSelf(currentPlayer, game.specialEvents);
   const canGiveOpponent = canGiveToOpponent(currentPlayer, oppositePlayer);
 
   return (

@@ -618,7 +618,7 @@ export function toggleCardPlaying(
 export function toggleCardGiving(
   state: GameState,
   playerId: string | null,
-  location: "hand" | "meadow",
+  location: "hand" | "meadow" | "reveal",
   index: number,
 ): GameState {
   const playerColor = getPlayerColor(state, playerId);
@@ -637,6 +637,7 @@ export function toggleCardGiving(
     },
     meadow: [...state.meadow],
     discard: [...state.discard],
+    reveal: [...state.reveal],
   };
 
   let cardToToggle: Card | undefined;
@@ -653,6 +654,14 @@ export function toggleCardGiving(
     cardToToggle = newState.meadow[index];
     if (cardToToggle) {
       newState.meadow[index] = {
+        ...cardToToggle,
+        giving: !cardToToggle.giving,
+      };
+    }
+  } else if (location === "reveal") {
+    cardToToggle = newState.reveal[index];
+    if (cardToToggle) {
+      newState.reveal[index] = {
         ...cardToToggle,
         giving: !cardToToggle.giving,
       };
@@ -836,10 +845,21 @@ export function giveSelectedCards(
     state.meadow,
     (card) => !card.giving,
   );
+  const [revealKeep, revealGive] = partition(
+    state.reveal,
+    (card) => !card.giving,
+  );
 
   const updatePlayerHand: Card[] =
-    playerColor === toColor ? [...player.hand, ...meadowGive] : [...handKeep];
-  const playerToHand = [...playerTo.hand, ...handGive, ...meadowGive];
+    playerColor === toColor
+      ? [...player.hand, ...meadowGive, ...revealGive]
+      : [...handKeep];
+  const playerToHand = [
+    ...playerTo.hand,
+    ...handGive,
+    ...meadowGive,
+    ...revealGive,
+  ];
 
   if (updatePlayerHand.length > MAX_HAND_SIZE) return state;
   if (playerColor !== toColor && playerToHand.length > MAX_HAND_SIZE)
@@ -863,6 +883,7 @@ export function giveSelectedCards(
             ...state.players[playerColor].history.gave,
             ...handGive,
             ...meadowGive,
+            ...revealGive,
           ],
         },
       },
@@ -879,6 +900,7 @@ export function giveSelectedCards(
       }),
     },
     meadow: meadowKeep,
+    reveal: revealKeep,
   };
 }
 
@@ -1067,6 +1089,54 @@ export function addResourcesToSelf(
       [playerColor]: {
         ...updatedState.players[playerColor],
         resources: updatedResources,
+      },
+    },
+  };
+}
+
+export function giveResources(
+  state: GameState,
+  playerId: string | null,
+  resources: Resources,
+  toColor: PlayerColor,
+): GameState {
+  const playerColor = getPlayerColor(state, playerId);
+  if (playerColor === null) return state;
+  if (playerColor !== state.turn) return state;
+
+  const player = state.players[playerColor];
+  const playerTo = state.players[toColor];
+  if (player === playerTo) return state;
+
+  const updatedResources: Resources = { ...player.resources };
+  const updatedToResources: Resources = { ...playerTo.resources };
+
+  for (const key in resources) {
+    if (Object.prototype.hasOwnProperty.call(resources, key)) {
+      const typedKey = key as keyof Resources;
+      const amount = resources[typedKey];
+
+      if (amount <= 0) continue;
+      if (player.resources[typedKey] < amount) return state;
+
+      if (typedKey !== "cards") {
+        updatedResources[typedKey] -= amount;
+        updatedToResources[typedKey] += amount;
+      }
+    }
+  }
+
+  return {
+    ...state,
+    players: {
+      ...state.players,
+      [playerColor]: {
+        ...state.players[playerColor],
+        resources: updatedResources,
+      },
+      [toColor]: {
+        ...state.players[toColor],
+        resources: updatedToResources,
       },
     },
   };

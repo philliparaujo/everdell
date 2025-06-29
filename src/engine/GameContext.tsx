@@ -12,7 +12,7 @@ import {
   PlayerColor,
   Resources,
 } from "./gameTypes";
-import { shuffleArray } from "./helpers";
+import { pickFourSpecialEvents, shuffleArray } from "./helpers";
 import { MAX_MEADOW_SIZE } from "./gameConstants";
 import { journeys } from "../assets/data/journey";
 import { specialEvents } from "../assets/data/specialEvents";
@@ -58,7 +58,7 @@ export function setupGame(firstPlayer: PlayerColor): GameState {
     locations: locations,
     journeys: journeys,
     events: events,
-    specialEvents: specialEvents,
+    specialEvents: pickFourSpecialEvents(specialEvents),
     turn: firstPlayer,
   };
 }
@@ -84,7 +84,7 @@ const GameContext = createContext<{
   ) => void;
   toggleCardGiving: (
     playerId: string | null,
-    location: "hand" | "meadow",
+    location: "hand" | "meadow" | "reveal",
     index: number,
   ) => void;
   discardSelectedCards: (playerId: string | null) => void;
@@ -132,6 +132,11 @@ const GameContext = createContext<{
     resources: Resources,
   ) => void;
   addResourcesToSelf: (playerId: string | null, resources: Resources) => void;
+  giveResources: (
+    playerId: string | null,
+    resources: Resources,
+    toColor: PlayerColor,
+  ) => void;
   harvest: (playerId: string | null) => void;
 }>({
   game: defaultState,
@@ -156,6 +161,7 @@ const GameContext = createContext<{
   toggleOccupiedCardInCity: noop,
   addResourcesToCardInCity: noop,
   addResourcesToSelf: noop,
+  giveResources: noop,
   harvest: noop,
 });
 
@@ -248,14 +254,19 @@ export const GameProvider = ({
 
     harvest: wrapAction(Actions.harvest),
 
-    // Minor actions that are inexpensive
+    // Minor, infrequent actions
     refillMeadow: wrapAction(Actions.refillMeadow, true),
     toggleOccupiedCardInCity: wrapAction(
       Actions.toggleOccupiedCardInCity,
       true,
     ),
+    giveResources: wrapAction(Actions.giveResources, true),
+    addResourcesToCardInCity: wrapAction(
+      Actions.addResourcesToCardInCity,
+      true,
+    ),
 
-    // More expensive minor actions
+    // Minor, frequent actions
     toggleCardDiscarding: wrapAction(Actions.toggleCardDiscarding, false),
     toggleCardPlaying: wrapAction(Actions.toggleCardPlaying, false),
     toggleCardGiving: wrapAction(Actions.toggleCardGiving, false),
@@ -263,10 +274,6 @@ export const GameProvider = ({
     playSelectedCards: wrapAction(Actions.playSelectedCards, false),
     giveSelectedCards: wrapAction(Actions.giveSelectedCards, false),
     drawCard: wrapAction(Actions.drawCard, false),
-    addResourcesToCardInCity: wrapAction(
-      Actions.addResourcesToCardInCity,
-      false,
-    ),
     addResourcesToSelf: wrapAction(Actions.addResourcesToSelf, false),
   };
 

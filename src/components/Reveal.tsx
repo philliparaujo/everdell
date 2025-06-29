@@ -12,12 +12,18 @@ import Button from "./Button";
 import CardPreview from "./CardPreview";
 
 function Reveal() {
-  const { game, toggleCardDiscarding, toggleCardPlaying, revealCard } =
-    useGame();
+  const {
+    game,
+    toggleCardDiscarding,
+    toggleCardPlaying,
+    toggleCardGiving,
+    revealCard,
+  } = useGame();
 
   const currentPlayer = game.players[game.turn];
   const isDiscarding = currentPlayer.discarding;
   const isPlaying = currentPlayer.playing;
+  const isGiving = currentPlayer.giving;
 
   const oppositePlayer = game.players[oppositePlayerOf(game.turn)];
 
@@ -29,10 +35,16 @@ function Reveal() {
       toggleCardDiscarding(storedId, "reveal", index);
     } else if (isPlaying && card) {
       toggleCardPlaying(storedId, "reveal", index);
+    } else if (isGiving && card) {
+      toggleCardGiving(storedId, "reveal", index);
     }
   };
 
-  const revealDeck = canRevealDeck(currentPlayer, oppositePlayer);
+  const revealDeck = canRevealDeck(
+    currentPlayer,
+    oppositePlayer,
+    game.specialEvents,
+  );
   const revealDiscard = canRevealDiscard(currentPlayer);
   const revealEmpty = game.reveal.length === 0;
 

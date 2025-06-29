@@ -91,7 +91,7 @@ function SpecialEventsDisplay() {
   const { game } = useGame();
 
   return (
-    <div style={locationsDisplayStyling}>
+    <div style={{ ...locationsDisplayStyling, paddingRight: "4px" }}>
       {game.specialEvents.map((specialEvent: SpecialEvent, index: number) => (
         <SpecialEventDisplay specialEvent={specialEvent} index={index} />
       ))}
