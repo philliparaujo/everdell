@@ -8,9 +8,7 @@ import {
 } from "../engine/helpers";
 import { EffectTypeIcon, ResourceIcon } from "./Icons";
 import {
-  arrowResourceStyling,
   BaseLocationDisplay,
-  locationsDisplayStyling,
   renderButtons,
   renderWorkers,
 } from "./LocationsDisplay";
@@ -38,19 +36,12 @@ function EventDisplay({ event, index }: { event: Event; index: number }) {
       )}
       workerChildren={renderWorkers(event)}
       resourceChildren={
-        <div
-          style={{
-            height: "100%",
-            alignItems: "end",
-          }}
-        >
-          <div className="flex items-center gap-1" style={arrowResourceStyling}>
-            <EffectTypeIcon type={event.effectTypeRequirement} />{" "}
-            {event.effectTypeCount}
-            {"→"}
-            <ResourceIcon type={"coins"} /> {event.value}
-          </div>
-        </div>
+        <>
+          <EffectTypeIcon type={event.effectTypeRequirement} />{" "}
+          {event.effectTypeCount}
+          {"→"}
+          <ResourceIcon type={"coins"} /> {event.value}
+        </>
       }
       used={event.used}
       wide={true}
@@ -62,7 +53,7 @@ function EventsDisplay() {
   const { game } = useGame();
 
   return (
-    <div style={{ ...locationsDisplayStyling, height: "102px" }}>
+    <div className="flex gap-2 h-[102px]">
       {game.events.map((event: Event, index: number) => (
         <EventDisplay event={event} index={index} />
       ))}

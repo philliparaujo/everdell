@@ -57,7 +57,7 @@ function PlayerStatus({ playerColor }: { playerColor: PlayerColor }) {
           ),
           true,
           () => (
-            <div style={{ fontStyle: "italic" }}>No resources</div>
+            <div className="italic">No resources</div>
           ),
         )}
       </div>

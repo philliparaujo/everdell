@@ -17,7 +17,8 @@ function Navigation({
     <div>
       <Link
         to={link}
-        style={{ textDecoration: "none", color: COLORS.navigationText }}
+        className="no-underline"
+        style={{ color: COLORS.navigationText }}
       >
         {arrow === "forward"
           ? `${displayText} ${arrowSymbol}`

@@ -15,14 +15,13 @@ const panImage = keyframes`
 `;
 
 // 2. Create a styled div that uses the animation and styles
-const BackgroundContainer = styled.div`
-  min-height: 100vh;
-
+const BackgroundContainer = styled.div.attrs({
+  className: "min-h-screen bg-no-repeat bg-fixed",
+})`
   background-image:
     linear-gradient(rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.85)),
     url(${backgroundImage});
   background-size: 120%;
-  background-repeat: no-repeat;
   animation: ${panImage} 400s linear infinite;
 `;
 

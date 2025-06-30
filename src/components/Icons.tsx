@@ -14,14 +14,6 @@ import lightblueworker from "../assets/transparent-icons/lightblueworker.png";
 import redworker from "../assets/transparent-icons/redworker.png";
 import { EffectType, PlayerColor, ResourceType } from "../engine/gameTypes";
 
-export const iconStyle: React.CSSProperties = {
-  width: "16px",
-  height: "16px",
-  verticalAlign: "middle",
-  marginLeft: "2px",
-  marginRight: "2px",
-};
-
 // Icon mappings
 const effectTypeIcons: Record<EffectType, string> = {
   Blue: bluetype,
@@ -43,12 +35,16 @@ const resourceIcons: Record<ResourceType, string> = {
 
 export function ResourceIcon({ type }: { type: ResourceType }) {
   return (
-    <img src={resourceIcons[type]} alt={type.toString()} style={iconStyle} />
+    <img
+      src={resourceIcons[type]}
+      alt={type.toString()}
+      className="w-4 h-4 mx-0.5 align-middle"
+    />
   );
 }
 
 export function CustomResourceIcon({ path }: { path: string }) {
-  return <img src={path} alt={path} style={iconStyle} />;
+  return <img src={path} alt={path} className="w-4 h-4 mx-0.5 align-middle" />;
 }
 
 export function WorkerIcon({ playerColor }: { playerColor: PlayerColor }) {
@@ -56,13 +52,17 @@ export function WorkerIcon({ playerColor }: { playerColor: PlayerColor }) {
     <img
       src={playerColor === "Red" ? redworker : lightblueworker}
       alt={playerColor.toString()}
-      style={iconStyle}
+      className="w-4 h-4 mx-0.5 align-middle"
     />
   );
 }
 
 export function EffectTypeIcon({ type }: { type: EffectType }) {
   return (
-    <img src={effectTypeIcons[type]} alt={type.toString()} style={iconStyle} />
+    <img
+      src={effectTypeIcons[type]}
+      alt={type.toString()}
+      className="w-4 h-4 mx-0.5 align-middle"
+    />
   );
 }

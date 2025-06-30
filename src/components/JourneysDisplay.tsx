@@ -8,9 +8,7 @@ import {
 } from "../engine/helpers";
 import { ResourceIcon } from "./Icons";
 import {
-  arrowResourceStyling,
   BaseLocationDisplay,
-  locationsDisplayStyling,
   renderButtons,
   renderWorkers,
 } from "./LocationsDisplay";
@@ -48,11 +46,11 @@ function JourneyDisplay({
       )}
       workerChildren={renderWorkers(journey)}
       resourceChildren={
-        <div style={arrowResourceStyling}>
+        <>
           <ResourceIcon type={"cards"} /> {`-${journey.discardCount}`}
           {"→"}
           <ResourceIcon type={"coins"} /> {journey.value}
-        </div>
+        </>
       }
     />
   );
@@ -62,7 +60,7 @@ function JourneysDisplay() {
   const { game } = useGame();
 
   return (
-    <div style={locationsDisplayStyling}>
+    <div className="flex gap-2">
       {game.journeys.map((journey: Journey, index: number) => (
         <JourneyDisplay journey={journey} index={index} />
       ))}

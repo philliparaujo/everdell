@@ -5,20 +5,13 @@ import {
   canRevealDeck,
   canRevealDiscard,
   getPlayerId,
-  isNotYourTurn,
   oppositePlayerOf,
 } from "../engine/helpers";
-import Button from "./Button";
 import CardPreview from "./CardPreview";
 
 function Reveal() {
-  const {
-    game,
-    toggleCardDiscarding,
-    toggleCardPlaying,
-    toggleCardGiving,
-    revealCard,
-  } = useGame();
+  const { game, toggleCardDiscarding, toggleCardPlaying, toggleCardGiving } =
+    useGame();
 
   const currentPlayer = game.players[game.turn];
   const isDiscarding = currentPlayer.discarding;
@@ -28,7 +21,6 @@ function Reveal() {
   const oppositePlayer = game.players[oppositePlayerOf(game.turn)];
 
   const storedId = getPlayerId();
-  const disabled = isNotYourTurn(game, storedId);
 
   const onLeftClick = (index: number, card: Card | null) => {
     if (isDiscarding && card) {
@@ -68,33 +60,13 @@ function Reveal() {
       {(revealDeck || revealDiscard || !revealEmpty) && (
         <>
           <hr />
-          <div className="grid grid-cols-2 gap-2 max-w-400px mx-auto pb-2">
-            {revealDeck && (
-              <Button
-                disabled={disabled}
-                color={COLORS.rareButton}
-                onClick={() => revealCard(storedId, "deck")}
-              >
-                Reveal deck
-              </Button>
-            )}
-            {revealDiscard && (
-              <Button
-                disabled={disabled}
-                color={COLORS.rareButton}
-                onClick={() => revealCard(storedId, "discard")}
-              >
-                Reveal discard
-              </Button>
-            )}
-          </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <div className="flex flex-col gap-2">
+            <div className="flex justify-between">
               {Array.from({ length: 2 }).map((_, index) =>
                 displayRevealCard(index),
               )}
             </div>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <div className="flex justify-between">
               {Array.from({ length: 2 }).map((_, index) =>
                 displayRevealCard(index + 2),
               )}

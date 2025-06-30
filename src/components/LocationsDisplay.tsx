@@ -13,46 +13,6 @@ import { ResourceIcon, WorkerIcon } from "./Icons";
 import { COLORS } from "../colors";
 import Button from "./Button";
 
-const locationStyling: React.CSSProperties = {
-  width: "100px",
-  background: COLORS.location,
-  padding: "0px",
-  border: `solid 2px ${COLORS.location}`,
-  borderRadius: "8px",
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  textAlign: "center",
-};
-
-export const locationsDisplayStyling: React.CSSProperties = {
-  display: "flex",
-  gap: "8px",
-};
-
-export const locationsTitleStyling: React.CSSProperties = {
-  fontSize: "10px",
-  paddingTop: "2px",
-};
-
-const workerStyling: React.CSSProperties = {
-  display: "flex",
-  height: "25px",
-  alignContent: "center",
-  gap: "8px",
-};
-export const resourceStyling: React.CSSProperties = {
-  display: "flex",
-  flexWrap: "wrap",
-  justifyContent: "center",
-  gap: "8px",
-};
-export const arrowResourceStyling: React.CSSProperties = {
-  ...resourceStyling,
-  gap: "2px",
-  alignItems: "center",
-};
-
 export function renderButtons(
   visitDisabled: boolean,
   leaveDisabled: boolean,
@@ -75,7 +35,7 @@ export function renderWorkers(
   location: Location | Journey | Event | SpecialEvent | Card,
 ) {
   return (
-    <div style={workerStyling}>
+    <div className="flex h-6 content-center gap-2">
       {location.workers.Red > 0 && (
         <span className="flex items-center gap-1">
           <WorkerIcon playerColor={"Red"} /> {location.workers.Red}
@@ -107,22 +67,35 @@ export function BaseLocationDisplay({
   used?: boolean;
   wide?: boolean;
 }) {
+  const getBorderColor = () => {
+    if (used) {
+      return COLORS.locationUsed;
+    }
+    if (exclusive) {
+      return COLORS.locationExclusive;
+    }
+    return COLORS.location;
+  };
+
   return (
     <div
+      className="flex flex-col rounded-lg items-center text-center border-2"
       style={{
-        ...locationStyling,
-        ...(wide && { width: "150px" }),
-        border: used
-          ? `solid 2px ${COLORS.locationUsed}`
-          : exclusive
-            ? `solid 2px ${COLORS.locationExclusive}`
-            : `solid 2px ${COLORS.location}`,
+        width: wide ? "150px" : "96px",
+        background: COLORS.location,
+        borderColor: getBorderColor(),
       }}
     >
-      {buttonChildren}
-      {<div style={locationsTitleStyling}>{titleChildren}</div>}
+      <div className="flex-1 flex flex-col justify-center">
+        {buttonChildren}
+      </div>
+      {titleChildren && (
+        <div className="text-[10px] pt-0.5">{titleChildren}</div>
+      )}
       {workerChildren}
-      {resourceChildren}
+      <div className="flex flex-wrap items-center gap-0.5">
+        {resourceChildren}
+      </div>
     </div>
   );
 }
@@ -160,13 +133,13 @@ function LocationDisplay({
       )}
       workerChildren={renderWorkers(location)}
       resourceChildren={
-        <div style={resourceStyling}>
+        <>
           {mapOverResources(location.resources, (key, val) => (
             <div key={key} className="flex items-center gap-1">
               <ResourceIcon type={key as ResourceType} /> {val}
             </div>
           ))}
-        </div>
+        </>
       }
     />
   );
@@ -200,11 +173,11 @@ function HavenDisplay() {
       )}
       workerChildren={renderWorkers(havenLocation)}
       resourceChildren={
-        <div style={arrowResourceStyling}>
+        <>
           <ResourceIcon type={"cards"} /> {-2}
           {"→"}
           <ResourceIcon type={"wildcards"} /> {1}
-        </div>
+        </>
       }
     />
   );
@@ -214,7 +187,7 @@ function LocationsDisplay() {
   const { game } = useGame();
 
   return (
-    <div style={locationsDisplayStyling}>
+    <div className="flex gap-2">
       {game.locations
         .slice(0, game.locations.length - 1)
         .map((location: Location, index: number) => (

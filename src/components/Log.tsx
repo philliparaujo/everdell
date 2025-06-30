@@ -1,4 +1,4 @@
-import { PLAYER_COLORS } from "../colors";
+import { COLORS, PLAYER_COLORS } from "../colors";
 import { useGame } from "../engine/GameContext";
 import { Card, History, PlayerColor, ResourceType } from "../engine/gameTypes";
 import {
@@ -11,17 +11,7 @@ import {
 import { ResourceIcon, WorkerIcon } from "./Icons";
 
 function LogEntry({ children }: { children: React.ReactNode }) {
-  return (
-    <li
-      style={{
-        marginBottom: "5px",
-        listStyleType: "none",
-        listStylePosition: "inside",
-      }}
-    >
-      {children}
-    </li>
-  );
+  return <li className="mb-1 list-none list-inside">{children}</li>;
 }
 
 function PlayerLog({
@@ -58,9 +48,9 @@ function PlayerLog({
   if (!player.name) return null;
 
   return (
-    <div style={{ fontSize: "0.9em", padding: "8px" }}>
+    <div className="text-sm p-2">
       <strong style={{ color: PLAYER_COLORS[color] }}>{player.name}</strong>
-      <ul style={{ margin: "8px 0 0 5px", padding: 0 }}>
+      <ul className="mt-2 ml-1 p-0">
         {seasonChange && (
           <LogEntry>
             Advanced to{" "}
@@ -98,7 +88,7 @@ function PlayerLog({
         )}
         {deltaWorkers !== 0 && (
           <LogEntry>
-            <span style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+            <span className="flex items-center gap-1">
               <WorkerIcon playerColor={color} /> {deltaWorkers > 0 ? "+" : ""}
               {deltaWorkers}
             </span>
@@ -106,14 +96,7 @@ function PlayerLog({
         )}
         {Object.values(deltaResources).some((v) => v !== 0) && (
           <LogEntry>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                gap: "8px",
-              }}
-            >
+            <div className="flex flex-row items-center gap-2">
               {mapOverResources(
                 deltaResources,
                 (key, val) => (
@@ -128,9 +111,7 @@ function PlayerLog({
             </div>
           </LogEntry>
         )}
-        {!hasContent && (
-          <div style={{ fontStyle: "italic" }}>No actions made</div>
-        )}
+        {!hasContent && <div className="italic">No actions made</div>}
       </ul>
     </div>
   );
@@ -141,12 +122,9 @@ function Log({ playerColor }: { playerColor: PlayerColor }) {
 
   return (
     <div
+      className="flex flex-col gap-1 rounded-s"
       style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: "4px",
-        backgroundColor: "#212121",
-        borderRadius: "4px",
+        backgroundColor: COLORS.log,
       }}
     >
       <PlayerLog

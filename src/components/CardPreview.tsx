@@ -65,7 +65,7 @@ function CardPreview({
               <img
                 src={require(`../assets/cards/${card.imageKey}.jpg`)}
                 alt={card.name}
-                className="w-full p-1 pb-0 h-[150px] object-cover rounded-lg"
+                className="w-full p-0 pb-0 h-[150px] object-cover rounded-t"
                 draggable={false}
               />
               <p className="text-xs font-bold" style={{ color: textColor }}>
@@ -75,7 +75,7 @@ function CardPreview({
 
             {storable && (
               <div
-                className="flex-grow flex flex-wrap justify-evenly items-center p-1 rounded"
+                className="flex-grow flex flex-wrap justify-evenly items-center rounded"
                 style={{
                   background: COLORS.storage,
                 }}

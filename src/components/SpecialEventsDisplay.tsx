@@ -11,10 +11,8 @@ import Hoverable from "./Hoverable";
 import { EffectTypeIcon } from "./Icons";
 import {
   BaseLocationDisplay,
-  locationsDisplayStyling,
   renderButtons,
   renderWorkers,
-  resourceStyling,
 } from "./LocationsDisplay";
 import SpecialEventInspect from "./SpecialEventInspect";
 
@@ -61,11 +59,11 @@ function SpecialEventDisplay({
         )}
         workerChildren={renderWorkers(specialEvent)}
         resourceChildren={
-          <div style={{ display: "flex", flexDirection: "column" }}>
+          <div>
             {specialEvent.cardRequirement.map((cardName) => (
               <p className="font-bold text-xs">{cardName}</p>
             ))}
-            <div style={{ ...resourceStyling, fontSize: "9px" }}>
+            <div className="flex flex-wrap justify-center gap-2 text-[10px]">
               {mapOverEffectTypes(
                 specialEvent.effectTypeRequirement,
                 (key, val) => (
@@ -88,13 +86,7 @@ function SpecialEventsDisplay() {
   const { game } = useGame();
 
   return (
-    <div
-      style={{
-        ...locationsDisplayStyling,
-        paddingRight: "4px",
-        height: "102px",
-      }}
-    >
+    <div className="flex gap-2 h-[102px] pr-1">
       {game.specialEvents.map((specialEvent: SpecialEvent, index: number) => (
         <SpecialEventDisplay specialEvent={specialEvent} index={index} />
       ))}

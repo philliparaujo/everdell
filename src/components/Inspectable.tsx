@@ -9,31 +9,16 @@ function Inspectable({
 }) {
   return (
     <div
+      className="fixed top-0 left-0 right-0 bottom-0 flex justify-center items-center text-center z-50"
       style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
         backgroundColor: COLORS.inspectBackground,
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        textAlign: "center",
-        zIndex: 9999,
       }}
       onClick={onClose}
     >
       <div
+        className="flex gap-8 p-6 rounded-xl max-w-[80%] max-h-[80%] overflow-hidden"
         style={{
-          display: "flex",
-          gap: "32px",
           backgroundColor: COLORS.inspect,
-          padding: "24px",
-          borderRadius: "12px",
-          maxWidth: "80%",
-          maxHeight: "80%",
-          overflow: "hidden",
         }}
         onClick={(e) => e.stopPropagation()}
       >

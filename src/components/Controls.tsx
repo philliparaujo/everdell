@@ -3,6 +3,8 @@ import { useGame } from "../engine/GameContext";
 import {
   canGiveToOpponent,
   canGiveToSelf,
+  canRevealDeck,
+  canRevealDiscard,
   getPlayerId,
   isNotYourTurn,
   isSafeToEndTurn,
@@ -23,6 +25,7 @@ function Controls() {
     drawCard,
     refillMeadow,
     harvest,
+    revealCard,
   } = useGame();
 
   const storedId = getPlayerId();
@@ -37,6 +40,12 @@ function Controls() {
 
   const canGiveSelf = canGiveToSelf(currentPlayer, game.specialEvents);
   const canGiveOpponent = canGiveToOpponent(currentPlayer, oppositePlayer);
+  const revealDeck = canRevealDeck(
+    currentPlayer,
+    oppositePlayer,
+    game.specialEvents,
+  );
+  const revealDiscard = canRevealDiscard(currentPlayer);
 
   return (
     <div className="grid grid-cols-2 gap-2 max-w-400px">
@@ -101,6 +110,24 @@ function Controls() {
           }}
         >
           {isGiving ? "Confirm (opp.)" : "Give opponent"}
+        </Button>
+      )}
+      {revealDeck && (
+        <Button
+          disabled={disabled}
+          color={COLORS.rareButton}
+          onClick={() => revealCard(storedId, "deck")}
+        >
+          Reveal deck
+        </Button>
+      )}
+      {revealDiscard && (
+        <Button
+          disabled={disabled}
+          color={COLORS.rareButton}
+          onClick={() => revealCard(storedId, "discard")}
+        >
+          Reveal discard
         </Button>
       )}
     </div>

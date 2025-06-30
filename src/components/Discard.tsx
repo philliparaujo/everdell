@@ -12,9 +12,7 @@ function Discard() {
 
   if (game.discard.length === 0) {
     return (
-      <div style={{ fontStyle: "italic", padding: "10px 0" }}>
-        No cards in discard pile
-      </div>
+      <div className="italic text-center py-2">No cards in discard pile</div>
     );
   }
 

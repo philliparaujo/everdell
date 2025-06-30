@@ -22,14 +22,11 @@ const Button: React.FC<ButtonProps> = ({
     backgroundColor: color,
     color: COLORS.buttonText,
     border: `solid 1px ${COLORS.buttonBorder}`,
-    borderRadius: "4px",
     cursor: disabled ? "auto" : "pointer",
     opacity: disabled ? 0.4 : 1,
     transition: "transform 0.1s ease, filter 0.1s ease",
     transform: hovered && !disabled ? "scale(1.02)" : "scale(1)",
     filter: hovered && !disabled ? "brightness(1.05)" : "none",
-    fontSize: "14px",
-    padding: "0 4px",
     ...style,
   };
 
@@ -43,6 +40,7 @@ const Button: React.FC<ButtonProps> = ({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       style={baseStyle}
+      className="rounded-4px text-sm px-1 py-0"
     >
       {children}
     </button>

@@ -29,14 +29,7 @@ function Game() {
   const oppositePlayer = game.players[oppositePlayerOf(playerColor)];
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "row",
-        width: "100%",
-        height: "100vh",
-      }}
-    >
+    <div className="flex flex-row w-full h-screen p-0">
       {/* --- Left Sidebar --- */}
       <div className={`h-screen`}>
         <Sidebar gameId={gameId} />

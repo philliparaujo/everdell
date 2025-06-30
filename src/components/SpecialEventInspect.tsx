@@ -12,24 +12,7 @@ import {
 } from "../engine/helpers";
 import { EffectTypeIcon, ResourceIcon } from "./Icons";
 import Inspectable from "./Inspectable";
-import {
-  arrowResourceStyling,
-  renderButtons,
-  renderWorkers,
-} from "./LocationsDisplay";
-
-const sectionStyle: React.CSSProperties = {
-  display: "flex",
-  flexDirection: "column",
-  gap: "4px",
-};
-
-const iconContainerStyle: React.CSSProperties = {
-  display: "flex",
-  gap: "12px",
-  alignItems: "center",
-  flexWrap: "wrap",
-};
+import { renderButtons, renderWorkers } from "./LocationsDisplay";
 
 // Handle singular and plural words
 const RESOURCE_ALIASES: Record<string, ResourceType> = {
@@ -107,38 +90,25 @@ function SpecialEventInspect({
 
   return (
     <Inspectable onClose={onClose}>
-      <div
-        style={{
-          flex: 1,
-          overflowY: "auto",
-          minWidth: "400px",
-          display: "flex",
-          flexDirection: "column",
-          gap: "24px",
-          maxHeight: "100%",
-          alignItems: "center",
-        }}
-      >
-        <h1 style={{ margin: 0, textAlign: "center" }}>{specialEvent.name}</h1>
+      <div className="flex flex-1 flex-col overflow-y-auto min-w-96 gap-6 max-h-[100%] items-center">
+        <h1 className="text-2xl font-bold">{specialEvent.name}</h1>
 
         {/* --- Requirements --- */}
         {(specialEvent.cardRequirement?.length > 0 ||
           requiredEffects.length > 0) && (
-          <div style={sectionStyle}>
-            <strong style={{ margin: 0, marginBottom: 4 }}>
-              Requirements:
-            </strong>
+          <div className="flex flex-col gap-2">
+            <strong className="m-0 mb-1">Requirements:</strong>
 
             {specialEvent.cardRequirement?.length > 0 && (
               <span>{listCardNames(specialEvent.cardRequirement)}</span>
             )}
 
             {requiredEffects.length > 0 && (
-              <div style={iconContainerStyle}>
+              <div className="flex flex-wrap items-center gap-3">
                 {mapOverEffectTypes(
                   specialEvent.effectTypeRequirement,
                   (key, val) => (
-                    <div key={key}>
+                    <div key={key} className="flex items-center gap-1">
                       <EffectTypeIcon type={key as EffectType} /> {val}
                     </div>
                   ),
@@ -150,38 +120,31 @@ function SpecialEventInspect({
 
         {/* --- Effects and rewards --- */}
         {specialEvent.specialDescription && (
-          <div style={sectionStyle}>
+          <div className="flex flex-col gap-2">
             <strong>When achieved...</strong>
-            <p style={{ margin: 0, display: "flex", alignItems: "center" }}>
+            <p className="m-0 flex items-center">
               {renderTextWithIcons(specialEvent.specialDescription)}
             </p>
           </div>
         )}
 
-        <div style={sectionStyle}>
+        <div className="flex flex-col gap-2">
           <strong>Reward:</strong>
           {specialEvent.specialReward && (
-            <p style={{ margin: 0, display: "flex", alignItems: "center" }}>
+            <p className="m-0 flex items-center">
               {renderTextWithIcons(specialEvent.specialReward)}
             </p>
           )}
           {specialEvent.value && (
-            <span style={arrowResourceStyling}>
+            <div className="flex items-center justify-center">
               <ResourceIcon type={"coins"} />
               {specialEvent.value}
-            </span>
+            </div>
           )}
         </div>
 
         {/* --- Visiting --- */}
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: "8px",
-          }}
-        >
+        <div className="flex flex-col items-center gap-2">
           {renderButtons(
             disabled || !canVisit,
             disabled || !canLeave,

@@ -2,6 +2,7 @@ import { PlayerColor } from "./engine/gameTypes";
 
 // Base Hues (adjust slightly for your preference)
 const darkBackground = "#1A1A1A";
+const mediumDarkBackground = "#212121";
 const mediumBackground = "#2A2A2A";
 const lightBackground = "#444";
 const inspectBackground = "rgba(0, 0, 0, 0.8)";
@@ -18,6 +19,8 @@ export const COLORS = {
   // Component main colors
   playArea: darkBackground,
   cardPreview: darkBackground,
+
+  log: mediumDarkBackground,
 
   container: mediumBackground,
   location: mediumBackground,

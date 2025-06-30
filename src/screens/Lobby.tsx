@@ -133,42 +133,44 @@ function Lobby() {
   }, []);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 flex flex-col justify-center min-h-screen">
-      <div className="flex justify-between items-center flex-wrap mb-8">
-        <div>
-          <span>
-            <strong>Display Name:</strong> {name || "Not Set"}
-          </span>
-          <span className="ml-6">
-            <strong>ID:</strong>{" "}
-            <span className="font-mono">{playerId || "Not Set"}</span>
-          </span>
+    <div className="max-w-7xl mx-auto p-4 flex flex-col h-screen">
+      <div className="flex-shrink-0">
+        <div className="flex justify-between items-center flex-wrap mb-8">
+          <div>
+            <span>
+              <strong>Display Name:</strong> {name || "Not Set"}
+            </span>
+            <span className="ml-6">
+              <strong>ID:</strong>{" "}
+              <span className="font-mono">{playerId || "Not Set"}</span>
+            </span>
+          </div>
+          <div className="flex gap-2">
+            <Navigation
+              link="/home"
+              displayText="Back to Home"
+              arrow="backward"
+            />
+          </div>
         </div>
-        <div className="flex gap-2">
-          <Navigation
-            link="/home"
-            displayText="Back to Home"
-            arrow="backward"
-          />
+
+        <h2 className="mb-4 text-lg font-bold">Available Games</h2>
+
+        <div className="mb-4">
+          <Button
+            onClick={startGame}
+            disabled={isDisabled}
+            color={COLORS.importantButton}
+          >
+            Start New Game
+          </Button>
         </div>
+
+        {gameList.length === 0 && <p className="italic">No games found.</p>}
       </div>
-
-      <h2 className="mb-4 text-lg font-bold">Available Games</h2>
-
-      <div className="mb-4">
-        <Button
-          onClick={startGame}
-          disabled={isDisabled}
-          color={COLORS.importantButton}
-        >
-          Start New Game
-        </Button>
-      </div>
-
-      {gameList.length === 0 && <p className="italic">No games found.</p>}
 
       {/* Game List Grid */}
-      <ul className="list-none p-0 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
+      <ul className="list-none p-0 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 overflow-y-auto pr-2 ">
         {gameList.map(({ id, game }) => {
           const redPlayer = game.players.Red;
           const bluePlayer = game.players.Blue;

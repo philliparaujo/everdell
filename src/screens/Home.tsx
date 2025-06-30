@@ -45,7 +45,7 @@ function Home() {
 
   return (
     <div
-      className="max-w-2xl mx-auto px-4 flex flex-col justify-center h-screen font-sans"
+      className="max-w-2xl mx-auto p-4 flex flex-col justify-center min-h-screen"
       style={{ color: COLORS.text }}
     >
       <div className="mb-6">
