@@ -16,7 +16,6 @@ import { useEffect, useState } from "react";
 import { getPlayerId, getPlayerName } from "../engine/helpers";
 import Button from "../components/Button";
 import Navigation from "../components/Navigation";
-import { COLORS, PLAYER_COLORS } from "../colors";
 import Id from "../components/Id";
 
 const GamePlayerDisplay = ({
@@ -32,9 +31,14 @@ const GamePlayerDisplay = ({
     : `${isYou ? "(Me) " : ""}${player.name}`;
   const displayId = !player.id ? "Open Slot" : player.id;
 
+  const playerColorClass: Record<PlayerColor, string> = {
+    Red: "text-player-red",
+    Blue: "text-player-blue",
+  };
+
   return (
     <div>
-      <div className="font-bold" style={{ color: PLAYER_COLORS[color] }}>
+      <div className={`font-bold ${playerColorClass[color]}`}>
         {displayName}
       </div>
       <Id id={displayId} />
@@ -157,11 +161,7 @@ function Lobby() {
         <h2 className="mb-4 text-lg font-bold">Available Games</h2>
 
         <div className="mb-4">
-          <Button
-            onClick={startGame}
-            disabled={isDisabled}
-            color={COLORS.importantButton}
-          >
+          <Button onClick={startGame} disabled={isDisabled} variant="important">
             Start New Game
           </Button>
         </div>
@@ -183,11 +183,7 @@ function Lobby() {
           return (
             <li
               key={id}
-              className="border rounded-lg p-4 flex flex-col gap-4"
-              style={{
-                borderColor: COLORS.containerBorder,
-                backgroundColor: COLORS.container,
-              }}
+              className="border-container-border bg-container rounded-lg p-4 flex flex-col gap-4"
             >
               <div className="flex items-baseline gap-1">
                 <strong>Game ID:</strong>
@@ -205,16 +201,13 @@ function Lobby() {
                 />
               </div>
 
-              <div
-                className="flex justify-between items-end gap-3 mt-auto pt-3 border-t"
-                style={{ borderTopColor: COLORS.containerBorder }}
-              >
+              <div className="flex justify-between items-end gap-3 mt-auto pt-3 border-t border-container-border">
                 <div className="flex gap-2 flex-wrap">
                   {canJoinRed && !isPlayerInGame && (
                     <Button
                       onClick={() => handleJoinGame(id, "Red")}
                       disabled={isDisabled}
-                      color={COLORS.importantButton}
+                      variant="important"
                     >
                       Join as Red
                     </Button>
@@ -223,7 +216,7 @@ function Lobby() {
                     <Button
                       onClick={() => handleJoinGame(id, "Blue")}
                       disabled={isDisabled}
-                      color={COLORS.importantButton}
+                      variant="important"
                     >
                       Join as Blue
                     </Button>
@@ -231,7 +224,7 @@ function Lobby() {
                   {isPlayerInGame && (
                     <Button
                       onClick={() => handleRejoinGame(id)}
-                      color={COLORS.importantButton}
+                      variant="important"
                     >
                       Rejoin
                     </Button>
@@ -244,7 +237,7 @@ function Lobby() {
                   <Button
                     onClick={() => handleDeleteGame(id)}
                     disabled={isDisabled}
-                    color={COLORS.dangerButton}
+                    variant="danger"
                   >
                     Delete
                   </Button>

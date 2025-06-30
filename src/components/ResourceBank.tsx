@@ -1,4 +1,3 @@
-import { COLORS } from "../colors";
 import { useGame } from "../engine/GameContext";
 import { defaultResources, ResourceType } from "../engine/gameTypes";
 import {
@@ -34,11 +33,7 @@ export function ResourceDisplay({ resource }: { resource: ResourceType }) {
   return (
     <div className="flex items-center justify-center gap-1">
       {canGiveResources(game.players[game.turn], game.specialEvents) && (
-        <Button
-          disabled={disabled}
-          onClick={giveResource}
-          color={COLORS.rareButton}
-        >
+        <Button disabled={disabled} onClick={giveResource} variant="rare">
           {"!"}
         </Button>
       )}

@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { COLORS } from "../colors";
 import { useGame } from "../engine/GameContext";
 import {
   Card,
@@ -53,6 +52,10 @@ function CardInspect({
       ? false
       : canVisitCardInCity(game, card, playerColor, -1);
 
+  const textColor = card?.occupied
+    ? "text-cardPreviewOutline-occupied"
+    : "text-text";
+
   return (
     <Inspectable onClose={onClose}>
       <img
@@ -72,15 +75,7 @@ function CardInspect({
         )}
         {placedDown && card.occupied !== null && cityColor ? (
           <div className="flex gap-2 justify-center">
-            <strong
-              style={{
-                color: card?.occupied
-                  ? COLORS.cardPreviewOccupied
-                  : COLORS.text,
-              }}
-            >
-              Occupied:
-            </strong>
+            <strong className={textColor}>Occupied:</strong>
             <Button
               disabled={disabled}
               onClick={() =>

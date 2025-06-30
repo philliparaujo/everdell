@@ -8,9 +8,9 @@ import {
   getPlayerId,
   isNotYourTurn,
   mapOverResources,
+  tailwindLocationBorderColor,
 } from "../engine/helpers";
 import { ResourceIcon, WorkerIcon } from "./Icons";
-import { COLORS } from "../colors";
 import Button from "./Button";
 
 export function renderButtons(
@@ -67,23 +67,11 @@ export function BaseLocationDisplay({
   used?: boolean;
   wide?: boolean;
 }) {
-  const getBorderColor = () => {
-    if (used) {
-      return COLORS.locationUsed;
-    }
-    if (exclusive) {
-      return COLORS.locationExclusive;
-    }
-    return COLORS.location;
-  };
-
   return (
     <div
-      className="flex flex-col rounded-lg items-center text-center border-2"
+      className={`flex flex-col rounded-lg items-center text-center border-2 bg-location-default ${tailwindLocationBorderColor(used, exclusive)}`}
       style={{
         width: wide ? "150px" : "96px",
-        background: COLORS.location,
-        borderColor: getBorderColor(),
       }}
     >
       <div className="flex-1 flex flex-col justify-center">

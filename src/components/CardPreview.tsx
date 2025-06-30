@@ -1,6 +1,8 @@
-import { COLORS } from "../colors";
 import { Card, PlayerColor, ResourceType } from "../engine/gameTypes";
-import { mapOverResources } from "../engine/helpers";
+import {
+  mapOverResources,
+  tailwindCardPreviewBorderColor,
+} from "../engine/helpers";
 import CardInspect from "./CardInspect";
 import Hoverable from "./Hoverable";
 import { ResourceIcon, WorkerIcon } from "./Icons";
@@ -18,20 +20,11 @@ function CardPreview({
   placedDown: boolean;
   cityColor: PlayerColor | null;
 }) {
-  let borderStyle: string;
-  if (card?.discarding) {
-    borderStyle = `2px solid ${COLORS.cardPreviewDiscarding}`;
-  } else if (card?.playing) {
-    borderStyle = `2px solid ${COLORS.cardPreviewPlaying}`;
-  } else if (card?.giving) {
-    borderStyle = `2px solid ${COLORS.cardPreviewGiving}`;
-  } else {
-    borderStyle = `2px solid ${COLORS.cardPreviewBorder}`;
-  }
-
   const storable =
     card && (card.storage || card.maxDestinations != null) && placedDown;
-  const textColor = card?.occupied ? COLORS.cardPreviewOccupied : COLORS.text;
+  const textColor = card?.occupied
+    ? "text-cardPreviewOutline-occupied"
+    : "text-text";
 
   const isInteractive = !!(card && onLeftClick);
 
@@ -52,11 +45,9 @@ function CardPreview({
       }
     >
       <div
-        className="w-[100px] rounded text-center flex-none flex flex-col"
+        className={`w-[100px] rounded text-center border-2 flex-none flex flex-col bg-card-preview ${tailwindCardPreviewBorderColor(!!card?.discarding, !!card?.playing, !!card?.giving)}`}
         style={{
           height: storable ? "210px" : "170px",
-          background: COLORS.cardPreview,
-          border: borderStyle,
         }}
       >
         {card ? (
@@ -68,18 +59,11 @@ function CardPreview({
                 className="w-full p-0 pb-0 h-[150px] object-cover rounded-t"
                 draggable={false}
               />
-              <p className="text-xs font-bold" style={{ color: textColor }}>
-                {card.name}
-              </p>
+              <p className={`text-xs font-bold ${textColor}`}>{card.name}</p>
             </div>
 
             {storable && (
-              <div
-                className="flex-grow flex flex-wrap justify-evenly items-center rounded"
-                style={{
-                  background: COLORS.storage,
-                }}
-              >
+              <div className="flex-grow flex flex-wrap justify-evenly items-center rounded bg-storage">
                 {card.storage &&
                   mapOverResources(card.storage, (key, val) => (
                     <div key={key} className="flex items-center text-[10px]">

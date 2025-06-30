@@ -11,9 +11,6 @@ import ResourceBank from "./ResourceBank";
 import Reveal from "./Reveal";
 import Navigation from "./Navigation";
 import Id from "./Id";
-import { COLORS } from "../colors";
-
-export const SIDEBAR_WIDTH = "260px";
 
 function Sidebar({ gameId }: { gameId: string | undefined }) {
   const { game } = useGame();
@@ -33,15 +30,8 @@ function Sidebar({ gameId }: { gameId: string | undefined }) {
   }
 
   return (
-    <div
-      className="h-screen overflow-y-auto overflow-x-hidden fixed border-r"
-      style={{
-        background: COLORS.container,
-        borderRightColor: COLORS.containerBorder,
-        width: SIDEBAR_WIDTH,
-      }}
-    >
-      <div className="p-2 flex flex-col gap-2">
+    <div className="w-sidebar h-screen overflow-y-auto overflow-x-hidden fixed border-r bg-container border-container-border">
+      <div className="p-2">
         <div className="flex flex-col gap-2">
           <Navigation
             link="/lobby"

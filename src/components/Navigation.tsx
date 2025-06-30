@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { COLORS } from "../colors";
 
 function Navigation({
   link,
@@ -15,11 +14,7 @@ function Navigation({
 
   return (
     <div>
-      <Link
-        to={link}
-        className="no-underline"
-        style={{ color: COLORS.navigationText }}
-      >
+      <Link to={link} className="no-underline text-navigation">
         {arrow === "forward"
           ? `${displayText} ${arrowSymbol}`
           : `${arrowSymbol}${displayText}`}

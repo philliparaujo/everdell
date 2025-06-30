@@ -1,5 +1,4 @@
 import { useParams } from "react-router-dom";
-import { COLORS, PLAYER_COLORS } from "../colors";
 import City from "../components/City";
 import Discard from "../components/Discard";
 import EventsDisplay from "../components/EventsDisplay";
@@ -8,12 +7,13 @@ import { ResourceIcon } from "../components/Icons";
 import JourneysDisplay from "../components/JourneysDisplay";
 import LocationsDisplay from "../components/LocationsDisplay";
 import Meadow from "../components/Meadow";
-import Sidebar, { SIDEBAR_WIDTH } from "../components/Sidebar";
+import Sidebar from "../components/Sidebar";
 import { useGame } from "../engine/GameContext";
 import {
   getPlayerColor,
   getPlayerId,
   oppositePlayerOf,
+  tailwindPlayerColor,
 } from "../engine/helpers";
 import SpecialEventsDisplay from "../components/SpecialEventsDisplay";
 
@@ -36,13 +36,7 @@ function Game() {
       </div>
 
       {/* --- Right Content Area --- */}
-      <div
-        className="flex-1 p-4 flex flex-col gap-3 min-w-0 bg-playArea"
-        style={{
-          background: COLORS.playArea,
-          marginLeft: SIDEBAR_WIDTH,
-        }}
-      >
+      <div className="flex-1 p-4 flex flex-col gap-3 min-w-0 bg-play-area ml-sidebar">
         {/* --- Two Column Rows --- */}
         <div className="flex gap-8">
           <section className="flex-0-1-auto min-w-0 overflow-x-auto">
@@ -98,8 +92,7 @@ function Game() {
         {!spectating && (
           <section>
             <h3
-              className="flex items-center gap-0.5 font-bold"
-              style={{ color: PLAYER_COLORS[playerColor] }}
+              className={`flex items-center gap-0.5 font-bold ${tailwindPlayerColor(playerColor)}`}
             >
               Hand
             </h3>
@@ -118,8 +111,7 @@ function Game() {
 
         <section>
           <h3
-            className="flex items-center gap-0.5 font-bold"
-            style={{ color: PLAYER_COLORS[playerColor] }}
+            className={`flex items-center gap-0.5 font-bold ${tailwindPlayerColor(playerColor)}`}
           >
             {spectating ? `${playerColor}'s` : "My"} City (
             <ResourceIcon type={"coins"} />{" "}
@@ -132,8 +124,7 @@ function Game() {
 
         <section>
           <h3
-            className="flex items-center gap-0.5 font-bold"
-            style={{ color: PLAYER_COLORS[oppositePlayerOf(playerColor)] }}
+            className={`flex items-center gap-0.5 font-bold ${tailwindPlayerColor(oppositePlayerOf(playerColor))}`}
           >
             {spectating ? `${oppositePlayerOf(playerColor)}'s` : "Opponent"}{" "}
             City (

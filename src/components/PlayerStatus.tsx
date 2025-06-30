@@ -1,4 +1,3 @@
-import { PLAYER_COLORS } from "../colors";
 import { MAX_HAND_SIZE } from "../engine/gameConstants";
 import { useGame } from "../engine/GameContext";
 import { PlayerColor, ResourceType } from "../engine/gameTypes";
@@ -6,7 +5,8 @@ import {
   getPlayerId,
   mapOverResources,
   maxCitySize,
-  seasonColor,
+  tailwindPlayerColor,
+  tailwindSeasonColor,
 } from "../engine/helpers";
 import { ResourceIcon, WorkerIcon } from "./Icons";
 import Id from "./Id";
@@ -20,7 +20,7 @@ function PlayerStatus({ playerColor }: { playerColor: PlayerColor }) {
   return (
     <div key={playerColor} className="flex flex-col gap-2">
       <div>
-        <strong style={{ color: PLAYER_COLORS[playerColor] }}>
+        <strong className={`${tailwindPlayerColor(playerColor)}`}>
           {storedId === player.id ? "(Me) " : ""}
           {player.name || "Guest"}
         </strong>
@@ -29,7 +29,7 @@ function PlayerStatus({ playerColor }: { playerColor: PlayerColor }) {
       <div className="flex justify-between">
         <div>
           <div>
-            <strong style={{ color: seasonColor(player.season) }}>
+            <strong className={`${tailwindSeasonColor(player.season)}`}>
               {player.season}
             </strong>
           </div>

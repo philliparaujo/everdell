@@ -1,4 +1,3 @@
-import { COLORS } from "../colors";
 import { useGame } from "../engine/GameContext";
 import {
   canGiveToOpponent,
@@ -75,14 +74,14 @@ function Controls() {
       </Button>
       <Button
         disabled={disabled || !isSafeToEndTurn(game)}
-        color={COLORS.importantButton}
+        variant="important"
         onClick={() => endTurn(storedId)}
       >
         End Turn
       </Button>
       <Button
         disabled={disabled || !isSafeToEndTurn(game)}
-        color={COLORS.importantButton}
+        variant="important"
         onClick={() => harvest(storedId)}
       >
         Harvest
@@ -90,7 +89,7 @@ function Controls() {
       {canGiveSelf && (
         <Button
           disabled={disabled || isDiscarding || isPlaying}
-          color={COLORS.rareButton}
+          variant="rare"
           onClick={() => {
             if (isGiving) giveSelectedCards(storedId, game.turn);
             setGiving(storedId, !isGiving);
@@ -102,7 +101,7 @@ function Controls() {
       {canGiveOpponent && (
         <Button
           disabled={disabled || isDiscarding || isPlaying}
-          color={COLORS.rareButton}
+          variant="rare"
           onClick={() => {
             if (isGiving)
               giveSelectedCards(storedId, oppositePlayerOf(game.turn));
@@ -115,7 +114,7 @@ function Controls() {
       {revealDeck && (
         <Button
           disabled={disabled}
-          color={COLORS.rareButton}
+          variant="rare"
           onClick={() => revealCard(storedId, "deck")}
         >
           Reveal deck
@@ -124,7 +123,7 @@ function Controls() {
       {revealDiscard && (
         <Button
           disabled={disabled}
-          color={COLORS.rareButton}
+          variant="rare"
           onClick={() => revealCard(storedId, "discard")}
         >
           Reveal discard

@@ -7,7 +7,6 @@ import {
   storePlayerName,
 } from "../engine/helpers";
 import Navigation from "../components/Navigation";
-import { COLORS } from "../colors";
 
 function Home() {
   const [name, setName] = useState(() => {
@@ -44,10 +43,7 @@ function Home() {
   };
 
   return (
-    <div
-      className="max-w-2xl mx-auto p-4 flex flex-col justify-center min-h-screen"
-      style={{ color: COLORS.text }}
-    >
+    <div className="max-w-2xl mx-auto p-4 flex flex-col justify-center min-h-screen text-text">
       <div className="mb-6">
         <label htmlFor="player-name" className="block mb-2 font-bold text-sm">
           Display Name
@@ -57,12 +53,7 @@ function Home() {
           type="text"
           value={name}
           onChange={handleNameChange}
-          className="w-full px-3 py-2.5 rounded-md border font-sans"
-          style={{
-            borderColor: COLORS.containerBorder,
-            backgroundColor: COLORS.container,
-            color: COLORS.text,
-          }}
+          className="w-full px-3 py-2.5 rounded-md border font-sans border-container-border bg-container text-text"
         />
       </div>
 
@@ -75,12 +66,7 @@ function Home() {
           type="text"
           value={playerId}
           onChange={handlePlayerIdChange}
-          className="w-full px-3 py-2.5 rounded-md border font-mono"
-          style={{
-            borderColor: COLORS.containerBorder,
-            backgroundColor: COLORS.container,
-            color: COLORS.text,
-          }}
+          className="w-full px-3 py-2.5 rounded-md border font-mono border-container-border bg-container text-text"
         />
       </div>
 

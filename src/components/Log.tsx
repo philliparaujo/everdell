@@ -1,4 +1,3 @@
-import { COLORS, PLAYER_COLORS } from "../colors";
 import { useGame } from "../engine/GameContext";
 import { Card, History, PlayerColor, ResourceType } from "../engine/gameTypes";
 import {
@@ -6,7 +5,8 @@ import {
   listCardNames,
   mapOverResources,
   oppositePlayerOf,
-  seasonColor,
+  tailwindPlayerColor,
+  tailwindSeasonColor,
 } from "../engine/helpers";
 import { ResourceIcon, WorkerIcon } from "./Icons";
 
@@ -49,12 +49,12 @@ function PlayerLog({
 
   return (
     <div className="text-sm p-2">
-      <strong style={{ color: PLAYER_COLORS[color] }}>{player.name}</strong>
+      <strong className={`${tailwindPlayerColor(color)}`}>{player.name}</strong>
       <ul className="mt-2 ml-1 p-0">
         {seasonChange && (
           <LogEntry>
             Advanced to{" "}
-            <strong style={{ color: seasonColor(player.season) }}>
+            <strong className={`${tailwindSeasonColor(player.season)}`}>
               {player.season}
             </strong>
           </LogEntry>
@@ -121,12 +121,7 @@ function Log({ playerColor }: { playerColor: PlayerColor }) {
   const { game } = useGame();
 
   return (
-    <div
-      className="flex flex-col gap-1 rounded-s"
-      style={{
-        backgroundColor: COLORS.log,
-      }}
-    >
+    <div className="flex flex-col gap-1 rounded-s bg-log">
       <PlayerLog
         history={game.players[playerColor].history}
         color={playerColor}
