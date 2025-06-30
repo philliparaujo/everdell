@@ -117,14 +117,7 @@ function PlayerLog({
               {mapOverResources(
                 deltaResources,
                 (key, val) => (
-                  <div
-                    key={key}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "4px",
-                    }}
-                  >
+                  <div key={key} className="flex items-center gap-1">
                     <ResourceIcon type={key as ResourceType} />{" "}
                     {val > 0 ? "+" : ""}
                     {val}

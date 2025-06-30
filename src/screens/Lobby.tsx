@@ -17,7 +17,7 @@ import { getPlayerId, getPlayerName } from "../engine/helpers";
 import Button from "../components/Button";
 import Navigation from "../components/Navigation";
 import { COLORS, PLAYER_COLORS } from "../colors";
-import { idStyle } from "./Game";
+import Id from "../components/Id";
 
 const GamePlayerDisplay = ({
   player,
@@ -27,25 +27,17 @@ const GamePlayerDisplay = ({
   isYou: boolean;
 }) => {
   const color = player.color;
-
-  if (!player.id) {
-    return (
-      <div>
-        <div style={{ color: PLAYER_COLORS[color], fontWeight: "bold" }}>
-          {color}
-        </div>
-        <div style={{ ...idStyle }}>Open Slot</div>
-      </div>
-    );
-  }
+  const displayName = !player.id
+    ? color
+    : `${isYou ? "(Me) " : ""}${player.name}`;
+  const displayId = !player.id ? "Open Slot" : player.id;
 
   return (
     <div>
-      <div style={{ color: PLAYER_COLORS[color], fontWeight: "bold" }}>
-        {isYou ? "(Me) " : ""}
-        {player.name}
+      <div className="font-bold" style={{ color: PLAYER_COLORS[color] }}>
+        {displayName}
       </div>
-      <div style={idStyle}>{player.id}</div>
+      <Id id={displayId} />
     </div>
   );
 };
@@ -141,39 +133,18 @@ function Lobby() {
   }, []);
 
   return (
-    <div
-      style={{
-        maxWidth: "1200px",
-        margin: "0 auto",
-        padding: "0 16px",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        minHeight: "100vh",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          flexWrap: "wrap",
-          gap: "16px",
-          marginBottom: "32px",
-        }}
-      >
+    <div className="max-w-7xl mx-auto px-4 flex flex-col justify-center min-h-screen">
+      <div className="flex justify-between items-center flex-wrap mb-8">
         <div>
           <span>
             <strong>Display Name:</strong> {name || "Not Set"}
           </span>
-          <span style={{ marginLeft: "24px" }}>
+          <span className="ml-6">
             <strong>ID:</strong>{" "}
-            <span style={{ fontFamily: "monospace" }}>
-              {playerId || "Not Set"}
-            </span>
+            <span className="font-mono">{playerId || "Not Set"}</span>
           </span>
         </div>
-        <div style={{ display: "flex", gap: "8px" }}>
+        <div className="flex gap-2">
           <Navigation
             link="/home"
             displayText="Back to Home"
@@ -182,9 +153,9 @@ function Lobby() {
         </div>
       </div>
 
-      <h3>Available Games</h3>
+      <h2 className="mb-4 text-lg font-bold">Available Games</h2>
 
-      <div>
+      <div className="mb-4">
         <Button
           onClick={startGame}
           disabled={isDisabled}
@@ -194,20 +165,10 @@ function Lobby() {
         </Button>
       </div>
 
-      {gameList.length === 0 && (
-        <p style={{ fontStyle: "italic" }}>No games found.</p>
-      )}
+      {gameList.length === 0 && <p className="italic">No games found.</p>}
 
       {/* Game List Grid */}
-      <ul
-        style={{
-          listStyle: "none",
-          padding: 0,
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(400px, 1fr))",
-          gap: "16px",
-        }}
-      >
+      <ul className="list-none p-0 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
         {gameList.map(({ id, game }) => {
           const redPlayer = game.players.Red;
           const bluePlayer = game.players.Blue;
@@ -220,28 +181,18 @@ function Lobby() {
           return (
             <li
               key={id}
+              className="border rounded-lg p-4 flex flex-col gap-4"
               style={{
-                border: `1px solid ${COLORS.containerBorder}`,
+                borderColor: COLORS.containerBorder,
                 backgroundColor: COLORS.container,
-                borderRadius: "8px",
-                padding: "16px",
-                display: "flex",
-                flexDirection: "column",
-                gap: "16px",
               }}
             >
-              <div>
-                <strong>Game ID:</strong>{" "}
-                <span style={{ fontFamily: "monospace" }}>{id}</span>
+              <div className="flex items-baseline gap-1">
+                <strong>Game ID:</strong>
+                <Id id={id} />
               </div>
 
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  minHeight: "40px",
-                }}
-              >
+              <div className="flex justify-between min-h-[40px]">
                 <GamePlayerDisplay
                   player={redPlayer}
                   isYou={playerId === redPlayer.id}
@@ -253,17 +204,10 @@ function Lobby() {
               </div>
 
               <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "flex-end",
-                  gap: "12px",
-                  marginTop: "auto",
-                  paddingTop: "12px",
-                  borderTop: `1px solid ${COLORS.containerBorder}`,
-                }}
+                className="flex justify-between items-end gap-3 mt-auto pt-3 border-t"
+                style={{ borderTopColor: COLORS.containerBorder }}
               >
-                <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+                <div className="flex gap-2 flex-wrap">
                   {canJoinRed && !isPlayerInGame && (
                     <Button
                       onClick={() => handleJoinGame(id, "Red")}

@@ -8,7 +8,6 @@ import {
   isNotYourTurn,
   oppositePlayerOf,
 } from "../engine/helpers";
-import { controlsStyling } from "../screens/Game";
 import Button from "./Button";
 import CardPreview from "./CardPreview";
 
@@ -69,7 +68,7 @@ function Reveal() {
       {(revealDeck || revealDiscard || !revealEmpty) && (
         <>
           <hr />
-          <div style={{ ...controlsStyling, paddingBottom: "8px" }}>
+          <div className="grid grid-cols-2 gap-2 max-w-400px mx-auto pb-2">
             {revealDeck && (
               <Button
                 disabled={disabled}

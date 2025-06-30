@@ -4,13 +4,16 @@ import {
   getPlayerId,
   oppositePlayerOf,
 } from "../engine/helpers";
-import { idStyle, sideBarStyling } from "../screens/Game";
 import Controls from "./Controls";
 import Log from "./Log";
 import PlayerStatus from "./PlayerStatus";
 import ResourceBank from "./ResourceBank";
 import Reveal from "./Reveal";
 import Navigation from "./Navigation";
+import Id from "./Id";
+import { COLORS } from "../colors";
+
+export const SIDEBAR_WIDTH = "260px";
 
 function Sidebar({ gameId }: { gameId: string | undefined }) {
   const { game } = useGame();
@@ -30,19 +33,26 @@ function Sidebar({ gameId }: { gameId: string | undefined }) {
   }
 
   return (
-    <div style={sideBarStyling}>
-      <div style={{ padding: "8px" }}>
-        <div style={{ display: "flex", gap: "8px", flexDirection: "column" }}>
+    <div
+      className="h-screen overflow-y-auto overflow-x-hidden fixed border-r"
+      style={{
+        background: COLORS.container,
+        borderRightColor: COLORS.containerBorder,
+        width: SIDEBAR_WIDTH,
+      }}
+    >
+      <div className="p-2 flex flex-col gap-2">
+        <div className="flex flex-col gap-2">
           <Navigation
             link="/lobby"
             displayText="Back to Lobby"
             arrow="backward"
           />
-          <div style={idStyle}>{gameId}</div>
-          <h3 style={{ margin: 0 }}>
+          <Id id={gameId ?? ""} />
+          <h3 className="font-bold text-lg">
             {game.turn}'s Turn{" "}
             {turnStatusText && (
-              <span style={{ fontSize: "14px" }}>({turnStatusText})</span>
+              <span className="text-sm">({turnStatusText})</span>
             )}
           </h3>
         </div>
@@ -53,7 +63,7 @@ function Sidebar({ gameId }: { gameId: string | undefined }) {
         <hr />
         <Controls />
         <hr />
-        <p style={{ margin: 0 }}>{`Deck size: ${game.deck.length}`}</p>
+        <p>{`Deck size: ${game.deck.length}`}</p>
         <ResourceBank />
         <Reveal />
         <hr />

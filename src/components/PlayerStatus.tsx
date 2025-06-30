@@ -8,8 +8,8 @@ import {
   maxCitySize,
   seasonColor,
 } from "../engine/helpers";
-import { headingStyling, idStyle } from "../screens/Game";
 import { ResourceIcon, WorkerIcon } from "./Icons";
+import Id from "./Id";
 
 function PlayerStatus({ playerColor }: { playerColor: PlayerColor }) {
   const { game } = useGame();
@@ -18,35 +18,27 @@ function PlayerStatus({ playerColor }: { playerColor: PlayerColor }) {
   const player = game.players[playerColor];
 
   return (
-    <div key={playerColor}>
+    <div key={playerColor} className="flex flex-col gap-2">
       <div>
         <strong style={{ color: PLAYER_COLORS[playerColor] }}>
           {storedId === player.id ? "(Me) " : ""}
           {player.name || "Guest"}
         </strong>
-        <p style={{ ...headingStyling, ...idStyle, marginBottom: "8px" }}>
-          {player.id !== "" ? player.id : "Not in game"}
-        </p>
+        <Id id={player.id || "Not in game"} />
       </div>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          marginBottom: "12px",
-        }}
-      >
+      <div className="flex justify-between">
         <div>
           <div>
             <strong style={{ color: seasonColor(player.season) }}>
               {player.season}
             </strong>
           </div>
-          <span>
+          <span className="flex items-center gap-1">
             <WorkerIcon playerColor={playerColor} />{" "}
             {player.workers.workersLeft} / {player.workers.maxWorkers}
           </span>
         </div>
-        <div>
+        <div className="flex flex-col items-end">
           <div>
             Hand: {player.hand.length} / {MAX_HAND_SIZE}
           </div>
@@ -55,11 +47,11 @@ function PlayerStatus({ playerColor }: { playerColor: PlayerColor }) {
           </div>
         </div>
       </div>
-      <div style={{ display: "flex", flexDirection: "row", gap: "8px" }}>
+      <div className="flex flex-row gap-2">
         {mapOverResources(
           player.resources,
           (key, val) => (
-            <div key={key}>
+            <div key={key} className="flex items-center gap-1">
               <ResourceIcon type={key as ResourceType} /> {val}
             </div>
           ),

@@ -119,7 +119,7 @@ function SpecialEventInspect({
           alignItems: "center",
         }}
       >
-        <h2 style={{ margin: 0, textAlign: "center" }}>{specialEvent.name}</h2>
+        <h1 style={{ margin: 0, textAlign: "center" }}>{specialEvent.name}</h1>
 
         {/* --- Requirements --- */}
         {(specialEvent.cardRequirement?.length > 0 ||
@@ -152,7 +152,7 @@ function SpecialEventInspect({
         {specialEvent.specialDescription && (
           <div style={sectionStyle}>
             <strong>When achieved...</strong>
-            <p style={{ margin: 0 }}>
+            <p style={{ margin: 0, display: "flex", alignItems: "center" }}>
               {renderTextWithIcons(specialEvent.specialDescription)}
             </p>
           </div>
@@ -161,7 +161,7 @@ function SpecialEventInspect({
         <div style={sectionStyle}>
           <strong>Reward:</strong>
           {specialEvent.specialReward && (
-            <p style={{ margin: 0 }}>
+            <p style={{ margin: 0, display: "flex", alignItems: "center" }}>
               {renderTextWithIcons(specialEvent.specialReward)}
             </p>
           )}

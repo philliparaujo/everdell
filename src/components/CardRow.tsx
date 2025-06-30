@@ -1,6 +1,5 @@
 import { Card, PlayerColor } from "../engine/gameTypes";
 import { maxCitySize } from "../engine/helpers";
-import { cardRowStyle } from "../screens/Game";
 import CardPreview from "./CardPreview";
 
 function CardRow({
@@ -19,7 +18,7 @@ function CardRow({
   const rowLength = maxLength ?? maxCitySize(cards);
 
   return (
-    <div style={cardRowStyle}>
+    <div className="flex overflow-y-hidden scrollbar-thin w-full gap-1 px-0 py-1 rounded-[4px]">
       {Array.from({ length: rowLength }).map((_, index) => {
         const card = cards[index] ?? null;
 

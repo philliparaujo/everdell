@@ -28,6 +28,8 @@ const Button: React.FC<ButtonProps> = ({
     transition: "transform 0.1s ease, filter 0.1s ease",
     transform: hovered && !disabled ? "scale(1.02)" : "scale(1)",
     filter: hovered && !disabled ? "brightness(1.05)" : "none",
+    fontSize: "14px",
+    padding: "0 4px",
     ...style,
   };
 

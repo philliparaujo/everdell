@@ -8,7 +8,6 @@ import {
   isSafeToEndTurn,
   oppositePlayerOf,
 } from "../engine/helpers";
-import { controlsStyling } from "../screens/Game";
 import Button from "./Button";
 
 function Controls() {
@@ -40,7 +39,7 @@ function Controls() {
   const canGiveOpponent = canGiveToOpponent(currentPlayer, oppositePlayer);
 
   return (
-    <div style={controlsStyling}>
+    <div className="grid grid-cols-2 gap-2 max-w-400px">
       <Button disabled={disabled} onClick={() => drawCard(storedId)}>
         Draw Card
       </Button>

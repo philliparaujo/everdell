@@ -5,10 +5,6 @@ import CardInspect from "./CardInspect";
 import Hoverable from "./Hoverable";
 import { ResourceIcon, WorkerIcon } from "./Icons";
 
-export const cardNamePreviewStyling: React.CSSProperties = {
-  fontSize: "12px",
-};
-
 function CardPreview({
   card,
   index,
@@ -56,17 +52,11 @@ function CardPreview({
       }
     >
       <div
+        className="w-[100px] rounded text-center flex-none flex flex-col"
         style={{
-          width: "100px",
           height: storable ? "210px" : "170px",
           background: COLORS.cardPreview,
           border: borderStyle,
-          padding: "4px",
-          borderRadius: "4px",
-          textAlign: "center",
-          flex: "0 0 auto",
-          display: "flex",
-          flexDirection: "column",
         }}
       >
         {card ? (
@@ -75,46 +65,34 @@ function CardPreview({
               <img
                 src={require(`../assets/cards/${card.imageKey}.jpg`)}
                 alt={card.name}
-                style={{
-                  width: "100%",
-                  height: "150px",
-                  objectFit: "cover",
-                  borderRadius: "4px",
-                  display: "block",
-                }}
+                className="w-full p-1 pb-0 h-[150px] object-cover rounded-lg"
                 draggable={false}
               />
-              <strong style={{ ...cardNamePreviewStyling, color: textColor }}>
+              <p className="text-xs font-bold" style={{ color: textColor }}>
                 {card.name}
-              </strong>
+              </p>
             </div>
 
             {storable && (
               <div
+                className="flex-grow flex flex-wrap justify-evenly items-center p-1 rounded"
                 style={{
                   background: COLORS.storage,
-                  flexGrow: 1,
-                  display: "flex",
-                  flexWrap: "wrap",
-                  justifyContent: "space-evenly",
-                  alignItems: "center",
-                  padding: "4px",
-                  borderRadius: "4px",
                 }}
               >
                 {card.storage &&
                   mapOverResources(card.storage, (key, val) => (
-                    <div key={key} style={{ fontSize: "10px" }}>
+                    <div key={key} className="flex items-center text-[10px]">
                       <ResourceIcon type={key as ResourceType} /> {val}
                     </div>
                   ))}
                 {card.workers.Red > 0 && (
-                  <div style={{ fontSize: "10px" }}>
+                  <div className="flex items-center text-[10px]">
                     <WorkerIcon playerColor={"Red"} /> {card.workers.Red}
                   </div>
                 )}
                 {card.workers.Blue > 0 && (
-                  <div style={{ fontSize: "10px" }}>
+                  <div className="flex items-center text-[10px]">
                     <WorkerIcon playerColor={"Blue"} /> {card.workers.Blue}
                   </div>
                 )}

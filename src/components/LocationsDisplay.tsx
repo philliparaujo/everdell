@@ -77,12 +77,12 @@ export function renderWorkers(
   return (
     <div style={workerStyling}>
       {location.workers.Red > 0 && (
-        <span>
+        <span className="flex items-center gap-1">
           <WorkerIcon playerColor={"Red"} /> {location.workers.Red}
         </span>
       )}
       {location.workers.Blue > 0 && (
-        <span>
+        <span className="flex items-center gap-1">
           <WorkerIcon playerColor={"Blue"} /> {location.workers.Blue}
         </span>
       )}
@@ -152,11 +152,6 @@ function LocationDisplay({
   return (
     <BaseLocationDisplay
       exclusive={location.exclusive}
-      titleChildren={
-        <div aria-hidden="true" style={{ visibility: "hidden" }}>
-          .
-        </div>
-      }
       buttonChildren={renderButtons(
         disabled || !canVisit,
         disabled || !canLeave,
@@ -167,7 +162,7 @@ function LocationDisplay({
       resourceChildren={
         <div style={resourceStyling}>
           {mapOverResources(location.resources, (key, val) => (
-            <div key={key}>
+            <div key={key} className="flex items-center gap-1">
               <ResourceIcon type={key as ResourceType} /> {val}
             </div>
           ))}
@@ -197,11 +192,6 @@ function HavenDisplay() {
 
   return (
     <BaseLocationDisplay
-      titleChildren={
-        <div aria-hidden="true" style={{ visibility: "hidden" }}>
-          .
-        </div>
-      }
       buttonChildren={renderButtons(
         disabled || !canVisit,
         disabled || !canLeave,

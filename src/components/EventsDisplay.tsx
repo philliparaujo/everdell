@@ -38,11 +38,18 @@ function EventDisplay({ event, index }: { event: Event; index: number }) {
       )}
       workerChildren={renderWorkers(event)}
       resourceChildren={
-        <div style={{ ...arrowResourceStyling, height: "40px" }}>
-          <EffectTypeIcon type={event.effectTypeRequirement} />{" "}
-          {event.effectTypeCount}
-          {"→"}
-          <ResourceIcon type={"coins"} /> {event.value}
+        <div
+          style={{
+            height: "100%",
+            alignItems: "end",
+          }}
+        >
+          <div className="flex items-center gap-1" style={arrowResourceStyling}>
+            <EffectTypeIcon type={event.effectTypeRequirement} />{" "}
+            {event.effectTypeCount}
+            {"→"}
+            <ResourceIcon type={"coins"} /> {event.value}
+          </div>
         </div>
       }
       used={event.used}
@@ -55,7 +62,7 @@ function EventsDisplay() {
   const { game } = useGame();
 
   return (
-    <div style={locationsDisplayStyling}>
+    <div style={{ ...locationsDisplayStyling, height: "102px" }}>
       {game.events.map((event: Event, index: number) => (
         <EventDisplay event={event} index={index} />
       ))}

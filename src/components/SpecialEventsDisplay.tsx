@@ -7,7 +7,6 @@ import {
   isNotYourTurn,
   mapOverEffectTypes,
 } from "../engine/helpers";
-import { cardNamePreviewStyling } from "./CardPreview";
 import Hoverable from "./Hoverable";
 import { EffectTypeIcon } from "./Icons";
 import {
@@ -62,11 +61,9 @@ function SpecialEventDisplay({
         )}
         workerChildren={renderWorkers(specialEvent)}
         resourceChildren={
-          <div
-            style={{ display: "flex", flexDirection: "column", height: "40px" }}
-          >
+          <div style={{ display: "flex", flexDirection: "column" }}>
             {specialEvent.cardRequirement.map((cardName) => (
-              <strong style={cardNamePreviewStyling}>{cardName}</strong>
+              <p className="font-bold text-xs">{cardName}</p>
             ))}
             <div style={{ ...resourceStyling, fontSize: "9px" }}>
               {mapOverEffectTypes(
@@ -91,7 +88,13 @@ function SpecialEventsDisplay() {
   const { game } = useGame();
 
   return (
-    <div style={{ ...locationsDisplayStyling, paddingRight: "4px" }}>
+    <div
+      style={{
+        ...locationsDisplayStyling,
+        paddingRight: "4px",
+        height: "102px",
+      }}
+    >
       {game.specialEvents.map((specialEvent: SpecialEvent, index: number) => (
         <SpecialEventDisplay specialEvent={specialEvent} index={index} />
       ))}

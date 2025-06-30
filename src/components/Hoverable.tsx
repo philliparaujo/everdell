@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, ReactNode } from "react";
 
 function Hoverable({
   children,
@@ -10,7 +10,7 @@ function Hoverable({
   children: React.ReactNode;
   isInteractive: boolean;
   onLeftClick?: () => void;
-  onRightClick?: (setInspectingFalse: () => void) => void;
+  onRightClick?: (setInspectingFalse: () => void) => ReactNode;
   style?: React.CSSProperties;
 }) {
   const [inspecting, setInspecting] = useState(false);

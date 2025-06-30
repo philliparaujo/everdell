@@ -8,22 +8,8 @@ import {
   mapOverResources,
   oppositePlayerOf,
 } from "../engine/helpers";
-import { resourceBankStyling } from "../screens/Game";
 import Button from "./Button";
 import { ResourceIcon } from "./Icons";
-
-export const resourceDisplayStyling: React.CSSProperties = {
-  width: "80px",
-  height: "20px",
-  background: COLORS.location,
-  padding: "4px",
-  borderRadius: "8px",
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "space-around",
-  alignItems: "center",
-  textAlign: "center",
-};
 
 export function ResourceDisplay({ resource }: { resource: ResourceType }) {
   const { game, addResourcesToSelf, giveResources } = useGame();
@@ -46,32 +32,30 @@ export function ResourceDisplay({ resource }: { resource: ResourceType }) {
   };
 
   return (
-    <div style={resourceDisplayStyling}>
-      <div>
-        {canGiveResources(game.players[game.turn], game.specialEvents) && (
-          <Button
-            disabled={disabled}
-            onClick={giveResource}
-            color={COLORS.rareButton}
-          >
-            {"!"}
-          </Button>
-        )}
-        <ResourceIcon type={resource} />
-        <Button disabled={disabled} onClick={decrementResource}>
-          {"-"}
+    <div className="flex items-center justify-center gap-1">
+      {canGiveResources(game.players[game.turn], game.specialEvents) && (
+        <Button
+          disabled={disabled}
+          onClick={giveResource}
+          color={COLORS.rareButton}
+        >
+          {"!"}
         </Button>
-        <Button disabled={disabled} onClick={incrementResource}>
-          {"+"}
-        </Button>
-      </div>
+      )}
+      <ResourceIcon type={resource} />
+      <Button disabled={disabled} onClick={decrementResource}>
+        {"-"}
+      </Button>
+      <Button disabled={disabled} onClick={incrementResource}>
+        {"+"}
+      </Button>
     </div>
   );
 }
 
 function ResourceBank() {
   return (
-    <div style={resourceBankStyling}>
+    <div className="grid grid-cols-2 gap-2">
       {mapOverResources(
         defaultResources,
         (key, _) => {

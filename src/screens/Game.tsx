@@ -8,7 +8,7 @@ import { ResourceIcon } from "../components/Icons";
 import JourneysDisplay from "../components/JourneysDisplay";
 import LocationsDisplay from "../components/LocationsDisplay";
 import Meadow from "../components/Meadow";
-import Sidebar from "../components/Sidebar";
+import Sidebar, { SIDEBAR_WIDTH } from "../components/Sidebar";
 import { useGame } from "../engine/GameContext";
 import {
   getPlayerColor,
@@ -16,90 +16,6 @@ import {
   oppositePlayerOf,
 } from "../engine/helpers";
 import SpecialEventsDisplay from "../components/SpecialEventsDisplay";
-
-const sideBarColumnStyling: React.CSSProperties = {
-  width: "260px",
-  flexShrink: 0,
-  height: "100vh",
-};
-
-export const sideBarStyling: React.CSSProperties = {
-  background: COLORS.container,
-  width: "260px",
-  height: "100%",
-  overflowY: "auto",
-  overflowX: "hidden",
-  position: "fixed",
-  borderRight: `1px solid ${COLORS.containerBorder}`,
-};
-
-export const controlsStyling: React.CSSProperties = {
-  display: "grid",
-  gridTemplateColumns: "1fr 1fr",
-  gap: "8px",
-  maxWidth: "400px",
-  marginLeft: "auto",
-  marginRight: "auto",
-};
-
-export const resourceBankStyling: React.CSSProperties = {
-  display: "grid",
-  gridTemplateColumns: "1fr 1fr",
-  gap: "8px",
-  marginLeft: "auto",
-  marginRight: "auto",
-};
-
-const playAreaStyling: React.CSSProperties = {
-  flex: 1,
-  padding: "16px",
-  display: "flex",
-  flexDirection: "column",
-  gap: "12px",
-  minWidth: 0,
-  background: COLORS.playArea,
-};
-
-export const headingStyling: React.CSSProperties = {
-  margin: 0,
-  display: "flex",
-  alignItems: "center",
-  gap: "2px",
-};
-
-export const idStyle: React.CSSProperties = {
-  fontSize: "11px",
-  fontFamily: "monospace",
-};
-
-const fullRowStyling: React.CSSProperties = {};
-
-const twoColumnRowStyling: React.CSSProperties = {
-  display: "flex",
-  gap: "32px",
-};
-
-const halfColumnStyling: React.CSSProperties = {
-  flex: "0 1 auto",
-  minWidth: 0,
-  overflowX: "auto",
-};
-
-const scrollStyle: React.CSSProperties = {
-  display: "flex",
-  overflowY: "hidden",
-  scrollbarWidth: "thin",
-};
-
-export const cardRowStyle: React.CSSProperties = {
-  ...scrollStyle,
-  width: "100%",
-  gap: "4px",
-  padding: "4px",
-  paddingInlineStart: 0,
-  borderRadius: "4px",
-  height: "100%",
-};
 
 function Game() {
   const { game } = useGame();
@@ -122,42 +38,64 @@ function Game() {
       }}
     >
       {/* --- Left Sidebar --- */}
-      <div style={sideBarColumnStyling}>
+      <div className={`h-screen`}>
         <Sidebar gameId={gameId} />
       </div>
 
       {/* --- Right Content Area --- */}
-      <div style={playAreaStyling}>
+      <div
+        className="flex-1 p-4 flex flex-col gap-3 min-w-0 bg-playArea"
+        style={{
+          background: COLORS.playArea,
+          marginLeft: SIDEBAR_WIDTH,
+        }}
+      >
         {/* --- Two Column Rows --- */}
-        <div style={twoColumnRowStyling}>
-          <section style={halfColumnStyling}>
-            <h4 style={headingStyling}>Locations</h4>
-            <div style={scrollStyle}>
+        <div className="flex gap-8">
+          <section className="flex-0-1-auto min-w-0 overflow-x-auto">
+            <h3 className="flex items-center gap-0.5 font-bold">Locations</h3>
+            <div
+              className="flex flex-1 overflow-y-hidden"
+              style={{ scrollbarWidth: "thin" }}
+            >
               <LocationsDisplay />
             </div>
           </section>
 
           {game.players[game.turn].season === "Autumn" && (
-            <section style={halfColumnStyling}>
-              <h4 style={headingStyling}>Journeys</h4>
-              <div style={scrollStyle}>
+            <section className="flex-0-1-auto min-w-0 overflow-x-auto">
+              <h3 className="flex items-center gap-0.5 font-bold">Journeys</h3>
+              <div
+                className="flex flex-1 overflow-y-hidden"
+                style={{ scrollbarWidth: "thin" }}
+              >
                 <JourneysDisplay />
               </div>
             </section>
           )}
         </div>
 
-        <div style={twoColumnRowStyling}>
-          <section style={halfColumnStyling}>
-            <h4 style={headingStyling}>Basic Events</h4>
-            <div style={scrollStyle}>
+        <div className="flex gap-8">
+          <section className="flex-0-1-auto min-w-0 overflow-x-auto">
+            <h3 className="flex items-center gap-0.5 font-bold">
+              Basic Events
+            </h3>
+            <div
+              className="flex flex-1 overflow-y-hidden"
+              style={{ scrollbarWidth: "thin" }}
+            >
               <EventsDisplay />
             </div>
           </section>
 
-          <section style={halfColumnStyling}>
-            <h4 style={headingStyling}>Special Events</h4>
-            <div style={scrollStyle}>
+          <section className="flex-0-1-auto min-w-0 overflow-x-auto">
+            <h3 className="flex items-center gap-0.5 font-bold">
+              Special Events
+            </h3>
+            <div
+              className="flex flex-1 overflow-y-hidden"
+              style={{ scrollbarWidth: "thin" }}
+            >
               <SpecialEventsDisplay />
             </div>
           </section>
@@ -165,55 +103,57 @@ function Game() {
 
         {/* --- Full Width Rows --- */}
         {!spectating && (
-          <section style={fullRowStyling}>
-            <h4
-              style={{ ...headingStyling, color: PLAYER_COLORS[playerColor] }}
+          <section>
+            <h3
+              className="flex items-center gap-0.5 font-bold"
+              style={{ color: PLAYER_COLORS[playerColor] }}
             >
               Hand
-            </h4>
+            </h3>
             <div>
               <Hand color={playerColor} />
             </div>
           </section>
         )}
 
-        <section style={fullRowStyling}>
-          <h4 style={headingStyling}>Meadow</h4>
+        <section>
+          <h3 className="flex items-center gap-0.5 font-bold">Meadow</h3>
           <div>
             <Meadow />
           </div>
         </section>
 
-        <section style={fullRowStyling}>
-          <h4 style={{ ...headingStyling, color: PLAYER_COLORS[playerColor] }}>
+        <section>
+          <h3
+            className="flex items-center gap-0.5 font-bold"
+            style={{ color: PLAYER_COLORS[playerColor] }}
+          >
             {spectating ? `${playerColor}'s` : "My"} City (
             <ResourceIcon type={"coins"} />{" "}
             {player.city.reduce((acc, curr) => acc + curr.value, 0)})
-          </h4>
+          </h3>
           <div>
             <City color={playerColor} />
           </div>
         </section>
 
-        <section style={fullRowStyling}>
-          <h4
-            style={{
-              ...headingStyling,
-              color: PLAYER_COLORS[oppositePlayerOf(playerColor)],
-            }}
+        <section>
+          <h3
+            className="flex items-center gap-0.5 font-bold"
+            style={{ color: PLAYER_COLORS[oppositePlayerOf(playerColor)] }}
           >
             {spectating ? `${oppositePlayerOf(playerColor)}'s` : "Opponent"}{" "}
             City (
             <ResourceIcon type={"coins"} />{" "}
             {oppositePlayer.city.reduce((acc, curr) => acc + curr.value, 0)})
-          </h4>
+          </h3>
           <div>
             <City color={oppositePlayerOf(playerColor)} />
           </div>
         </section>
 
-        <section style={fullRowStyling}>
-          <h4 style={headingStyling}>Discard</h4>
+        <section>
+          <h3 className="flex items-center gap-0.5 font-bold">Discard</h3>
           <div>
             <Discard />
           </div>

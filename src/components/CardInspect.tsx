@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { COLORS } from "../colors";
 import { useGame } from "../engine/GameContext";
 import {
@@ -13,12 +14,10 @@ import {
   isNotYourTurn,
   mapOverResources,
 } from "../engine/helpers";
-import { resourceBankStyling } from "../screens/Game";
 import Button from "./Button";
 import { ResourceIcon } from "./Icons";
 import Inspectable from "./Inspectable";
 import { renderButtons, renderWorkers } from "./LocationsDisplay";
-import { resourceDisplayStyling } from "./ResourceBank";
 
 function CardInspect({
   card,
@@ -40,6 +39,7 @@ function CardInspect({
     toggleOccupiedCardInCity,
   } = useGame();
 
+  const [imageLoaded, setImageLoaded] = useState(false);
   const storedId = getPlayerId();
   const playerColor = getPlayerColor(game, storedId);
 
@@ -58,40 +58,20 @@ function CardInspect({
       <img
         src={require(`../assets/cards/${card.imageKey}.jpg`)}
         alt={card.name}
-        style={{
-          maxHeight: "100%",
-          maxWidth: "50%",
-          width: "auto",
-          height: "auto",
-          objectFit: "contain",
-          borderRadius: "8px",
-        }}
+        className={`max-w-[50%] object-contain rounded-lg aspect-5/7 bg-neutral-800 transition-opacity duration-0 ${
+          imageLoaded ? "opacity-100" : "opacity-0"
+        }`}
+        onLoad={() => setImageLoaded(true)}
       />
-
-      <div
-        style={{
-          flex: 1,
-          overflowY: "auto",
-          minWidth: 0,
-          display: "flex",
-          flexDirection: "column",
-          gap: "16px",
-        }}
-      >
-        <h1 style={{ fontSize: "32px", marginBottom: 0 }}>{card.name}</h1>
+      <div className="flex flex-1 flex-col gap-4 overflow-y-auto min-w-0">
+        <h1 className="text-3xl font-bold">{card.name}</h1>
         {card.value !== undefined && (
           <p>
             <strong>Base Points:</strong> {card.value}
           </p>
         )}
         {placedDown && card.occupied !== null && cityColor ? (
-          <div
-            style={{
-              display: "flex",
-              gap: "8px",
-              justifyContent: "center",
-            }}
-          >
+          <div className="flex gap-2 justify-center">
             <strong
               style={{
                 color: card?.occupied
@@ -120,34 +100,19 @@ function CardInspect({
         )}
 
         {placedDown && card.storage && (
-          <div style={resourceBankStyling}>
+          <div className="grid grid-cols-2 gap-4 mx-auto">
             {mapOverResources(
               card.storage,
               (key, val) => {
                 return key === "cards" ? (
                   <></>
                 ) : (
-                  <div
-                    key={key}
-                    style={{
-                      ...resourceDisplayStyling,
-                      width: "auto",
-                      justifyContent: "center",
-                      flexDirection: "row",
-                      gap: "8px",
-                    }}
-                  >
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "0px",
-                      }}
-                    >
+                  <div key={key} className="flex gap-1 justify-center">
+                    <div className="flex items-center gap-0">
                       <ResourceIcon type={key as ResourceType} />
                       <span>{val}</span>
                     </div>
-                    <div style={{ display: "flex" }}>
+                    <div className="flex">
                       <Button
                         disabled={disabled}
                         onClick={() =>
@@ -180,14 +145,7 @@ function CardInspect({
         )}
 
         {placedDown && card.maxDestinations != null && (
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              textAlign: "center",
-            }}
-          >
+          <div className="flex flex-col items-center text-center">
             {cityColor !== null &&
               renderButtons(
                 disabled || !canVisit,

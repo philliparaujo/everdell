@@ -45,28 +45,11 @@ function Home() {
 
   return (
     <div
-      style={{
-        maxWidth: "600px",
-        margin: "0 auto",
-        padding: "0 16px",
-        justifyContent: "center",
-        display: "flex",
-        flexDirection: "column",
-        height: "100vh",
-        fontFamily: "Arial, sans-serif",
-        color: COLORS.text,
-      }}
+      className="max-w-2xl mx-auto px-4 flex flex-col justify-center h-screen font-sans"
+      style={{ color: COLORS.text }}
     >
-      <div style={{ marginBottom: "24px" }}>
-        <label
-          htmlFor="player-name"
-          style={{
-            display: "block",
-            marginBottom: "8px",
-            fontWeight: "bold",
-            fontSize: "14px",
-          }}
-        >
+      <div className="mb-6">
+        <label htmlFor="player-name" className="block mb-2 font-bold text-sm">
           Display Name
         </label>
         <input
@@ -74,27 +57,17 @@ function Home() {
           type="text"
           value={name}
           onChange={handleNameChange}
+          className="w-full px-3 py-2.5 rounded-md border font-sans"
           style={{
-            width: "100%",
-            padding: "10px",
-            borderRadius: "6px",
-            border: `1px solid ${COLORS.containerBorder}`,
+            borderColor: COLORS.containerBorder,
             backgroundColor: COLORS.container,
             color: COLORS.text,
           }}
         />
       </div>
 
-      <div style={{ marginBottom: "32px" }}>
-        <label
-          htmlFor="player-id"
-          style={{
-            display: "block",
-            marginBottom: "8px",
-            fontWeight: "bold",
-            fontSize: "14px",
-          }}
-        >
+      <div className="mb-8">
+        <label htmlFor="player-id" className="block mb-2 font-bold text-sm">
           Player ID
         </label>
         <input
@@ -102,21 +75,18 @@ function Home() {
           type="text"
           value={playerId}
           onChange={handlePlayerIdChange}
+          className="w-full px-3 py-2.5 rounded-md border font-mono"
           style={{
-            width: "100%",
-            padding: "10px",
-            borderRadius: "6px",
-            border: `1px solid ${COLORS.containerBorder}`,
+            borderColor: COLORS.containerBorder,
             backgroundColor: COLORS.container,
             color: COLORS.text,
-            fontFamily: "monospace",
           }}
         />
       </div>
 
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
+      <div className="flex justify-between">
         <Navigation link="/lobby" displayText="Go to Lobby" arrow="forward" />
-        <span style={{}}></span>
+        <span></span>
       </div>
     </div>
   );
