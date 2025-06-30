@@ -122,7 +122,7 @@ function SpecialEventInspect({
         {specialEvent.specialDescription && (
           <div className="flex flex-col gap-2">
             <strong>When achieved...</strong>
-            <p className="m-0 flex items-center">
+            <p className="m-0 flex items-center gap-1">
               {renderTextWithIcons(specialEvent.specialDescription)}
             </p>
           </div>
@@ -131,12 +131,12 @@ function SpecialEventInspect({
         <div className="flex flex-col gap-2">
           <strong>Reward:</strong>
           {specialEvent.specialReward && (
-            <p className="m-0 flex items-center">
+            <p className="m-0 flex items-center gap-1">
               {renderTextWithIcons(specialEvent.specialReward)}
             </p>
           )}
           {specialEvent.value && (
-            <div className="flex items-center justify-center">
+            <div className="flex items-center justify-center gap-1">
               <ResourceIcon type={"coins"} />
               {specialEvent.value}
             </div>

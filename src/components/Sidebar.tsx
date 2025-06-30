@@ -30,35 +30,33 @@ function Sidebar({ gameId }: { gameId: string | undefined }) {
   }
 
   return (
-    <div className="w-sidebar h-screen overflow-y-auto overflow-x-hidden fixed border-r bg-container border-container-border">
-      <div className="p-2">
-        <div className="flex flex-col gap-2">
-          <Navigation
-            link="/lobby"
-            displayText="Back to Lobby"
-            arrow="backward"
-          />
-          <Id id={gameId ?? ""} />
-          <h3 className="font-bold text-lg">
-            {game.turn}'s Turn{" "}
-            {turnStatusText && (
-              <span className="text-sm">({turnStatusText})</span>
-            )}
-          </h3>
-        </div>
-        <hr />
-        <PlayerStatus playerColor={topStatusColor} />
-        <hr />
-        <PlayerStatus playerColor={oppositePlayerOf(topStatusColor)} />
-        <hr />
-        <Controls />
-        <hr />
-        <p>{`Deck size: ${game.deck.length}`}</p>
-        <ResourceBank />
-        <Reveal />
-        <hr />
-        <Log playerColor={topStatusColor} />
+    <div className="w-sidebar h-screen overflow-y-auto overflow-x-hidden fixed border-r bg-container border-container-border p-2 flex flex-col gap-1">
+      <div className="flex flex-col gap-2">
+        <Navigation
+          link="/lobby"
+          displayText="Back to Lobby"
+          arrow="backward"
+        />
+        <Id id={gameId ?? ""} />
+        <h3 className="font-bold text-lg">
+          {game.turn}'s Turn{" "}
+          {turnStatusText && (
+            <span className="text-sm">({turnStatusText})</span>
+          )}
+        </h3>
       </div>
+      <hr />
+      <PlayerStatus playerColor={topStatusColor} />
+      <hr />
+      <PlayerStatus playerColor={oppositePlayerOf(topStatusColor)} />
+      <hr />
+      <Controls />
+      <hr />
+      <p>{`Deck size: ${game.deck.length}`}</p>
+      <ResourceBank />
+      <Reveal />
+      <hr />
+      <Log playerColor={topStatusColor} />
     </div>
   );
 }
