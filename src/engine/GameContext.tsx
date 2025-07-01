@@ -1,18 +1,22 @@
 import { doc, getFirestore, onSnapshot, setDoc } from "firebase/firestore";
 import { createContext, useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import { cardFrequencies, rawCards } from "../assets/data/cards";
 import { events } from "../assets/data/events";
 import { journeys } from "../assets/data/journey";
 import { locations } from "../assets/data/locations";
 import { specialEvents } from "../assets/data/specialEvents";
+import { pickNRandom, shuffleArray } from "../utils/math";
 import * as Actions from "./gameActions";
 import {
   FIRST_PLAYER_HAND_SIZE,
   MAX_MEADOW_SIZE,
   SECOND_PLAYER_HAND_SIZE,
 } from "./gameConstants";
-import { defaultPlayer, defaultPlayerCount } from "./gameDefaults";
+import {
+  defaultGameState,
+  defaultPlayer,
+  defaultPlayerCount,
+} from "./gameDefaults";
 import {
   Card,
   Event,
@@ -22,7 +26,6 @@ import {
   ResourceCount,
   SpecialEvent,
 } from "./gameTypes";
-import { pickNRandom, shuffleArray } from "../utils/math";
 
 let actionQueue = Promise.resolve();
 
@@ -61,8 +64,8 @@ export function setupGame(firstPlayer: PlayerColor): GameState {
   }));
   const newSpecialEvents: SpecialEvent[] = pickNRandom(
     4,
-    specialEvents.map((se) => ({
-      ...se,
+    specialEvents.map((specialEvent) => ({
+      ...specialEvent,
       used: false,
       workers: defaultPlayerCount,
     })),
@@ -92,7 +95,6 @@ export function setupGame(firstPlayer: PlayerColor): GameState {
     turn: firstPlayer,
   };
 }
-const defaultState = setupGame("Red");
 
 const noop = (..._: any[]) => {};
 
@@ -172,7 +174,7 @@ const GameContext = createContext<{
   ) => void;
   harvest: (playerId: string | null) => void;
 }>({
-  game: defaultState,
+  game: defaultGameState,
   endTurn: noop,
   setDiscarding: noop,
   setPlaying: noop,
@@ -197,33 +199,6 @@ const GameContext = createContext<{
   giveResources: noop,
   harvest: noop,
 });
-
-export const GameProviderLoader = ({
-  children,
-}: {
-  children: React.ReactNode;
-}) => {
-  const { gameId } = useParams();
-  const [game, setGame] = useState<GameState | null>(null);
-
-  useEffect(() => {
-    if (!gameId) return;
-    const dbRef = doc(getFirestore(), `games/${gameId}`);
-    const unsubscribe = onSnapshot(dbRef, (snapshot) => {
-      const data = snapshot.data();
-      if (data) setGame(data as GameState);
-    });
-    return () => unsubscribe();
-  }, [gameId]);
-
-  if (!game || !gameId) return <div>Loading game...</div>;
-
-  return (
-    <GameProvider game={game} gameId={gameId}>
-      {children}
-    </GameProvider>
-  );
-};
 
 export const GameProvider = ({
   children,

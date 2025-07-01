@@ -1,5 +1,5 @@
 import { Navigate, Route, Routes } from "react-router-dom";
-import { GameProviderLoader } from "./engine/GameContext";
+import GameProviderLoader from "./server/GameProviderLoader";
 import Game from "./screens/Game";
 import Home from "./screens/Home";
 import Lobby from "./screens/Lobby";

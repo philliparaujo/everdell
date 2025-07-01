@@ -1,5 +1,6 @@
 import {
   EffectType,
+  GameState,
   Player,
   PlayerCount,
   ResourceCount,
@@ -64,6 +65,22 @@ export const defaultPlayer: Player = {
   },
 };
 
+export const defaultGameState: GameState = {
+  players: {
+    Red: defaultPlayer,
+    Blue: defaultPlayer,
+  },
+  deck: [],
+  discard: [],
+  meadow: [],
+  reveal: [],
+  locations: [],
+  journeys: [],
+  events: [],
+  specialEvents: [],
+  turn: "Red",
+};
+
 export const RESOURCE_ORDER: ResourceType[] = [
   "twigs",
   "resin",
@@ -73,6 +90,7 @@ export const RESOURCE_ORDER: ResourceType[] = [
   "cards",
   "wildcards",
 ];
+
 export const EFFECT_ORDER: EffectType[] = [
   "Blue",
   "Green",
