@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
+import Navigation from "../components/Navigation";
 import {
   getPlayerId,
   getPlayerName,
   storePlayerId,
   storePlayerName,
 } from "../engine/helpers";
-import Navigation from "../components/Navigation";
 
 function Home() {
   const [name, setName] = useState(() => {

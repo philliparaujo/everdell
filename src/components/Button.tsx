@@ -25,7 +25,7 @@ const Button: React.FC<ButtonProps> = ({
   };
 
   const baseClasses =
-    "text-button-text border border-button-border cursor-pointer disabled:cursor-auto disabled:opacity-40 transition-all duration-100 ease-in-out hover:enabled:scale-102 hover:enabled:brightness-105 rounded-[4px] text-sm px-1 py-0";
+    "text-button-text border border-button-border cursor-pointer disabled:cursor-auto disabled:opacity-40 transition-all duration-100 ease-in-out hover:enabled:scale-[102%] hover:enabled:brightness-105 rounded-[4px] text-sm px-1 py-0";
 
   return (
     <button

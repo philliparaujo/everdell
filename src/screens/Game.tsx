@@ -8,6 +8,7 @@ import JourneysDisplay from "../components/JourneysDisplay";
 import LocationsDisplay from "../components/LocationsDisplay";
 import Meadow from "../components/Meadow";
 import Sidebar from "../components/Sidebar";
+import SpecialEventsDisplay from "../components/SpecialEventsDisplay";
 import { useGame } from "../engine/GameContext";
 import {
   getPlayerColor,
@@ -15,7 +16,45 @@ import {
   oppositePlayerOf,
   tailwindPlayerColor,
 } from "../engine/helpers";
-import SpecialEventsDisplay from "../components/SpecialEventsDisplay";
+
+const HalfSection = ({
+  title,
+  children,
+}: {
+  title: React.ReactNode;
+  children: React.ReactNode;
+}) => {
+  return (
+    <section className="flex-0-1-auto min-w-0 overflow-x-auto">
+      <h3 className="flex items-center gap-0.5 font-bold">{title}</h3>
+      <div
+        className="flex flex-1 overflow-y-hidden"
+        style={{ scrollbarWidth: "thin" }}
+      >
+        {children}
+      </div>
+    </section>
+  );
+};
+
+const FullSection = ({
+  title,
+  titleColor = "",
+  children,
+}: {
+  title: React.ReactNode;
+  titleColor?: string;
+  children: React.ReactNode;
+}) => {
+  return (
+    <section>
+      <h3 className={`flex items-center gap-0.5 font-bold ${titleColor}`}>
+        {title}
+      </h3>
+      {children}
+    </section>
+  );
+};
 
 function Game() {
   const { game } = useGame();
@@ -39,109 +78,71 @@ function Game() {
       <div className="flex-1 p-4 flex flex-col gap-3 min-w-0 bg-play-area ml-sidebar">
         {/* --- Two Column Rows --- */}
         <div className="flex gap-8">
-          <section className="flex-0-1-auto min-w-0 overflow-x-auto">
-            <h3 className="flex items-center gap-0.5 font-bold">Locations</h3>
-            <div
-              className="flex flex-1 overflow-y-hidden"
-              style={{ scrollbarWidth: "thin" }}
-            >
-              <LocationsDisplay />
-            </div>
-          </section>
+          <HalfSection title="Locations">
+            <LocationsDisplay />
+          </HalfSection>
 
           {game.players[game.turn].season === "Autumn" && (
-            <section className="flex-0-1-auto min-w-0 overflow-x-auto">
-              <h3 className="flex items-center gap-0.5 font-bold">Journeys</h3>
-              <div
-                className="flex flex-1 overflow-y-hidden"
-                style={{ scrollbarWidth: "thin" }}
-              >
-                <JourneysDisplay />
-              </div>
-            </section>
+            <HalfSection title="Journeys">
+              <JourneysDisplay />
+            </HalfSection>
           )}
         </div>
 
         <div className="flex gap-8">
-          <section className="flex-0-1-auto min-w-0 overflow-x-auto">
-            <h3 className="flex items-center gap-0.5 font-bold">
-              Basic Events
-            </h3>
-            <div
-              className="flex flex-1 overflow-y-hidden"
-              style={{ scrollbarWidth: "thin" }}
-            >
-              <EventsDisplay />
-            </div>
-          </section>
+          <HalfSection title="Basic Events">
+            <EventsDisplay />
+          </HalfSection>
 
-          <section className="flex-0-1-auto min-w-0 overflow-x-auto">
-            <h3 className="flex items-center gap-0.5 font-bold">
-              Special Events
-            </h3>
-            <div
-              className="flex flex-1 overflow-y-hidden"
-              style={{ scrollbarWidth: "thin" }}
-            >
-              <SpecialEventsDisplay />
-            </div>
-          </section>
+          <HalfSection title="Special Events">
+            <SpecialEventsDisplay />
+          </HalfSection>
         </div>
 
         {/* --- Full Width Rows --- */}
         {!spectating && (
-          <section>
-            <h3
-              className={`flex items-center gap-0.5 font-bold ${tailwindPlayerColor(playerColor)}`}
-            >
-              Hand
-            </h3>
-            <div>
-              <Hand color={playerColor} />
-            </div>
-          </section>
+          <FullSection
+            title="Hand"
+            titleColor={tailwindPlayerColor(playerColor)}
+          >
+            <Hand color={playerColor} />
+          </FullSection>
         )}
 
-        <section>
-          <h3 className="flex items-center gap-0.5 font-bold">Meadow</h3>
-          <div>
-            <Meadow />
-          </div>
-        </section>
+        <FullSection title="Meadow">
+          <Meadow />
+        </FullSection>
 
-        <section>
-          <h3
-            className={`flex items-center gap-0.5 font-bold ${tailwindPlayerColor(playerColor)}`}
-          >
-            {spectating ? `${playerColor}'s` : "My"} City (
-            <ResourceIcon type={"coins"} />{" "}
-            {player.city.reduce((acc, curr) => acc + curr.value, 0)})
-          </h3>
-          <div>
-            <City color={playerColor} />
-          </div>
-        </section>
+        <FullSection
+          title={
+            <>
+              {spectating ? `${playerColor}'s` : "My"} City (
+              <ResourceIcon type={"coins"} />{" "}
+              {player.city.reduce((acc, curr) => acc + curr.value, 0)})
+            </>
+          }
+          titleColor={tailwindPlayerColor(playerColor)}
+        >
+          <City color={playerColor} />
+        </FullSection>
 
-        <section>
-          <h3
-            className={`flex items-center gap-0.5 font-bold ${tailwindPlayerColor(oppositePlayerOf(playerColor))}`}
-          >
-            {spectating ? `${oppositePlayerOf(playerColor)}'s` : "Opponent"}{" "}
-            City (
-            <ResourceIcon type={"coins"} />{" "}
-            {oppositePlayer.city.reduce((acc, curr) => acc + curr.value, 0)})
-          </h3>
-          <div>
-            <City color={oppositePlayerOf(playerColor)} />
-          </div>
-        </section>
+        <FullSection
+          title={
+            <>
+              {spectating ? `${oppositePlayerOf(playerColor)}'s` : "Opponent"}{" "}
+              City (
+              <ResourceIcon type={"coins"} />{" "}
+              {oppositePlayer.city.reduce((acc, curr) => acc + curr.value, 0)})
+            </>
+          }
+          titleColor={tailwindPlayerColor(oppositePlayerOf(playerColor))}
+        >
+          <City color={oppositePlayerOf(playerColor)} />
+        </FullSection>
 
-        <section>
-          <h3 className="flex items-center gap-0.5 font-bold">Discard</h3>
-          <div>
-            <Discard />
-          </div>
-        </section>
+        <FullSection title="Discard">
+          <Discard />
+        </FullSection>
       </div>
     </div>
   );

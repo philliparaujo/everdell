@@ -7,44 +7,16 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
-import { setupGame } from "../engine/GameContext";
-import { GameState, Player, PlayerColor } from "../engine/gameTypes";
-import { db } from "../server/firebase";
-import { useEffect, useState } from "react";
-import { getPlayerId, getPlayerName } from "../engine/helpers";
 import Button from "../components/Button";
+import GameList from "../components/GameList";
 import Navigation from "../components/Navigation";
-import Id from "../components/Id";
-
-const GamePlayerDisplay = ({
-  player,
-  isYou,
-}: {
-  player: Player;
-  isYou: boolean;
-}) => {
-  const color = player.color;
-  const displayName = !player.id
-    ? color
-    : `${isYou ? "(Me) " : ""}${player.name}`;
-  const displayId = !player.id ? "Open Slot" : player.id;
-
-  const playerColorClass: Record<PlayerColor, string> = {
-    Red: "text-player-red",
-    Blue: "text-player-blue",
-  };
-
-  return (
-    <div>
-      <div className={`font-bold ${playerColorClass[color]}`}>
-        {displayName}
-      </div>
-      <Id id={displayId} />
-    </div>
-  );
-};
+import { setupGame } from "../engine/GameContext";
+import { GameState, PlayerColor } from "../engine/gameTypes";
+import { getPlayerId, getPlayerName } from "../engine/helpers";
+import { db } from "../server/firebase";
 
 function Lobby() {
   const navigate = useNavigate();
@@ -54,7 +26,7 @@ function Lobby() {
   const [name] = useState(() => getPlayerName() || "");
   const [playerId] = useState(() => getPlayerId() || null);
 
-  const isDisabled = !playerId || !name;
+  const isDisabled = !playerId;
 
   const startGame = async () => {
     if (isDisabled) return;
@@ -122,23 +94,25 @@ function Lobby() {
     setGameList((prev) => prev.filter((g) => g.id !== gameId));
   };
 
+  const fetchGames = async () => {
+    const snapshot = await getDocs(collection(db, "games"));
+    const games: { id: string; game: GameState }[] = snapshot.docs.map(
+      (doc) => ({
+        id: doc.id,
+        game: doc.data() as GameState,
+      }),
+    );
+    setGameList(games);
+  };
+
   useEffect(() => {
-    const fetchGames = async () => {
-      const snapshot = await getDocs(collection(db, "games"));
-      const games: { id: string; game: GameState }[] = snapshot.docs.map(
-        (doc) => ({
-          id: doc.id,
-          game: doc.data() as GameState,
-        }),
-      );
-      setGameList(games);
-    };
     fetchGames();
   }, []);
 
   return (
     <div className="max-w-7xl mx-auto p-4 flex flex-col h-screen">
       <div className="flex-shrink-0">
+        {/* Header */}
         <div className="flex justify-between items-center flex-wrap mb-8">
           <div>
             <span>
@@ -158,6 +132,7 @@ function Lobby() {
           </div>
         </div>
 
+        {/* Title and start button */}
         <h2 className="mb-4 text-lg font-bold">Available Games</h2>
 
         <div className="mb-4">
@@ -169,84 +144,15 @@ function Lobby() {
         {gameList.length === 0 && <p className="italic">No games found.</p>}
       </div>
 
-      {/* Game List Grid */}
-      <ul className="list-none p-0 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 overflow-y-auto pr-2 ">
-        {gameList.map(({ id, game }) => {
-          const redPlayer = game.players.Red;
-          const bluePlayer = game.players.Blue;
-
-          const isPlayerInGame =
-            playerId && [redPlayer.id, bluePlayer.id].includes(playerId);
-          const canJoinRed = !redPlayer.id;
-          const canJoinBlue = !bluePlayer.id;
-
-          return (
-            <li
-              key={id}
-              className="border-container-border bg-container rounded-lg p-4 flex flex-col gap-4"
-            >
-              <div className="flex items-baseline gap-1">
-                <strong>Game ID:</strong>
-                <Id id={id} />
-              </div>
-
-              <div className="flex justify-between min-h-[40px]">
-                <GamePlayerDisplay
-                  player={redPlayer}
-                  isYou={playerId === redPlayer.id}
-                />
-                <GamePlayerDisplay
-                  player={bluePlayer}
-                  isYou={playerId === bluePlayer.id}
-                />
-              </div>
-
-              <div className="flex justify-between items-end gap-3 mt-auto pt-3 border-t border-container-border">
-                <div className="flex gap-2 flex-wrap">
-                  {canJoinRed && !isPlayerInGame && (
-                    <Button
-                      onClick={() => handleJoinGame(id, "Red")}
-                      disabled={isDisabled}
-                      variant="important"
-                    >
-                      Join as Red
-                    </Button>
-                  )}
-                  {canJoinBlue && !isPlayerInGame && (
-                    <Button
-                      onClick={() => handleJoinGame(id, "Blue")}
-                      disabled={isDisabled}
-                      variant="important"
-                    >
-                      Join as Blue
-                    </Button>
-                  )}
-                  {isPlayerInGame && (
-                    <Button
-                      onClick={() => handleRejoinGame(id)}
-                      variant="important"
-                    >
-                      Rejoin
-                    </Button>
-                  )}
-                  {!isPlayerInGame && (
-                    <Button onClick={() => handleSpectateGame(id)}>
-                      Spectate
-                    </Button>
-                  )}
-                  <Button
-                    onClick={() => handleDeleteGame(id)}
-                    disabled={isDisabled}
-                    variant="danger"
-                  >
-                    Delete
-                  </Button>
-                </div>
-              </div>
-            </li>
-          );
-        })}
-      </ul>
+      {/* Game list grid */}
+      <GameList
+        list={gameList}
+        playerId={playerId}
+        onJoinGame={handleJoinGame}
+        onRejoinGame={handleRejoinGame}
+        onSpectateGame={handleSpectateGame}
+        onDeleteGame={handleDeleteGame}
+      />
     </div>
   );
 }

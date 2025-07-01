@@ -3,8 +3,15 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { cardFrequencies, rawCards } from "../assets/data/cards";
 import { events } from "../assets/data/events";
+import { journeys } from "../assets/data/journey";
 import { locations } from "../assets/data/locations";
+import { specialEvents } from "../assets/data/specialEvents";
 import * as Actions from "./gameActions";
+import {
+  FIRST_PLAYER_HAND_SIZE,
+  MAX_MEADOW_SIZE,
+  SECOND_PLAYER_HAND_SIZE,
+} from "./gameConstants";
 import {
   Card,
   defaultPlayer,
@@ -16,13 +23,6 @@ import {
   SpecialEvent,
 } from "./gameTypes";
 import { pickFourSpecialEvents, shuffleArray } from "./helpers";
-import { journeys } from "../assets/data/journey";
-import { specialEvents } from "../assets/data/specialEvents";
-import {
-  FIRST_PLAYER_HAND_SIZE,
-  MAX_MEADOW_SIZE,
-  SECOND_PLAYER_HAND_SIZE,
-} from "./gameConstants";
 
 let actionQueue = Promise.resolve();
 
