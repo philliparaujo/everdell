@@ -15,8 +15,8 @@ import GameList from "../components/GameList";
 import Navigation from "../components/Navigation";
 import { setupGame } from "../engine/GameContext";
 import { GameState, PlayerColor } from "../engine/gameTypes";
-import { getPlayerId, getPlayerName } from "../engine/helpers";
 import { db } from "../server/firebase";
+import { getPlayerId, getPlayerName } from "../utils/identity";
 
 function Lobby() {
   const navigate = useNavigate();

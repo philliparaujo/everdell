@@ -4,11 +4,11 @@ import {
   canGiveToSelf,
   canRevealDeck,
   canRevealDiscard,
-  getPlayerId,
   isNotYourTurn,
   isSafeToEndTurn,
   oppositePlayerOf,
-} from "../engine/helpers";
+} from "../utils/gameLogic";
+import { getPlayerId } from "../utils/identity";
 import Button from "./Button";
 
 function Controls() {

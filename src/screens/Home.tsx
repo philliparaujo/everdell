@@ -6,7 +6,7 @@ import {
   getPlayerName,
   storePlayerId,
   storePlayerName,
-} from "../engine/helpers";
+} from "../utils/identity";
 
 function Home() {
   const [name, setName] = useState(() => {

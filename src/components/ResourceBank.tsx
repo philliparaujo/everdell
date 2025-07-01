@@ -1,12 +1,13 @@
 import { useGame } from "../engine/GameContext";
-import { defaultResources, ResourceType } from "../engine/gameTypes";
+import { defaultResources } from "../engine/gameDefaults";
+import { ResourceType } from "../engine/gameTypes";
 import {
   canGiveResources,
-  getPlayerId,
   isNotYourTurn,
-  mapOverResources,
   oppositePlayerOf,
-} from "../engine/helpers";
+} from "../utils/gameLogic";
+import { getPlayerId } from "../utils/identity";
+import { mapOverResources } from "../utils/loops";
 import Button from "./Button";
 import { ResourceIcon } from "./Icons";
 

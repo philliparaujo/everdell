@@ -10,12 +10,9 @@ import Meadow from "../components/Meadow";
 import Sidebar from "../components/Sidebar";
 import SpecialEventsDisplay from "../components/SpecialEventsDisplay";
 import { useGame } from "../engine/GameContext";
-import {
-  getPlayerColor,
-  getPlayerId,
-  oppositePlayerOf,
-  tailwindPlayerColor,
-} from "../engine/helpers";
+import { oppositePlayerOf } from "../utils/gameLogic";
+import { getPlayerColor, getPlayerId } from "../utils/identity";
+import { stylePlayerColor } from "../utils/tailwind";
 
 const HalfSection = ({
   title,
@@ -101,10 +98,7 @@ function Game() {
 
         {/* --- Full Width Rows --- */}
         {!spectating && (
-          <FullSection
-            title="Hand"
-            titleColor={tailwindPlayerColor(playerColor)}
-          >
+          <FullSection title="Hand" titleColor={stylePlayerColor(playerColor)}>
             <Hand color={playerColor} />
           </FullSection>
         )}
@@ -121,7 +115,7 @@ function Game() {
               {player.city.reduce((acc, curr) => acc + curr.value, 0)})
             </>
           }
-          titleColor={tailwindPlayerColor(playerColor)}
+          titleColor={stylePlayerColor(playerColor)}
         >
           <City color={playerColor} />
         </FullSection>
@@ -135,7 +129,7 @@ function Game() {
               {oppositePlayer.city.reduce((acc, curr) => acc + curr.value, 0)})
             </>
           }
-          titleColor={tailwindPlayerColor(oppositePlayerOf(playerColor))}
+          titleColor={stylePlayerColor(oppositePlayerOf(playerColor))}
         >
           <City color={oppositePlayerOf(playerColor)} />
         </FullSection>

@@ -3,9 +3,9 @@ import { Card } from "../engine/gameTypes";
 import {
   canRevealDeck,
   canRevealDiscard,
-  getPlayerId,
   oppositePlayerOf,
-} from "../engine/helpers";
+} from "../utils/gameLogic";
+import { getPlayerId } from "../utils/identity";
 import CardPreview from "./CardPreview";
 
 function Reveal() {

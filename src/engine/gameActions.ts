@@ -1,29 +1,29 @@
 import {
-  MAX_HAND_SIZE,
-  MAX_MEADOW_SIZE,
-  MAX_REVEAL_SIZE,
-} from "./gameConstants";
-import {
-  Card,
-  defaultResources,
-  GameState,
-  Player,
-  PlayerColor,
-  Resources,
-  Season,
-} from "./gameTypes";
-import {
   canVisitCardInCity,
   canVisitEvent,
   canVisitJourney,
   canVisitLocation,
   canVisitSpecialEvent,
-  getPlayerColor,
+  computeMaxCitySize,
   isSafeToEndTurn,
-  maxCitySize,
   oppositePlayerOf,
-  partition,
-} from "./helpers";
+} from "../utils/gameLogic";
+import { getPlayerColor } from "../utils/identity";
+import { partition } from "../utils/math";
+import {
+  MAX_HAND_SIZE,
+  MAX_MEADOW_SIZE,
+  MAX_REVEAL_SIZE,
+} from "./gameConstants";
+import { defaultResources } from "./gameDefaults";
+import {
+  Card,
+  GameState,
+  Player,
+  PlayerColor,
+  ResourceCount,
+  Season,
+} from "./gameTypes";
 
 export function endTurn(state: GameState, playerId: string | null): GameState {
   const playerColor = getPlayerColor(state, playerId);
@@ -778,8 +778,8 @@ export function playSelectedCards(
 
   const oppositeCity = [...oppositePlayer.city, ...otherPlayedCards];
 
-  if (myCity.length > maxCitySize(myCity)) return state;
-  if (oppositeCity.length > maxCitySize(oppositeCity)) return state;
+  if (myCity.length > computeMaxCitySize(myCity)) return state;
+  if (oppositeCity.length > computeMaxCitySize(oppositeCity)) return state;
 
   const mySortedCity = myCity
     .sort((a, b) => (a.name < b.name ? -1 : 1))
@@ -973,7 +973,7 @@ export function addResourcesToCardInCity(
   playerId: string | null,
   cityColor: PlayerColor,
   index: number,
-  resources: Resources,
+  resources: ResourceCount,
 ): GameState {
   const playerColor = getPlayerColor(state, playerId);
   if (playerColor === null) return state;
@@ -984,11 +984,11 @@ export function addResourcesToCardInCity(
   const card = state.players[cityColor].city[index];
   if (card.storage === null) return state;
 
-  const updatedStorage: Resources = { ...card.storage };
+  const updatedStorage: ResourceCount = { ...card.storage };
 
   for (const key in resources) {
     if (Object.prototype.hasOwnProperty.call(resources, key)) {
-      const typedKey = key as keyof Resources;
+      const typedKey = key as keyof ResourceCount;
       updatedStorage[typedKey] += resources[typedKey];
       updatedStorage[typedKey] = Math.max(0, updatedStorage[typedKey]);
     }
@@ -1055,20 +1055,20 @@ export function toggleOccupiedCardInCity(
 export function addResourcesToSelf(
   state: GameState,
   playerId: string | null,
-  resources: Resources,
+  resources: ResourceCount,
 ): GameState {
   const playerColor = getPlayerColor(state, playerId);
   if (playerColor === null) return state;
   if (playerColor !== state.turn) return state;
 
   const player = state.players[playerColor];
-  const updatedResources: Resources = { ...player.resources };
+  const updatedResources: ResourceCount = { ...player.resources };
 
   let updatedState = { ...state };
 
   for (const key in resources) {
     if (Object.prototype.hasOwnProperty.call(resources, key)) {
-      const typedKey = key as keyof Resources;
+      const typedKey = key as keyof ResourceCount;
 
       if (typedKey === "cards") {
         for (let i = 0; i < resources.cards; i++) {
@@ -1096,7 +1096,7 @@ export function addResourcesToSelf(
 export function giveResources(
   state: GameState,
   playerId: string | null,
-  resources: Resources,
+  resources: ResourceCount,
   toColor: PlayerColor,
 ): GameState {
   const playerColor = getPlayerColor(state, playerId);
@@ -1107,12 +1107,12 @@ export function giveResources(
   const playerTo = state.players[toColor];
   if (player === playerTo) return state;
 
-  const updatedResources: Resources = { ...player.resources };
-  const updatedToResources: Resources = { ...playerTo.resources };
+  const updatedResources: ResourceCount = { ...player.resources };
+  const updatedToResources: ResourceCount = { ...playerTo.resources };
 
   for (const key in resources) {
     if (Object.prototype.hasOwnProperty.call(resources, key)) {
-      const typedKey = key as keyof Resources;
+      const typedKey = key as keyof ResourceCount;
       const amount = resources[typedKey];
 
       if (amount <= 0) continue;

@@ -1,11 +1,7 @@
 import { useGame } from "../engine/GameContext";
 import { Event } from "../engine/gameTypes";
-import {
-  canVisitEvent,
-  getPlayerColor,
-  getPlayerId,
-  isNotYourTurn,
-} from "../engine/helpers";
+import { canVisitEvent, isNotYourTurn } from "../utils/gameLogic";
+import { getPlayerColor, getPlayerId } from "../utils/identity";
 import { EffectTypeIcon, ResourceIcon } from "./Icons";
 import {
   BaseLocationDisplay,

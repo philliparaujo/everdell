@@ -1,17 +1,19 @@
 import { ReactNode } from "react";
 import { useGame } from "../engine/GameContext";
-import { Card, Event, Journey, SpecialEvent } from "../engine/gameTypes";
-import { Location, ResourceType } from "../engine/gameTypes";
 import {
-  canVisitLocation,
-  getPlayerColor,
-  getPlayerId,
-  isNotYourTurn,
-  mapOverResources,
-  tailwindLocationBorderColor,
-} from "../engine/helpers";
-import { ResourceIcon, WorkerIcon } from "./Icons";
+  Card,
+  Event,
+  Journey,
+  Location,
+  ResourceType,
+  SpecialEvent,
+} from "../engine/gameTypes";
+import { canVisitLocation, isNotYourTurn } from "../utils/gameLogic";
+import { getPlayerColor, getPlayerId } from "../utils/identity";
+import { mapOverResources } from "../utils/loops";
+import { styleLocationBorderColor } from "../utils/tailwind";
 import Button from "./Button";
+import { ResourceIcon, WorkerIcon } from "./Icons";
 
 export function renderButtons(
   visitDisabled: boolean,
@@ -69,7 +71,7 @@ export function BaseLocationDisplay({
 }) {
   return (
     <div
-      className={`flex flex-col rounded-lg items-center text-center border-2 bg-location-default ${tailwindLocationBorderColor(used, exclusive)}`}
+      className={`flex flex-col rounded-lg items-center text-center border-2 bg-location-default ${styleLocationBorderColor(used, exclusive)}`}
       style={{
         width: wide ? "150px" : "96px",
       }}

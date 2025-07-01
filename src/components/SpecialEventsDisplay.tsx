@@ -1,12 +1,8 @@
 import { useGame } from "../engine/GameContext";
 import { EffectType, SpecialEvent } from "../engine/gameTypes";
-import {
-  canVisitSpecialEvent,
-  getPlayerColor,
-  getPlayerId,
-  isNotYourTurn,
-  mapOverEffectTypes,
-} from "../engine/helpers";
+import { canVisitSpecialEvent, isNotYourTurn } from "../utils/gameLogic";
+import { getPlayerColor, getPlayerId } from "../utils/identity";
+import { mapOverEffectTypes } from "../utils/loops";
 import Hoverable from "./Hoverable";
 import { EffectTypeIcon } from "./Icons";
 import {

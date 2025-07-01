@@ -1,8 +1,6 @@
 import { Card, PlayerColor, ResourceType } from "../engine/gameTypes";
-import {
-  mapOverResources,
-  tailwindCardPreviewBorderColor,
-} from "../engine/helpers";
+import { mapOverResources } from "../utils/loops";
+import { styleCardPreviewBorderColor } from "../utils/tailwind";
 import CardInspect from "./CardInspect";
 import Hoverable from "./Hoverable";
 import { ResourceIcon, WorkerIcon } from "./Icons";
@@ -45,7 +43,7 @@ function CardPreview({
       }
     >
       <div
-        className={`w-[100px] rounded text-center border-2 flex-none flex flex-col bg-card-preview ${tailwindCardPreviewBorderColor(!!card?.discarding, !!card?.playing, !!card?.giving)}`}
+        className={`w-[100px] rounded text-center border-2 flex-none flex flex-col bg-card-preview ${styleCardPreviewBorderColor(!!card?.discarding, !!card?.playing, !!card?.giving)}`}
         style={{
           height: storable ? "210px" : "170px",
         }}

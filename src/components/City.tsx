@@ -1,6 +1,6 @@
 import { useGame } from "../engine/GameContext";
 import { PlayerColor } from "../engine/gameTypes";
-import { getPlayerId } from "../engine/helpers";
+import { getPlayerId } from "../utils/identity";
 import CardRow from "./CardRow";
 
 function City({ color }: { color: PlayerColor }) {

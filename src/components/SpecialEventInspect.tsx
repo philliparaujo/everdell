@@ -1,15 +1,9 @@
 import { useGame } from "../engine/GameContext";
+import { EFFECT_ORDER, RESOURCE_ORDER } from "../engine/gameDefaults";
 import { EffectType, ResourceType, SpecialEvent } from "../engine/gameTypes";
-import {
-  canVisitSpecialEvent,
-  EFFECT_ORDER,
-  getPlayerColor,
-  getPlayerId,
-  isNotYourTurn,
-  listCardNames,
-  mapOverEffectTypes,
-  RESOURCE_ORDER,
-} from "../engine/helpers";
+import { canVisitSpecialEvent, isNotYourTurn } from "../utils/gameLogic";
+import { getPlayerColor, getPlayerId } from "../utils/identity";
+import { listCardNames, mapOverEffectTypes } from "../utils/loops";
 import { EffectTypeIcon, ResourceIcon } from "./Icons";
 import Inspectable from "./Inspectable";
 import { renderButtons, renderWorkers } from "./LocationsDisplay";

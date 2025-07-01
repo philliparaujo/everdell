@@ -1,10 +1,11 @@
+import { defaultEffectTypeCount } from "../../engine/gameDefaults";
 import { SpecialEvent } from "../../engine/gameTypes";
 
 export const specialEvents: Omit<SpecialEvent, "used" | "workers">[] = [
   {
     name: "Under New Management",
     cardRequirement: ["Peddler", "General Store"],
-    effectTypeRequirement: { Blue: 0, Green: 0, Purple: 0, Red: 0, Tan: 0 },
+    effectTypeRequirement: defaultEffectTypeCount,
     specialDescription: "You may place up to 3 wildcards here",
     specialReward: "Each berry twig = 1 coin, each resin pebble = 2 coins",
     value: null,
@@ -12,7 +13,7 @@ export const specialEvents: Omit<SpecialEvent, "used" | "workers">[] = [
   {
     name: "A Well Run City",
     cardRequirement: ["Chip Sweep", "Clock Tower"],
-    effectTypeRequirement: { Blue: 0, Green: 0, Purple: 0, Red: 0, Tan: 0 },
+    effectTypeRequirement: defaultEffectTypeCount,
     specialDescription: "Bring back one of your deployed workers",
     specialReward: null,
     value: 4,
@@ -20,7 +21,7 @@ export const specialEvents: Omit<SpecialEvent, "used" | "workers">[] = [
   {
     name: "Path of the Pilgrims",
     cardRequirement: ["Monastery", "Wanderer"],
-    effectTypeRequirement: { Blue: 0, Green: 0, Purple: 0, Red: 0, Tan: 0 },
+    effectTypeRequirement: defaultEffectTypeCount,
     specialDescription: null,
     specialReward: "3 coins for each worker in your Monastery",
     value: null,
@@ -28,7 +29,7 @@ export const specialEvents: Omit<SpecialEvent, "used" | "workers">[] = [
   {
     name: "Remembering the Fallen",
     cardRequirement: ["Cemetery", "Shepherd"],
-    effectTypeRequirement: { Blue: 0, Green: 0, Purple: 0, Red: 0, Tan: 0 },
+    effectTypeRequirement: defaultEffectTypeCount,
     specialDescription: null,
     specialReward: "3 coins for each buried worker in your Cemetery",
     value: null,
@@ -36,7 +37,7 @@ export const specialEvents: Omit<SpecialEvent, "used" | "workers">[] = [
   {
     name: "Performer in Residence",
     cardRequirement: ["Inn", "Bard"],
-    effectTypeRequirement: { Blue: 0, Green: 0, Purple: 0, Red: 0, Tan: 0 },
+    effectTypeRequirement: defaultEffectTypeCount,
     specialDescription: "You may place up to 3 berries here",
     specialReward: "2 coins for each berry on this Event",
     value: null,
@@ -44,7 +45,7 @@ export const specialEvents: Omit<SpecialEvent, "used" | "workers">[] = [
   {
     name: "Croak Wart Cure",
     cardRequirement: ["Undertaker", "Barge Toad"],
-    effectTypeRequirement: { Blue: 0, Green: 0, Purple: 0, Red: 0, Tan: 0 },
+    effectTypeRequirement: defaultEffectTypeCount,
     specialDescription: "Pay 2 berries and discard 2 cards from your city",
     specialReward: null,
     value: 6,
@@ -52,7 +53,7 @@ export const specialEvents: Omit<SpecialEvent, "used" | "workers">[] = [
   {
     name: "Capture of the Acorn Thieves",
     cardRequirement: ["Courthouse", "Ranger"],
-    effectTypeRequirement: { Blue: 0, Green: 0, Purple: 0, Red: 0, Tan: 0 },
+    effectTypeRequirement: defaultEffectTypeCount,
     specialDescription:
       "Place up to 2 Critters from your city face-down beneath this Event",
     specialReward: "3 coins for each Critter beneath this Event",
@@ -61,7 +62,7 @@ export const specialEvents: Omit<SpecialEvent, "used" | "workers">[] = [
   {
     name: "Tax Relief",
     cardRequirement: ["Judge", "Queen"],
-    effectTypeRequirement: { Blue: 0, Green: 0, Purple: 0, Red: 0, Tan: 0 },
+    effectTypeRequirement: defaultEffectTypeCount,
     specialDescription: "Activate your greens",
     specialReward: null,
     value: 3,
@@ -69,7 +70,7 @@ export const specialEvents: Omit<SpecialEvent, "used" | "workers">[] = [
   {
     name: "A Brilliant Marketing Plan",
     cardRequirement: ["Shopkeeper", "Post Office"],
-    effectTypeRequirement: { Blue: 0, Green: 0, Purple: 0, Red: 0, Tan: 0 },
+    effectTypeRequirement: defaultEffectTypeCount,
     specialDescription: "You may give opponents up to a total of 3 wildcards",
     specialReward: "For each donation, gain 2 coins",
     value: null,
@@ -77,7 +78,7 @@ export const specialEvents: Omit<SpecialEvent, "used" | "workers">[] = [
   {
     name: "Ministering to Miscreants",
     cardRequirement: ["Monk", "Dungeon"],
-    effectTypeRequirement: { Blue: 0, Green: 0, Purple: 0, Red: 0, Tan: 0 },
+    effectTypeRequirement: defaultEffectTypeCount,
     specialDescription: null,
     specialReward: "3 coins for each prisoner in your Dungeon",
     value: null,
@@ -85,7 +86,7 @@ export const specialEvents: Omit<SpecialEvent, "used" | "workers">[] = [
   {
     name: "Graduation of Scholars",
     cardRequirement: ["Teacher", "University"],
-    effectTypeRequirement: { Blue: 0, Green: 0, Purple: 0, Red: 0, Tan: 0 },
+    effectTypeRequirement: defaultEffectTypeCount,
     specialDescription:
       "You may place up to 3 Critters from your hand beneath this Event",
     specialReward: "2 coins for each Critter beneath this Event",
@@ -94,7 +95,7 @@ export const specialEvents: Omit<SpecialEvent, "used" | "workers">[] = [
   {
     name: "Pristine Chapel Ceiling",
     cardRequirement: ["Woodcarver", "Chapel"],
-    effectTypeRequirement: { Blue: 0, Green: 0, Purple: 0, Red: 0, Tan: 0 },
+    effectTypeRequirement: defaultEffectTypeCount,
     specialDescription:
       "Draw 1 card and receive 1 wildcard for each coin on your Chapel",
     specialReward: "2 coins for each coin on your Chapel",
@@ -111,7 +112,7 @@ export const specialEvents: Omit<SpecialEvent, "used" | "workers">[] = [
   {
     name: "Ancient Scrolls Discovered",
     cardRequirement: ["Historian", "Ruins"],
-    effectTypeRequirement: { Blue: 0, Green: 0, Purple: 0, Red: 0, Tan: 0 },
+    effectTypeRequirement: defaultEffectTypeCount,
     specialDescription:
       "Reveal 5 cards. You may draw any or place any beneath this Event",
     specialReward: "1 coin for each card beneath this Event",
@@ -120,7 +121,7 @@ export const specialEvents: Omit<SpecialEvent, "used" | "workers">[] = [
   {
     name: "An Evening of Fireworks",
     cardRequirement: ["Lookout", "Miner Mole"],
-    effectTypeRequirement: { Blue: 0, Green: 0, Purple: 0, Red: 0, Tan: 0 },
+    effectTypeRequirement: defaultEffectTypeCount,
     specialDescription: "You may place up to 3 twigs here",
     specialReward: "2 coins for each twig on this Event",
     value: null,
@@ -128,7 +129,7 @@ export const specialEvents: Omit<SpecialEvent, "used" | "workers">[] = [
   {
     name: "Flying Doctor Service",
     cardRequirement: ["Doctor", "Postal Pigeon"],
-    effectTypeRequirement: { Blue: 0, Green: 0, Purple: 0, Red: 0, Tan: 0 },
+    effectTypeRequirement: defaultEffectTypeCount,
     specialDescription: null,
     specialReward: "3 coins for each Husband/Wife pair in every city",
     value: null,

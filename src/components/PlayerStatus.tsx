@@ -1,13 +1,10 @@
 import { MAX_HAND_SIZE } from "../engine/gameConstants";
 import { useGame } from "../engine/GameContext";
 import { PlayerColor, ResourceType } from "../engine/gameTypes";
-import {
-  getPlayerId,
-  mapOverResources,
-  maxCitySize,
-  tailwindPlayerColor,
-  tailwindSeasonColor,
-} from "../engine/helpers";
+import { computeMaxCitySize } from "../utils/gameLogic";
+import { getPlayerId } from "../utils/identity";
+import { mapOverResources } from "../utils/loops";
+import { stylePlayerColor, styleSeasonColor } from "../utils/tailwind";
 import { ResourceIcon, WorkerIcon } from "./Icons";
 import Id from "./Id";
 
@@ -20,7 +17,7 @@ function PlayerStatus({ playerColor }: { playerColor: PlayerColor }) {
   return (
     <div key={playerColor} className="flex flex-col gap-2">
       <div>
-        <strong className={`${tailwindPlayerColor(playerColor)}`}>
+        <strong className={`${stylePlayerColor(playerColor)}`}>
           {storedId === player.id ? "(Me) " : ""}
           {player.name || "Guest"}
         </strong>
@@ -29,7 +26,7 @@ function PlayerStatus({ playerColor }: { playerColor: PlayerColor }) {
       <div className="flex justify-between">
         <div>
           <div>
-            <strong className={`${tailwindSeasonColor(player.season)}`}>
+            <strong className={`${styleSeasonColor(player.season)}`}>
               {player.season}
             </strong>
           </div>
@@ -43,7 +40,7 @@ function PlayerStatus({ playerColor }: { playerColor: PlayerColor }) {
             Hand: {player.hand.length} / {MAX_HAND_SIZE}
           </div>
           <div>
-            City: {player.city.length} / {maxCitySize(player.city)}
+            City: {player.city.length} / {computeMaxCitySize(player.city)}
           </div>
         </div>
       </div>

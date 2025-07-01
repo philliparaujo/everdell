@@ -1,5 +1,5 @@
 import { Card, PlayerColor } from "../engine/gameTypes";
-import { maxCitySize } from "../engine/helpers";
+import { computeMaxCitySize } from "../utils/gameLogic";
 import CardPreview from "./CardPreview";
 
 function CardRow({
@@ -15,7 +15,7 @@ function CardRow({
   onLeftClick: (index: number, card: Card | null) => void;
   maxLength?: number;
 }) {
-  const rowLength = maxLength ?? maxCitySize(cards);
+  const rowLength = maxLength ?? computeMaxCitySize(cards);
 
   return (
     <div className="flex overflow-y-hidden scrollbar-thin w-full gap-1 px-0 py-1 rounded-[4px]">

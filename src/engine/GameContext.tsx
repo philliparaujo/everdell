@@ -12,17 +12,17 @@ import {
   MAX_MEADOW_SIZE,
   SECOND_PLAYER_HAND_SIZE,
 } from "./gameConstants";
+import { defaultPlayer, defaultPlayerCount } from "./gameDefaults";
 import {
   Card,
-  defaultPlayer,
   Event,
   GameState,
   Location,
   PlayerColor,
-  Resources,
+  ResourceCount,
   SpecialEvent,
 } from "./gameTypes";
-import { pickFourSpecialEvents, shuffleArray } from "./helpers";
+import { pickNRandom, shuffleArray } from "../utils/math";
 
 let actionQueue = Promise.resolve();
 
@@ -52,18 +52,19 @@ export function setupGame(firstPlayer: PlayerColor): GameState {
   // Set up remaining objects
   const newLocations: Location[] = locations.map((location) => ({
     ...location,
-    workers: { Red: 0, Blue: 0 },
+    workers: defaultPlayerCount,
   }));
   const newEvents: Event[] = events.map((event) => ({
     ...event,
     used: false,
-    workers: { Red: 0, Blue: 0 },
+    workers: defaultPlayerCount,
   }));
-  const newSpecialEvents: SpecialEvent[] = pickFourSpecialEvents(
+  const newSpecialEvents: SpecialEvent[] = pickNRandom(
+    4,
     specialEvents.map((se) => ({
       ...se,
       used: false,
-      workers: { Red: 0, Blue: 0 },
+      workers: defaultPlayerCount,
     })),
   );
 
@@ -158,12 +159,15 @@ const GameContext = createContext<{
     playerId: string | null,
     cityColor: PlayerColor,
     index: number,
-    resources: Resources,
+    resources: ResourceCount,
   ) => void;
-  addResourcesToSelf: (playerId: string | null, resources: Resources) => void;
+  addResourcesToSelf: (
+    playerId: string | null,
+    resources: ResourceCount,
+  ) => void;
   giveResources: (
     playerId: string | null,
-    resources: Resources,
+    resources: ResourceCount,
     toColor: PlayerColor,
   ) => void;
   harvest: (playerId: string | null) => void;

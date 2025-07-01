@@ -1,16 +1,13 @@
 import { useGame } from "../engine/GameContext";
-import {
-  getPlayerColor,
-  getPlayerId,
-  oppositePlayerOf,
-} from "../engine/helpers";
+import { oppositePlayerOf } from "../utils/gameLogic";
+import { getPlayerColor, getPlayerId } from "../utils/identity";
 import Controls from "./Controls";
+import Id from "./Id";
 import Log from "./Log";
+import Navigation from "./Navigation";
 import PlayerStatus from "./PlayerStatus";
 import ResourceBank from "./ResourceBank";
 import Reveal from "./Reveal";
-import Navigation from "./Navigation";
-import Id from "./Id";
 
 function Sidebar({ gameId }: { gameId: string | undefined }) {
   const { game } = useGame();

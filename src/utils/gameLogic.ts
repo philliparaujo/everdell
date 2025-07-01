@@ -1,7 +1,6 @@
-import { MAX_MEADOW_SIZE } from "./gameConstants";
+import { MAX_MEADOW_SIZE } from "../engine/gameConstants";
 import {
   Card,
-  defaultResources,
   EffectType,
   Event,
   GameState,
@@ -9,112 +8,9 @@ import {
   Location,
   Player,
   PlayerColor,
-  Resources,
-  ResourceType,
-  Season,
   SpecialEvent,
-} from "./gameTypes";
-
-export const shuffleArray = (array: any[]) => {
-  const newArray = [...array];
-  for (let i = newArray.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
-  }
-  return newArray;
-};
-
-export function partition<T>(
-  arr: T[],
-  predicate: (item: T) => boolean,
-): [T[], T[]] {
-  const keep: T[] = [];
-  const discard: T[] = [];
-  for (const item of arr) {
-    (predicate(item) ? keep : discard).push(item);
-  }
-  return [keep, discard];
-}
-
-export function listCardNames(cardNames: string[]): string {
-  return cardNames.join(", ");
-}
-
-export function storePlayerName(name: string) {
-  console.log("Storing", name);
-  sessionStorage.setItem("playerName", name);
-}
-
-export function storePlayerId(id: string) {
-  console.log("Storing", id);
-  sessionStorage.setItem("playerId", id);
-}
-
-export function getPlayerName(): string | null {
-  return sessionStorage.getItem("playerName");
-}
-
-export function getPlayerId(): string | null {
-  return sessionStorage.getItem("playerId");
-}
-
-export function tailwindPlayerColor(color: PlayerColor): string {
-  return `text-player-${color.toLowerCase()}`;
-}
-
-// Cannot do text-season-${season.toLowerCase()} for compile reasons
-export function tailwindSeasonColor(season: Season): string {
-  switch (season) {
-    case "Winter":
-      return "text-season-winter";
-    case "Spring":
-      return "text-season-spring";
-    case "Summer":
-      return "text-season-summer";
-    case "Autumn":
-      return "text-season-autumn";
-  }
-}
-
-export function tailwindLocationBorderColor(
-  used: boolean,
-  exclusive: boolean,
-): string {
-  if (used) {
-    return "border-location-used";
-  }
-  if (exclusive) {
-    return "border-location-exclusive";
-  }
-  return "border-location-default";
-}
-
-export function tailwindCardPreviewBorderColor(
-  discarding: boolean,
-  playing: boolean,
-  giving: boolean,
-): string {
-  if (discarding) {
-    return "border-cardPreviewOutline-discarding";
-  }
-  if (playing) {
-    return "border-cardPreviewOutline-playing";
-  }
-  if (giving) {
-    return "border-cardPreviewOutline-giving";
-  }
-  return "border-cardPreviewOutline-default";
-}
-
-export function getPlayerColor(
-  game: GameState,
-  playerId: string | null,
-): PlayerColor | null {
-  if (playerId === null) return null;
-  if (playerId === game.players.Red.id) return "Red";
-  if (playerId === game.players.Blue.id) return "Blue";
-  return null;
-}
+} from "../engine/gameTypes";
+import { getPlayerColor } from "./identity";
 
 export function oppositePlayerOf(playerColor: PlayerColor): PlayerColor {
   return playerColor === "Red" ? "Blue" : "Red";
@@ -125,111 +21,6 @@ export function isNotYourTurn(
   playerId: string | null,
 ): boolean {
   return getPlayerColor(game, playerId) !== game.turn;
-}
-
-export const RESOURCE_ORDER: ResourceType[] = [
-  "twigs",
-  "resin",
-  "pebbles",
-  "berries",
-  "coins",
-  "cards",
-  "wildcards",
-];
-export const EFFECT_ORDER: EffectType[] = [
-  "Blue",
-  "Green",
-  "Purple",
-  "Red",
-  "Tan",
-];
-
-export function mapOverResources(
-  resources: Resources,
-  onMap: (key: ResourceType, val: number) => React.ReactNode,
-  filter: boolean = true,
-  onNoResources?: () => React.ReactNode,
-) {
-  const resourceCount = RESOURCE_ORDER.reduce(
-    (acc, curr) => acc + Math.abs(resources[curr]),
-    0,
-  );
-  if (resourceCount === 0 && onNoResources) {
-    return onNoResources();
-  }
-
-  return RESOURCE_ORDER.filter((key) => resources[key] !== 0 || !filter).map(
-    (key) => onMap(key, resources[key]),
-  );
-}
-
-export function mapOverEffectTypes(
-  effectTypes: Record<EffectType, number>,
-  onMap: (key: EffectType, val: number) => React.ReactNode,
-  filter: boolean = true,
-  onNoEffectTypes?: () => React.ReactNode,
-) {
-  const effectTypeCount = EFFECT_ORDER.reduce(
-    (acc, curr) => acc + Math.abs(effectTypes[curr]),
-    0,
-  );
-  if (effectTypeCount === 0 && onNoEffectTypes) {
-    return onNoEffectTypes();
-  }
-
-  return EFFECT_ORDER.filter((key) => effectTypes[key] !== 0 || !filter).map(
-    (key) => onMap(key, effectTypes[key]),
-  );
-}
-
-export function computeResourceDelta(
-  oldResources: Resources,
-  newResources: Resources,
-): Resources {
-  const delta = { ...defaultResources };
-
-  for (const type of RESOURCE_ORDER) {
-    delta[type] = newResources[type] - oldResources[type];
-  }
-  return delta;
-}
-
-export function computeCardsDelta(
-  oldCards: Card[],
-  newCards: Card[],
-): { added: string[]; removed: string[] } {
-  const oldCardCounts = new Map<string, number>();
-  oldCards.forEach((card) => {
-    oldCardCounts.set(card.name, (oldCardCounts.get(card.name) || 0) + 1);
-  });
-
-  const newCardCounts = new Map<string, number>();
-  newCards.forEach((card) => {
-    newCardCounts.set(card.name, (newCardCounts.get(card.name) || 0) + 1);
-  });
-
-  const added: string[] = [];
-  const removed: string[] = [];
-
-  newCardCounts.forEach((newCount, cardName) => {
-    const oldCount = oldCardCounts.get(cardName) || 0;
-    if (newCount > oldCount) {
-      for (let i = 0; i < newCount - oldCount; i++) {
-        added.push(cardName);
-      }
-    }
-  });
-
-  oldCardCounts.forEach((oldCount, cardName) => {
-    const newCount = newCardCounts.get(cardName) || 0;
-    if (oldCount > newCount) {
-      for (let i = 0; i < oldCount - newCount; i++) {
-        removed.push(cardName);
-      }
-    }
-  });
-
-  return { added, removed };
 }
 
 export function isSafeToEndTurn(state: GameState): boolean {
@@ -245,7 +36,7 @@ export function isSafeToEndTurn(state: GameState): boolean {
   return meadowFull && notPerformingAction;
 }
 
-export function maxCitySize(city: Card[]) {
+export function computeMaxCitySize(city: Card[]) {
   const baseMaxCitySize = 15;
   const husbandWifePairs = Math.min(
     countCardInCity(city, "Husband"),
@@ -485,15 +276,4 @@ export function canGiveResources(
         specialEvent.workers[player.color] > 0,
     )
   );
-}
-
-export function pickFourSpecialEvents(events: SpecialEvent[]): SpecialEvent[] {
-  const arr = [...events];
-
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-
-  return arr.slice(0, 4);
 }

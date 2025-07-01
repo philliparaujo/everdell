@@ -1,6 +1,6 @@
 import { MAX_MEADOW_SIZE } from "../engine/gameConstants";
 import { useGame } from "../engine/GameContext";
-import { getPlayerId } from "../engine/helpers";
+import { getPlayerId } from "../utils/identity";
 import CardRow from "./CardRow";
 
 function Meadow() {

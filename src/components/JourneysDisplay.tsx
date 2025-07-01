@@ -1,11 +1,7 @@
 import { useGame } from "../engine/GameContext";
 import { Journey } from "../engine/gameTypes";
-import {
-  canVisitJourney,
-  getPlayerColor,
-  getPlayerId,
-  isNotYourTurn,
-} from "../engine/helpers";
+import { canVisitJourney, isNotYourTurn } from "../utils/gameLogic";
+import { getPlayerColor, getPlayerId } from "../utils/identity";
 import { ResourceIcon } from "./Icons";
 import {
   BaseLocationDisplay,

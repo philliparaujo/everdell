@@ -1,13 +1,12 @@
 import { useGame } from "../engine/GameContext";
 import { Card, History, PlayerColor, ResourceType } from "../engine/gameTypes";
+import { oppositePlayerOf } from "../utils/gameLogic";
 import {
   computeResourceDelta,
   listCardNames,
   mapOverResources,
-  oppositePlayerOf,
-  tailwindPlayerColor,
-  tailwindSeasonColor,
-} from "../engine/helpers";
+} from "../utils/loops";
+import { stylePlayerColor, styleSeasonColor } from "../utils/tailwind";
 import { ResourceIcon, WorkerIcon } from "./Icons";
 
 function LogEntry({ children }: { children: React.ReactNode }) {
@@ -49,12 +48,12 @@ function PlayerLog({
 
   return (
     <div className="text-sm p-2">
-      <strong className={`${tailwindPlayerColor(color)}`}>{player.name}</strong>
+      <strong className={`${stylePlayerColor(color)}`}>{player.name}</strong>
       <ul className="mt-2 ml-1 p-0">
         {seasonChange && (
           <LogEntry>
             Advanced to{" "}
-            <strong className={`${tailwindSeasonColor(player.season)}`}>
+            <strong className={`${styleSeasonColor(player.season)}`}>
               {player.season}
             </strong>
           </LogEntry>

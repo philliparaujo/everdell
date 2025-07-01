@@ -11,16 +11,14 @@ export type ResourceType =
   | "coins"
   | "cards"
   | "wildcards";
-export type Resources = Record<ResourceType, number>;
+export type ResourceCount = Record<ResourceType, number>;
 
-export type Workers = {
-  workersLeft: number;
-  maxWorkers: number;
-};
+export type PlayerColor = "Red" | "Blue";
+export type PlayerCount = Record<PlayerColor, number>;
 
 export type Card = {
   name: string;
-  cost: Resources;
+  cost: ResourceCount;
   value: number;
   cardType: CardType;
   effectType: EffectType;
@@ -29,15 +27,17 @@ export type Card = {
 
   imageKey: string;
 
-  occupied: boolean | null; // Constructions can be occupied to play free critters
-  constructionRequirement: string | null; // Critters can be played for free by occupying constructions
+  // Constructions can be occupied to play free critters
+  occupied: boolean | null; // For constructions
+  constructionRequirement: string | null; // For critters
 
   // Some cards can be visited by workers
   activeDestinations: number | null;
   maxDestinations: number | null;
-  workers: Record<PlayerColor, number>;
+  workers: PlayerCount;
 
-  storage: Resources | null; // Some cards can store resources or coins on them
+  // Some cards can store resources or coins on them
+  storage: ResourceCount | null;
 
   discarding: boolean;
   playing: boolean;
@@ -46,15 +46,15 @@ export type Card = {
 
 export type Location = {
   exclusive: boolean;
-  resources: Resources;
-  workers: Record<PlayerColor, number>;
+  resources: ResourceCount;
+  workers: PlayerCount;
 };
 
 export type Journey = {
   exclusive: boolean;
   discardCount: number;
   value: number;
-  workers: Record<PlayerColor, number>;
+  workers: PlayerCount;
 };
 
 export type Event = {
@@ -62,7 +62,7 @@ export type Event = {
   value: number;
   effectTypeRequirement: EffectType;
   effectTypeCount: number;
-  workers: Record<PlayerColor, number>;
+  workers: PlayerCount;
   used: boolean;
 };
 
@@ -70,13 +70,18 @@ export type SpecialEvent = {
   name: string;
   cardRequirement: string[];
   effectTypeRequirement: Record<EffectType, number>;
-  workers: Record<PlayerColor, number>;
+  workers: PlayerCount;
   used: boolean;
 
   specialDescription: string | null;
   specialReward: string | null;
 
   value: number | null;
+};
+
+export type Workers = {
+  workersLeft: number;
+  maxWorkers: number;
 };
 
 export type History = {
@@ -88,19 +93,18 @@ export type History = {
   gave: Card[];
 
   // From last turn
-  resources: Resources;
+  resources: ResourceCount;
   workers: Workers;
   season: Season;
 };
 
-export type PlayerColor = "Red" | "Blue";
 export type Player = {
   name: string;
   id: string;
   color: PlayerColor;
   hand: Card[];
   city: Card[];
-  resources: Resources;
+  resources: ResourceCount;
   workers: Workers;
   season: Season;
 
@@ -124,48 +128,4 @@ export type GameState = {
   events: Event[];
   specialEvents: SpecialEvent[];
   turn: PlayerColor;
-};
-
-export const defaultResources: Resources = {
-  twigs: 0,
-  resin: 0,
-  pebbles: 0,
-  berries: 0,
-  coins: 0,
-  cards: 0,
-  wildcards: 0,
-};
-
-export const defaultWorkers: Workers = {
-  workersLeft: 2,
-  maxWorkers: 2,
-};
-
-export const defaultPlayer: Player = {
-  name: "",
-  id: "",
-  color: "Red",
-  hand: [],
-  city: [],
-  resources: defaultResources,
-  workers: defaultWorkers,
-  season: "Winter",
-
-  discarding: false,
-  playing: false,
-  giving: false,
-  revealingDeck: false,
-  revealingDiscard: false,
-
-  history: {
-    discarded: [],
-    cityDiscarded: [],
-    drew: [],
-    played: [],
-    gave: [],
-
-    resources: defaultResources,
-    workers: defaultWorkers,
-    season: "Winter",
-  },
 };

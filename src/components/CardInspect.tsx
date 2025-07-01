@@ -1,18 +1,10 @@
 import { useState } from "react";
 import { useGame } from "../engine/GameContext";
-import {
-  Card,
-  defaultResources,
-  PlayerColor,
-  ResourceType,
-} from "../engine/gameTypes";
-import {
-  canVisitCardInCity,
-  getPlayerColor,
-  getPlayerId,
-  isNotYourTurn,
-  mapOverResources,
-} from "../engine/helpers";
+import { defaultResources } from "../engine/gameDefaults";
+import { Card, PlayerColor, ResourceType } from "../engine/gameTypes";
+import { canVisitCardInCity, isNotYourTurn } from "../utils/gameLogic";
+import { getPlayerColor, getPlayerId } from "../utils/identity";
+import { mapOverResources } from "../utils/loops";
 import Button from "./Button";
 import { ResourceIcon } from "./Icons";
 import Inspectable from "./Inspectable";
