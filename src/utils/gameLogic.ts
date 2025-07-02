@@ -1,4 +1,4 @@
-import { MAX_MEADOW_SIZE } from "../engine/gameConstants";
+import { MAX_BASE_CITY_SIZE, MAX_MEADOW_SIZE } from "../engine/gameConstants";
 import {
   Card,
   EffectType,
@@ -9,8 +9,15 @@ import {
   Player,
   PlayerColor,
   SpecialEvent,
+  Visitable,
 } from "../engine/gameTypes";
 import { getPlayerColor } from "./identity";
+import {
+  countCardOccurrences,
+  countEffectTypeOccurrences,
+  hasCards,
+  isOnSpecialEvents,
+} from "./loops";
 
 export function oppositePlayerOf(playerColor: PlayerColor): PlayerColor {
   return playerColor === "Red" ? "Blue" : "Red";
@@ -37,14 +44,34 @@ export function isSafeToEndTurn(state: GameState): boolean {
 }
 
 export function computeMaxCitySize(city: Card[]) {
-  const baseMaxCitySize = 15;
   const husbandWifePairs = Math.min(
-    countCardInCity(city, "Husband"),
-    countCardInCity(city, "Wife"),
+    countCardOccurrences(city, "Husband"),
+    countCardOccurrences(city, "Wife"),
   );
-  const wanderers = countCardInCity(city, "Wanderer");
+  const wanderers = countCardOccurrences(city, "Wanderer");
 
-  return baseMaxCitySize + husbandWifePairs + wanderers;
+  return MAX_BASE_CITY_SIZE + husbandWifePairs + wanderers;
+}
+
+function canVisitGeneric(
+  player: Player,
+  location: Visitable,
+  workersVisiting: 1 | -1,
+): boolean {
+  const newWorkersLeft = player.workers.workersLeft - workersVisiting;
+
+  // Cannot end with negative workers or more than max available
+  if (newWorkersLeft < 0 || newWorkersLeft > player.workers.maxWorkers)
+    return false;
+
+  // Cannot take away more workers than are on the location
+  if (
+    workersVisiting < 0 &&
+    location.workers[player.color] < Math.abs(workersVisiting)
+  )
+    return false;
+
+  return true;
 }
 
 export function canVisitLocation(
@@ -54,18 +81,11 @@ export function canVisitLocation(
   workersVisiting: 1 | -1,
 ): boolean {
   const player = state.players[playerColor];
-  const newWorkersLeft = player.workers.workersLeft - workersVisiting;
-
-  // Cannot end with negative workers or more than max available
-  if (newWorkersLeft < 0 || newWorkersLeft > player.workers.maxWorkers)
-    return false;
-  // Cannot leave location that doesn't have your worker on it
-  if (workersVisiting < 0 && location.workers[playerColor] <= 0) return false;
-
-  const workersOnLocation = location.workers.Red + location.workers.Blue;
+  if (!canVisitGeneric(player, location, workersVisiting)) return false;
 
   // Cannot visit exclusive location with a worker already on it
-  if (workersVisiting >= 0 && location.exclusive && workersOnLocation > 0)
+  const workersOnLocation = location.workers.Red + location.workers.Blue;
+  if (workersVisiting > 0 && location.exclusive && workersOnLocation > 0)
     return false;
 
   return true;
@@ -78,19 +98,13 @@ export function canVisitJourney(
   workersVisiting: 1 | -1,
 ): boolean {
   const player = state.players[playerColor];
-  const newWorkersLeft = player.workers.workersLeft - workersVisiting;
-
-  // Cannot end with negative workers or more than max available
-  if (newWorkersLeft < 0 || newWorkersLeft > player.workers.maxWorkers)
-    return false;
-  // Canont leave journey that doesn't have your worker on it
-  if (workersVisiting < 0 && journey.workers[playerColor] <= 0) return false;
-
-  const workersOnJourney = journey.workers.Red + journey.workers.Blue;
+  if (!canVisitGeneric(player, journey, workersVisiting)) return false;
 
   // Cannot visit exclusive journey with a worker already on it
-  if (workersVisiting >= 0 && journey.exclusive && workersOnJourney > 0)
+  const workersOnJourney = journey.workers.Red + journey.workers.Blue;
+  if (workersVisiting > 0 && journey.exclusive && workersOnJourney > 0)
     return false;
+
   // Cannot visit journey if player not in Autumn
   if (player.season !== "Autumn") return false;
 
@@ -104,24 +118,18 @@ export function canVisitEvent(
   workersVisiting: 1 | -1,
 ): boolean {
   const player = state.players[playerColor];
-  const newWorkersLeft = player.workers.workersLeft - workersVisiting;
+  if (!canVisitGeneric(player, event, workersVisiting)) return false;
 
-  // Cannot end with negative workers or more than max available
-  if (newWorkersLeft < 0 || newWorkersLeft > player.workers.maxWorkers)
-    return false;
-  // Cannot leave event that doesn't have your worker on it
-  if (workersVisiting < 0 && event.workers[playerColor] <= 0) return false;
+  // Cannot visit event that is already used
+  if (workersVisiting > 0 && event.used) return false;
 
+  // Cannot visit event if requirement not met
   const requirementCount = player.city.reduce(
     (acc, curr) =>
       acc + (curr.effectType === event.effectTypeRequirement ? 1 : 0),
     0,
   );
-
-  // Cannot visit event that is already used
-  if (event.used && workersVisiting > 0) return false;
-  // Cannot visit event if requirement not met
-  if (requirementCount < event.effectTypeCount && workersVisiting > 0)
+  if (workersVisiting > 0 && requirementCount < event.effectTypeCount)
     return false;
 
   return true;
@@ -134,31 +142,24 @@ export function canVisitSpecialEvent(
   workersVisiting: 1 | -1,
 ): boolean {
   const player = state.players[playerColor];
-  const newWorkersLeft = player.workers.workersLeft - workersVisiting;
+  if (!canVisitGeneric(player, specialEvent, workersVisiting)) return false;
 
-  // Cannot end with negative workers or more than max available
-  if (newWorkersLeft < 0 || newWorkersLeft > player.workers.maxWorkers)
-    return false;
-  // Cannot leave event that doesn't have your worker on it
-  if (workersVisiting < 0 && specialEvent.workers[playerColor] <= 0)
-    return false;
+  // Cannot visit special event that is already used
+  if (workersVisiting > 0 && specialEvent.used) return false;
 
+  // Cannot visit special event if requirement not met
   // Assumes cardRequirement list has no duplicate card names
   const cardRequirementMet = specialEvent.cardRequirement
-    .map((cardName) => hasCardInCity(player.city, cardName))
+    .map((cardName) => hasCards(player.city, [cardName]))
     .reduce((acc, curr) => acc && curr, true);
-
   const effectTypeRequirementMet = Object.entries(
     specialEvent.effectTypeRequirement,
   ).every(
     ([effectType, required]) =>
-      countEffectTypeInCity(player.city, effectType as EffectType) >= required,
+      countEffectTypeOccurrences(player.city, effectType as EffectType) >=
+      required,
   );
-
-  // Cannot visit special event that is already used
-  if (specialEvent.used && workersVisiting > 0) return false;
-  // Cannot visit special event if requirement not met
-  if ((!cardRequirementMet || !effectTypeRequirementMet) && workersVisiting > 0)
+  if (workersVisiting > 0 && (!cardRequirementMet || !effectTypeRequirementMet))
     return false;
 
   return true;
@@ -171,109 +172,142 @@ export function canVisitCardInCity(
   workersVisiting: 1 | -1,
 ): boolean {
   const player = state.players[playerColor];
-  const newWorkersLeft = player.workers.workersLeft - workersVisiting;
-
-  // Cannot end with negative workers or more than max available
-  if (newWorkersLeft < 0 || newWorkersLeft > player.workers.maxWorkers)
-    return false;
-  // Cannot leave card that doesn't have your worker on it
-  if (workersVisiting < 0 && card.workers[playerColor] <= 0) return false;
+  if (!canVisitGeneric(player, card, workersVisiting)) return false;
 
   // Cannot interact with card that doesn't have destinations
   if (card.maxDestinations === null || card.activeDestinations == null)
     return false;
-  // Cannot end with negative workers on card or more than max destinations
+
+  // Cannot end with more workers on card than max destinations
   const newWorkersOnCard = card.activeDestinations + workersVisiting;
-  if (newWorkersOnCard < 0 || newWorkersOnCard > card.maxDestinations)
-    return false;
+  if (newWorkersOnCard > card.maxDestinations) return false;
 
   return true;
 }
 
-export function countCardInCity(city: Card[], cardName: string): number {
-  return city.reduce((acc, curr) => acc + (curr.name === cardName ? 1 : 0), 0);
-}
+function hasPermission(
+  state: GameState,
+  playerColor: PlayerColor,
+  greenCardsList: string[],
+  nonGreenCardsList: string[],
+  givesOpponentPermissionList: string[],
+  specialEventsList: string[],
+): boolean {
+  const player = state.players[playerColor];
+  const oppositePlayer = state.players[oppositePlayerOf(playerColor)];
+  const specialEvents = state.specialEvents;
 
-export function hasCardInCity(city: Card[], cardName: string): boolean {
-  return city.some((card) => card.name === cardName);
-}
+  const canCopyGreenCardsList = ["Miner Mole"];
 
-export function countEffectTypeInCity(
-  city: Card[],
-  effectType: EffectType,
-): number {
-  return city.reduce(
-    (acc, curr) => acc + (curr.effectType === effectType ? 1 : 0),
-    0,
+  return (
+    hasCards(player.city, [...greenCardsList, ...nonGreenCardsList]) ||
+    hasCards(oppositePlayer.city, givesOpponentPermissionList) ||
+    (hasCards(player.city, canCopyGreenCardsList) &&
+      hasCards(oppositePlayer.city, greenCardsList)) ||
+    isOnSpecialEvents(player, specialEvents, specialEventsList)
   );
 }
 
 export function canGiveToSelf(
-  player: Player,
-  specialEvents: SpecialEvent[],
+  state: GameState,
+  playerColor: PlayerColor,
 ): boolean {
-  return (
-    hasCardInCity(player.city, "Undertaker") ||
-    specialEvents.some(
-      (specialEvent) =>
-        specialEvent.name === "A Brilliant Marketing Plan" &&
-        specialEvent.workers[player.color] > 0,
-    ) ||
-    specialEvents.some(
-      (specialEvent) =>
-        specialEvent.name === "Ancient Scrolls Discovered" &&
-        specialEvent.workers[player.color] > 0,
-    )
+  // Cards and events that can give cards to self
+  const greenCardsList: string[] = [];
+  const nonGreenCardsList: string[] = ["Undertaker"];
+  const givesOpponentPermissionList: string[] = [];
+
+  const specialEventsList: string[] = [
+    "A Brilliant Marketing Plan",
+    "Ancient Scrolls Discovered",
+  ];
+
+  return hasPermission(
+    state,
+    playerColor,
+    greenCardsList,
+    nonGreenCardsList,
+    givesOpponentPermissionList,
+    specialEventsList,
   );
 }
 
 export function canGiveToOpponent(
-  player: Player,
-  oppositePlayer: Player,
+  state: GameState,
+  playerColor: PlayerColor,
 ): boolean {
-  return (
-    hasCardInCity(player.city, "Post Office") ||
-    hasCardInCity(player.city, "Teacher") ||
-    hasCardInCity(oppositePlayer.city, "Post Office") ||
-    (hasCardInCity(player.city, "Miner Mole") &&
-      hasCardInCity(oppositePlayer.city, "Teacher"))
+  // Cards and events that can give cards to opponent
+  const greenCardsList: string[] = ["Teacher"];
+  const nonGreenCardsList: string[] = ["Post Office"];
+  const givesOpponentPermissionList: string[] = ["Post Office"];
+  const specialEventsList: string[] = [];
+
+  return hasPermission(
+    state,
+    playerColor,
+    greenCardsList,
+    nonGreenCardsList,
+    givesOpponentPermissionList,
+    specialEventsList,
   );
 }
 
 export function canRevealDeck(
-  player: Player,
-  oppositePlayer: Player,
-  specialEvents: SpecialEvent[],
+  state: GameState,
+  playerColor: PlayerColor,
 ): boolean {
-  return (
-    hasCardInCity(player.city, "Cemetery") ||
-    hasCardInCity(player.city, "Postal Pigeon") ||
-    (hasCardInCity(player.city, "Miner Mole") &&
-      hasCardInCity(oppositePlayer.city, "Postal Pigeon")) ||
-    specialEvents.some(
-      (specialEvent) =>
-        specialEvent.name === "Ancient Scrolls Discovered" &&
-        specialEvent.workers[player.color] > 0,
-    )
+  // Cards and events that can reveal deck
+  const greenCardsList: string[] = ["Postal Pigeon"];
+  const nonGreenCardsList: string[] = ["Cemetery"];
+  const givesOpponentPermissionList: string[] = [];
+  const specialEventsList: string[] = ["Ancient Scrolls Discovered"];
+
+  return hasPermission(
+    state,
+    playerColor,
+    greenCardsList,
+    nonGreenCardsList,
+    givesOpponentPermissionList,
+    specialEventsList,
   );
 }
 
-export function canRevealDiscard(player: Player): boolean {
-  return hasCardInCity(player.city, "Cemetery");
+export function canRevealDiscard(
+  state: GameState,
+  playerColor: PlayerColor,
+): boolean {
+  // Cards and events that can reveal discard
+  const greenCardsList: string[] = [];
+  const nonGreenCardsList: string[] = ["Cemetery"];
+  const givesOpponentPermissionList: string[] = [];
+  const specialEventsList: string[] = [];
+
+  return hasPermission(
+    state,
+    playerColor,
+    greenCardsList,
+    nonGreenCardsList,
+    givesOpponentPermissionList,
+    specialEventsList,
+  );
 }
 
 export function canGiveResources(
-  player: Player,
-  specialEvents: SpecialEvent[],
+  state: GameState,
+  playerColor: PlayerColor,
 ): boolean {
-  return (
-    hasCardInCity(player.city, "Monk") ||
-    hasCardInCity(player.city, "Monastery") ||
-    hasCardInCity(player.city, "Shepherd") ||
-    specialEvents.some(
-      (specialEvent) =>
-        specialEvent.name === "A Brilliant Marketing Plan" &&
-        specialEvent.workers[player.color] > 0,
-    )
+  // Cards and events that can give resources
+  const greenCardsList: string[] = ["Monk"];
+  const nonGreenCardsList: string[] = ["Monastery", "Shepherd"];
+  const givesOpponentPermissionList: string[] = [];
+  const specialEventsList: string[] = ["A Brilliant Marketing Plan"];
+
+  return hasPermission(
+    state,
+    playerColor,
+    greenCardsList,
+    nonGreenCardsList,
+    givesOpponentPermissionList,
+    specialEventsList,
   );
 }

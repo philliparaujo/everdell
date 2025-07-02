@@ -79,6 +79,9 @@ export type SpecialEvent = {
   value: number | null;
 };
 
+// Only share workers field
+export type Visitable = Location | Journey | Event | SpecialEvent | Card;
+
 export type Workers = {
   workersLeft: number;
   maxWorkers: number;

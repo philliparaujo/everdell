@@ -31,12 +31,8 @@ function Reveal() {
     }
   };
 
-  const revealDeck = canRevealDeck(
-    currentPlayer,
-    oppositePlayer,
-    game.specialEvents,
-  );
-  const revealDiscard = canRevealDiscard(currentPlayer);
+  const revealDeck = canRevealDeck(game, game.turn);
+  const revealDiscard = canRevealDiscard(game, game.turn);
   const revealEmpty = game.reveal.length === 0;
 
   const displayRevealCard = (index: number) => {

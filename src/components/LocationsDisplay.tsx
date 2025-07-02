@@ -7,6 +7,7 @@ import {
   Location,
   ResourceType,
   SpecialEvent,
+  Visitable,
 } from "../engine/gameTypes";
 import { canVisitLocation, isNotYourTurn } from "../utils/gameLogic";
 import { getPlayerColor, getPlayerId } from "../utils/identity";
@@ -33,9 +34,7 @@ export function renderButtons(
   );
 }
 
-export function renderWorkers(
-  location: Location | Journey | Event | SpecialEvent | Card,
-) {
+export function renderWorkers(location: Visitable) {
   return (
     <div className="flex h-6 content-center gap-2">
       {location.workers.Red > 0 && (

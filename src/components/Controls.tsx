@@ -35,16 +35,10 @@ function Controls() {
   const isPlaying = currentPlayer.playing;
   const isGiving = currentPlayer.giving;
 
-  const oppositePlayer = game.players[oppositePlayerOf(game.turn)];
-
-  const canGiveSelf = canGiveToSelf(currentPlayer, game.specialEvents);
-  const canGiveOpponent = canGiveToOpponent(currentPlayer, oppositePlayer);
-  const revealDeck = canRevealDeck(
-    currentPlayer,
-    oppositePlayer,
-    game.specialEvents,
-  );
-  const revealDiscard = canRevealDiscard(currentPlayer);
+  const canGiveSelf = canGiveToSelf(game, game.turn);
+  const canGiveOpponent = canGiveToOpponent(game, game.turn);
+  const revealDeck = canRevealDeck(game, game.turn);
+  const revealDiscard = canRevealDiscard(game, game.turn);
 
   return (
     <div className="grid grid-cols-2 gap-2 max-w-400px">

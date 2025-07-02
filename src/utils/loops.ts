@@ -3,7 +3,14 @@ import {
   EFFECT_ORDER,
   RESOURCE_ORDER,
 } from "../engine/gameDefaults";
-import { EffectType, ResourceCount, ResourceType } from "../engine/gameTypes";
+import {
+  Card,
+  EffectType,
+  Player,
+  ResourceCount,
+  ResourceType,
+  SpecialEvent,
+} from "../engine/gameTypes";
 
 export function listCardNames(cardNames: string[]): string {
   return cardNames.join(", ");
@@ -57,4 +64,36 @@ export function computeResourceDelta(
     delta[type] = newResources[type] - oldResources[type];
   }
   return delta;
+}
+
+export function countCardOccurrences(city: Card[], cardName: string): number {
+  return city.reduce((acc, curr) => acc + (curr.name === cardName ? 1 : 0), 0);
+}
+
+// True if any of the cards are on the list
+export function hasCards(city: Card[], cardNames: string[]): boolean {
+  return city.some((card) => cardNames.includes(card.name));
+}
+
+export function countEffectTypeOccurrences(
+  city: Card[],
+  effectType: EffectType,
+): number {
+  return city.reduce(
+    (acc, curr) => acc + (curr.effectType === effectType ? 1 : 0),
+    0,
+  );
+}
+
+// True if any of the special events are on the list and have workers on them
+export function isOnSpecialEvents(
+  player: Player,
+  specialEvents: SpecialEvent[],
+  eventNames: string[],
+): boolean {
+  return specialEvents.some(
+    (specialEvent) =>
+      eventNames.includes(specialEvent.name) &&
+      specialEvent.workers[player.color] > 0,
+  );
 }

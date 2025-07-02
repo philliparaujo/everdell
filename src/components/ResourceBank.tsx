@@ -31,9 +31,11 @@ export function ResourceDisplay({ resource }: { resource: ResourceType }) {
     );
   };
 
+  const canGive = canGiveResources(game, game.turn);
+
   return (
     <div className="flex items-center justify-center gap-1">
-      {canGiveResources(game.players[game.turn], game.specialEvents) && (
+      {canGive && (
         <Button disabled={disabled} onClick={giveResource} variant="rare">
           {"!"}
         </Button>
