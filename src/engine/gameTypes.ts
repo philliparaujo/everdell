@@ -16,6 +16,7 @@ export type ResourceCount = Record<ResourceType, number>;
 export type PlayerColor = "Red" | "Blue";
 export type PlayerCount = Record<PlayerColor, number>;
 
+export type Action = "discarding" | "playing" | "giving";
 export type Card = {
   name: string;
   cost: ResourceCount;
@@ -39,6 +40,7 @@ export type Card = {
   // Some cards can store resources or coins on them
   storage: ResourceCount | null;
 
+  // Actions
   discarding: boolean;
   playing: boolean;
   giving: boolean;

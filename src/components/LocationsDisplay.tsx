@@ -1,14 +1,6 @@
 import { ReactNode } from "react";
 import { useGame } from "../engine/GameContext";
-import {
-  Card,
-  Event,
-  Journey,
-  Location,
-  ResourceType,
-  SpecialEvent,
-  Visitable,
-} from "../engine/gameTypes";
+import { Location, ResourceType, Visitable } from "../engine/gameTypes";
 import { canVisitLocation, isNotYourTurn } from "../utils/gameLogic";
 import { getPlayerColor, getPlayerId } from "../utils/identity";
 import { mapOverResources } from "../utils/loops";

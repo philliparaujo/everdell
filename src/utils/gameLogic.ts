@@ -1,4 +1,9 @@
-import { MAX_BASE_CITY_SIZE, MAX_MEADOW_SIZE } from "../engine/gameConstants";
+import {
+  MAX_BASE_CITY_SIZE,
+  MAX_HAND_SIZE,
+  MAX_MEADOW_SIZE,
+  MAX_REVEAL_SIZE,
+} from "../engine/gameConstants";
 import {
   Card,
   EffectType,
@@ -51,6 +56,19 @@ export function computeMaxCitySize(city: Card[]) {
   const wanderers = countCardOccurrences(city, "Wanderer");
 
   return MAX_BASE_CITY_SIZE + husbandWifePairs + wanderers;
+}
+
+export function sanityCheck(state: GameState): boolean {
+  for (const playerColor of Object.keys(state.players) as PlayerColor[]) {
+    const player = state.players[playerColor];
+    if (player.hand.length > MAX_HAND_SIZE) return false;
+    if (player.city.length > computeMaxCitySize(player.city)) return false;
+  }
+
+  if (state.meadow.length > MAX_MEADOW_SIZE) return false;
+  if (state.reveal.length > MAX_REVEAL_SIZE) return false;
+
+  return true;
 }
 
 function canVisitGeneric(

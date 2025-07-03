@@ -1,10 +1,6 @@
 import { useGame } from "../engine/GameContext";
 import { Card } from "../engine/gameTypes";
-import {
-  canRevealDeck,
-  canRevealDiscard,
-  oppositePlayerOf,
-} from "../utils/gameLogic";
+import { canRevealDeck, canRevealDiscard } from "../utils/gameLogic";
 import { getPlayerId } from "../utils/identity";
 import CardPreview from "./CardPreview";
 
@@ -16,8 +12,6 @@ function Reveal() {
   const isDiscarding = currentPlayer.discarding;
   const isPlaying = currentPlayer.playing;
   const isGiving = currentPlayer.giving;
-
-  const oppositePlayer = game.players[oppositePlayerOf(game.turn)];
 
   const storedId = getPlayerId();
 

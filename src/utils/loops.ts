@@ -97,3 +97,20 @@ export function isOnSpecialEvents(
       specialEvent.workers[player.color] > 0,
   );
 }
+
+export function resetActions(cards: Card[]): Card[] {
+  return cards.map((card) => ({
+    ...card,
+    playing: false,
+    discarding: false,
+    giving: false,
+  }));
+}
+
+export function sortCity(city: Card[]): Card[] {
+  return city
+    .sort((a, b) => (a.name < b.name ? -1 : 1))
+    .sort((a, b) =>
+      a.effectType.toString() < b.effectType.toString() ? -1 : 1,
+    );
+}
