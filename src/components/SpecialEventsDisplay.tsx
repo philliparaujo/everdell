@@ -3,13 +3,10 @@ import { EffectType, SpecialEvent } from "../engine/gameTypes";
 import { canVisitSpecialEvent, isNotYourTurn } from "../utils/gameLogic";
 import { getPlayerColor, getPlayerId } from "../utils/identity";
 import { mapOverEffectTypes } from "../utils/loops";
+import { renderVisitButtons, renderVisitingWorkers } from "../utils/react";
 import Hoverable from "./Hoverable";
 import { EffectTypeIcon } from "./Icons";
-import {
-  BaseLocationDisplay,
-  renderButtons,
-  renderWorkers,
-} from "./LocationsDisplay";
+import { BaseLocationDisplay } from "./LocationsDisplay";
 import SpecialEventInspect from "./SpecialEventInspect";
 
 function SpecialEventDisplay({
@@ -26,13 +23,9 @@ function SpecialEventDisplay({
 
   const disabled = isNotYourTurn(game, storedId);
   const canVisit =
-    playerColor === null
-      ? false
-      : canVisitSpecialEvent(game, specialEvent, playerColor, 1);
+    playerColor && canVisitSpecialEvent(game, specialEvent, playerColor, 1);
   const canLeave =
-    playerColor === null
-      ? false
-      : canVisitSpecialEvent(game, specialEvent, playerColor, -1);
+    playerColor && canVisitSpecialEvent(game, specialEvent, playerColor, -1);
 
   return (
     <Hoverable
@@ -47,13 +40,13 @@ function SpecialEventDisplay({
     >
       <BaseLocationDisplay
         titleChildren={specialEvent.name}
-        buttonChildren={renderButtons(
+        buttonChildren={renderVisitButtons(
           disabled || !canVisit,
           disabled || !canLeave,
           () => visitSpecialEvent(storedId, index, 1),
           () => visitSpecialEvent(storedId, index, -1),
         )}
-        workerChildren={renderWorkers(specialEvent)}
+        workerChildren={renderVisitingWorkers(specialEvent)}
         resourceChildren={
           <div>
             {specialEvent.cardRequirement.map((cardName) => (

@@ -94,6 +94,15 @@ function Lobby() {
     setGameList((prev) => prev.filter((g) => g.id !== gameId));
   };
 
+  const handleDeleteAllGames = async () => {
+    if (isDisabled) return;
+    const snapshot = await getDocs(collection(db, "games"));
+    snapshot.docs.forEach(async (doc) => {
+      await deleteDoc(doc.ref);
+    });
+    setGameList([]);
+  };
+
   const fetchGames = async () => {
     const snapshot = await getDocs(collection(db, "games"));
     const games: { id: string; game: GameState }[] = snapshot.docs.map(
@@ -135,9 +144,16 @@ function Lobby() {
         {/* Title and start button */}
         <h2 className="mb-4 text-lg font-bold">Available Games</h2>
 
-        <div className="mb-4">
+        <div className="mb-4 flex gap-2">
           <Button onClick={startGame} disabled={isDisabled} variant="important">
             Start New Game
+          </Button>
+          <Button
+            onClick={handleDeleteAllGames}
+            disabled={isDisabled}
+            variant="danger"
+          >
+            Delete All Games
           </Button>
         </div>
 

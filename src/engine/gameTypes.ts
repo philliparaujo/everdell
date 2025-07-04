@@ -17,6 +17,7 @@ export type PlayerColor = "Red" | "Blue";
 export type PlayerCount = Record<PlayerColor, number>;
 
 export type Action = "discarding" | "playing" | "giving";
+export type ExpansionName = "base";
 export type Card = {
   name: string;
   cost: ResourceCount;
@@ -26,6 +27,8 @@ export type Card = {
   unique: boolean;
   description: string;
 
+  // Image path is assets/cards/expansionName/imageKey.jpg
+  expansionName: ExpansionName;
   imageKey: string;
 
   // Constructions can be occupied to play free critters

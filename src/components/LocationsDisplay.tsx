@@ -1,47 +1,12 @@
 import { ReactNode } from "react";
 import { useGame } from "../engine/GameContext";
-import { Location, ResourceType, Visitable } from "../engine/gameTypes";
+import { Location, ResourceType } from "../engine/gameTypes";
 import { canVisitLocation, isNotYourTurn } from "../utils/gameLogic";
 import { getPlayerColor, getPlayerId } from "../utils/identity";
 import { mapOverResources } from "../utils/loops";
 import { styleLocationBorderColor } from "../utils/tailwind";
-import Button from "./Button";
-import { ResourceIcon, WorkerIcon } from "./Icons";
-
-export function renderButtons(
-  visitDisabled: boolean,
-  leaveDisabled: boolean,
-  onVisit: () => void,
-  onLeave: () => void,
-) {
-  return (
-    <div>
-      <Button disabled={visitDisabled} onClick={onVisit}>
-        Visit
-      </Button>
-      <Button disabled={leaveDisabled} onClick={onLeave}>
-        Leave
-      </Button>
-    </div>
-  );
-}
-
-export function renderWorkers(location: Visitable) {
-  return (
-    <div className="flex h-6 content-center gap-2">
-      {location.workers.Red > 0 && (
-        <span className="flex items-center gap-1">
-          <WorkerIcon playerColor={"Red"} /> {location.workers.Red}
-        </span>
-      )}
-      {location.workers.Blue > 0 && (
-        <span className="flex items-center gap-1">
-          <WorkerIcon playerColor={"Blue"} /> {location.workers.Blue}
-        </span>
-      )}
-    </div>
-  );
-}
+import { ResourceIcon } from "./Icons";
+import { renderVisitButtons, renderVisitingWorkers } from "../utils/react";
 
 export function BaseLocationDisplay({
   buttonChildren,
@@ -95,24 +60,20 @@ function LocationDisplay({
 
   const disabled = isNotYourTurn(game, storedId);
   const canVisit =
-    playerColor === null
-      ? false
-      : canVisitLocation(game, location, playerColor, 1);
+    playerColor && canVisitLocation(game, location, playerColor, 1);
   const canLeave =
-    playerColor === null
-      ? false
-      : canVisitLocation(game, location, playerColor, -1);
+    playerColor && canVisitLocation(game, location, playerColor, -1);
 
   return (
     <BaseLocationDisplay
       exclusive={location.exclusive}
-      buttonChildren={renderButtons(
+      buttonChildren={renderVisitButtons(
         disabled || !canVisit,
         disabled || !canLeave,
         () => visitLocation(storedId, index, 1),
         () => visitLocation(storedId, index, -1),
       )}
-      workerChildren={renderWorkers(location)}
+      workerChildren={renderVisitingWorkers(location)}
       resourceChildren={
         <>
           {mapOverResources(location.resources, (key, val) => (
@@ -136,23 +97,19 @@ function HavenDisplay() {
 
   const disabled = isNotYourTurn(game, storedId);
   const canVisit =
-    playerColor === null
-      ? false
-      : canVisitLocation(game, havenLocation, playerColor, 1);
+    playerColor && canVisitLocation(game, havenLocation, playerColor, 1);
   const canLeave =
-    playerColor === null
-      ? false
-      : canVisitLocation(game, havenLocation, playerColor, -1);
+    playerColor && canVisitLocation(game, havenLocation, playerColor, -1);
 
   return (
     <BaseLocationDisplay
-      buttonChildren={renderButtons(
+      buttonChildren={renderVisitButtons(
         disabled || !canVisit,
         disabled || !canLeave,
         () => visitLocation(storedId, game.locations.length - 1, 1),
         () => visitLocation(storedId, game.locations.length - 1, -1),
       )}
-      workerChildren={renderWorkers(havenLocation)}
+      workerChildren={renderVisitingWorkers(havenLocation)}
       resourceChildren={
         <>
           <ResourceIcon type={"cards"} /> {-2}

@@ -52,7 +52,9 @@ function CardPreview({
           <>
             <div>
               <img
-                src={require(`../assets/cards/${card.imageKey}.jpg`)}
+                src={require(
+                  `../assets/cards/${card.expansionName}/${card.imageKey}.jpg`,
+                )}
                 alt={card.name}
                 className="w-full p-0 pb-0 h-[150px] object-cover rounded-t"
                 draggable={false}

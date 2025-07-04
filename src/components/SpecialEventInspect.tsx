@@ -1,58 +1,15 @@
 import { useGame } from "../engine/GameContext";
-import { EFFECT_ORDER, RESOURCE_ORDER } from "../engine/gameDefaults";
-import { EffectType, ResourceType, SpecialEvent } from "../engine/gameTypes";
+import { EffectType, SpecialEvent } from "../engine/gameTypes";
 import { canVisitSpecialEvent, isNotYourTurn } from "../utils/gameLogic";
 import { getPlayerColor, getPlayerId } from "../utils/identity";
 import { listCardNames, mapOverEffectTypes } from "../utils/loops";
+import {
+  renderVisitButtons,
+  renderTextWithIcons,
+  renderVisitingWorkers,
+} from "../utils/react";
 import { EffectTypeIcon, ResourceIcon } from "./Icons";
 import Inspectable from "./Inspectable";
-import { renderButtons, renderWorkers } from "./LocationsDisplay";
-
-// Handle singular and plural words
-const RESOURCE_ALIASES: Record<string, ResourceType> = {
-  twig: "twigs",
-  pebble: "pebbles",
-  berry: "berries",
-  coin: "coins",
-  card: "cards",
-  wildcard: "wildcards",
-};
-
-const EFFECT_ALIASES: Record<string, EffectType> = {
-  blues: "Blue",
-  greens: "Green",
-  purples: "Purple",
-  reds: "Red",
-  tans: "Tan",
-};
-
-export function renderTextWithIcons(text: string): React.ReactNode[] {
-  const parts = text.split(/(\s+|[.,;!?]+)/);
-
-  return parts.map((part, idx) => {
-    const bare = part.toLowerCase().replace(/[^a-z]/g, "");
-
-    if ((RESOURCE_ORDER as string[]).includes(bare)) {
-      return <ResourceIcon key={idx} type={bare as ResourceType} />;
-    }
-
-    if (bare in RESOURCE_ALIASES) {
-      return <ResourceIcon key={idx} type={RESOURCE_ALIASES[bare]} />;
-    }
-
-    if (EFFECT_ORDER.map((e) => e.toLowerCase()).includes(bare)) {
-      const canonical = bare.charAt(0).toUpperCase() + bare.slice(1); // "blue" → "Blue"
-      return <EffectTypeIcon key={idx} type={canonical as EffectType} />;
-    }
-
-    if (bare in EFFECT_ALIASES) {
-      return <EffectTypeIcon key={idx} type={EFFECT_ALIASES[bare]} />;
-    }
-
-    // Plain text or delimeter
-    return part;
-  });
-}
 
 function SpecialEventInspect({
   specialEvent,
@@ -70,13 +27,9 @@ function SpecialEventInspect({
 
   const disabled = isNotYourTurn(game, storedId);
   const canVisit =
-    playerColor === null
-      ? false
-      : canVisitSpecialEvent(game, specialEvent, playerColor, 1);
+    playerColor && canVisitSpecialEvent(game, specialEvent, playerColor, 1);
   const canLeave =
-    playerColor === null
-      ? false
-      : canVisitSpecialEvent(game, specialEvent, playerColor, -1);
+    playerColor && canVisitSpecialEvent(game, specialEvent, playerColor, -1);
 
   const requiredEffects = Object.entries(
     specialEvent.effectTypeRequirement,
@@ -139,13 +92,13 @@ function SpecialEventInspect({
 
         {/* --- Visiting --- */}
         <div className="flex flex-col items-center gap-2">
-          {renderButtons(
+          {renderVisitButtons(
             disabled || !canVisit,
             disabled || !canLeave,
             () => visitSpecialEvent(storedId, index, 1),
             () => visitSpecialEvent(storedId, index, -1),
           )}
-          {renderWorkers(specialEvent)}
+          {renderVisitingWorkers(specialEvent)}
         </div>
       </div>
     </Inspectable>

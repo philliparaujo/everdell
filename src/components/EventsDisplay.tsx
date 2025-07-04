@@ -2,12 +2,9 @@ import { useGame } from "../engine/GameContext";
 import { Event } from "../engine/gameTypes";
 import { canVisitEvent, isNotYourTurn } from "../utils/gameLogic";
 import { getPlayerColor, getPlayerId } from "../utils/identity";
+import { renderVisitButtons, renderVisitingWorkers } from "../utils/react";
 import { EffectTypeIcon, ResourceIcon } from "./Icons";
-import {
-  BaseLocationDisplay,
-  renderButtons,
-  renderWorkers,
-} from "./LocationsDisplay";
+import { BaseLocationDisplay } from "./LocationsDisplay";
 
 function EventDisplay({ event, index }: { event: Event; index: number }) {
   const { game, visitEvent } = useGame();
@@ -16,21 +13,19 @@ function EventDisplay({ event, index }: { event: Event; index: number }) {
   const playerColor = getPlayerColor(game, storedId);
 
   const disabled = isNotYourTurn(game, storedId);
-  const canVisit =
-    playerColor === null ? false : canVisitEvent(game, event, playerColor, 1);
-  const canLeave =
-    playerColor === null ? false : canVisitEvent(game, event, playerColor, -1);
+  const canVisit = playerColor && canVisitEvent(game, event, playerColor, 1);
+  const canLeave = playerColor && canVisitEvent(game, event, playerColor, -1);
 
   return (
     <BaseLocationDisplay
       titleChildren={event.name}
-      buttonChildren={renderButtons(
+      buttonChildren={renderVisitButtons(
         disabled || !canVisit,
         disabled || !canLeave,
         () => visitEvent(storedId, index, 1),
         () => visitEvent(storedId, index, -1),
       )}
-      workerChildren={renderWorkers(event)}
+      workerChildren={renderVisitingWorkers(event)}
       resourceChildren={
         <>
           <EffectTypeIcon type={event.effectTypeRequirement} />{" "}

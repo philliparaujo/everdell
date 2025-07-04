@@ -8,7 +8,7 @@ import { mapOverResources } from "../utils/loops";
 import Button from "./Button";
 import { ResourceIcon } from "./Icons";
 import Inspectable from "./Inspectable";
-import { renderButtons, renderWorkers } from "./LocationsDisplay";
+import { renderVisitButtons, renderVisitingWorkers } from "../utils/react";
 
 function CardInspect({
   card,
@@ -36,13 +36,9 @@ function CardInspect({
 
   const disabled = isNotYourTurn(game, storedId);
   const canVisit =
-    playerColor === null
-      ? false
-      : canVisitCardInCity(game, card, playerColor, 1);
+    playerColor && canVisitCardInCity(game, card, playerColor, 1);
   const canLeave =
-    playerColor === null
-      ? false
-      : canVisitCardInCity(game, card, playerColor, -1);
+    playerColor && canVisitCardInCity(game, card, playerColor, -1);
 
   const textColor = card?.occupied
     ? "text-cardPreviewOutline-occupied"
@@ -51,7 +47,9 @@ function CardInspect({
   return (
     <Inspectable onClose={onClose}>
       <img
-        src={require(`../assets/cards/${card.imageKey}.jpg`)}
+        src={require(
+          `../assets/cards/${card.expansionName}/${card.imageKey}.jpg`,
+        )}
         alt={card.name}
         className={`max-w-[50%] object-contain rounded-lg aspect-5/7 bg-neutral-800 transition-opacity duration-0 ${
           imageLoaded ? "opacity-100" : "opacity-0"
@@ -134,13 +132,13 @@ function CardInspect({
         {placedDown && card.maxDestinations != null && (
           <div className="flex flex-col items-center text-center">
             {cityColor !== null &&
-              renderButtons(
+              renderVisitButtons(
                 disabled || !canVisit,
                 disabled || !canLeave,
                 () => visitCardInCity(storedId, cityColor, index, 1),
                 () => visitCardInCity(storedId, cityColor, index, -1),
               )}
-            {card.workers && renderWorkers(card)}
+            {card.workers && renderVisitingWorkers(card)}
           </div>
         )}
       </div>

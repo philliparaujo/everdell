@@ -2,12 +2,9 @@ import { useGame } from "../engine/GameContext";
 import { Journey } from "../engine/gameTypes";
 import { canVisitJourney, isNotYourTurn } from "../utils/gameLogic";
 import { getPlayerColor, getPlayerId } from "../utils/identity";
+import { renderVisitButtons, renderVisitingWorkers } from "../utils/react";
 import { ResourceIcon } from "./Icons";
-import {
-  BaseLocationDisplay,
-  renderButtons,
-  renderWorkers,
-} from "./LocationsDisplay";
+import { BaseLocationDisplay } from "./LocationsDisplay";
 
 function JourneyDisplay({
   journey,
@@ -23,24 +20,20 @@ function JourneyDisplay({
 
   const disabled = isNotYourTurn(game, storedId);
   const canVisit =
-    playerColor === null
-      ? false
-      : canVisitJourney(game, journey, playerColor, 1);
+    playerColor && canVisitJourney(game, journey, playerColor, 1);
   const canLeave =
-    playerColor === null
-      ? false
-      : canVisitJourney(game, journey, playerColor, -1);
+    playerColor && canVisitJourney(game, journey, playerColor, -1);
 
   return (
     <BaseLocationDisplay
       exclusive={journey.exclusive}
-      buttonChildren={renderButtons(
+      buttonChildren={renderVisitButtons(
         disabled || !canVisit,
         disabled || !canLeave,
         () => visitJourney(storedId, index, 1),
         () => visitJourney(storedId, index, -1),
       )}
-      workerChildren={renderWorkers(journey)}
+      workerChildren={renderVisitingWorkers(journey)}
       resourceChildren={
         <>
           <ResourceIcon type={"cards"} /> {`-${journey.discardCount}`}
