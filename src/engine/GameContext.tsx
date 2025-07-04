@@ -1,106 +1,17 @@
 import { doc, getFirestore, onSnapshot, setDoc } from "firebase/firestore";
 import { createContext, useContext, useEffect, useState } from "react";
-import { cardFrequencies, rawCards } from "../assets/data/cards";
-import { events } from "../assets/data/events";
-import { journeys } from "../assets/data/journey";
-import { locations } from "../assets/data/locations";
-import { specialEvents } from "../assets/data/specialEvents";
-import { pickNRandom, shuffleArray } from "../utils/math";
 import * as Actions from "./gameActions";
-import {
-  FIRST_PLAYER_HAND_SIZE,
-  MAX_MEADOW_SIZE,
-  SECOND_PLAYER_HAND_SIZE,
-} from "./gameConstants";
-import {
-  defaultGameState,
-  defaultPlayer,
-  defaultPlayerCount,
-} from "./gameDefaults";
-import {
-  Card,
-  Event,
-  GameState,
-  Location,
-  PlayerColor,
-  ResourceCount,
-  SpecialEvent,
-} from "./gameTypes";
+import { defaultGameState } from "./gameDefaults";
+import { GameState, PlayerColor, ResourceCount } from "./gameTypes";
 
 let actionQueue = Promise.resolve();
-
-export function setupGame(firstPlayer: PlayerColor): GameState {
-  // Shuffle deck
-  const cards: Card[] = rawCards.flatMap((card) => {
-    const count = cardFrequencies[card.name] ?? 1;
-    return Array.from({ length: count }, () => ({
-      ...card,
-      discarding: false,
-      playing: false,
-      giving: false,
-    }));
-  });
-  const deck = shuffleArray(cards);
-
-  // Fill up meadow and deal cards
-  const MEADOW_END = MAX_MEADOW_SIZE;
-  const FIRST_END = MEADOW_END + FIRST_PLAYER_HAND_SIZE;
-  const SECOND_END = FIRST_END + SECOND_PLAYER_HAND_SIZE;
-
-  const meadow = deck.slice(0, MEADOW_END);
-  const firstHand = deck.slice(MEADOW_END, FIRST_END);
-  const secondHand = deck.slice(FIRST_END, SECOND_END);
-  const remainingDeck = deck.slice(SECOND_END);
-
-  // Set up remaining objects
-  const newLocations: Location[] = locations.map((location) => ({
-    ...location,
-    workers: defaultPlayerCount,
-  }));
-  const newEvents: Event[] = events.map((event) => ({
-    ...event,
-    used: false,
-    workers: defaultPlayerCount,
-  }));
-  const newSpecialEvents: SpecialEvent[] = pickNRandom(
-    4,
-    specialEvents.map((specialEvent) => ({
-      ...specialEvent,
-      used: false,
-      workers: defaultPlayerCount,
-    })),
-  );
-
-  return {
-    players: {
-      Red: {
-        ...defaultPlayer,
-        color: "Red",
-        hand: firstPlayer === "Red" ? firstHand : secondHand,
-      },
-      Blue: {
-        ...defaultPlayer,
-        color: "Blue",
-        hand: firstPlayer === "Blue" ? firstHand : secondHand,
-      },
-    },
-    deck: remainingDeck,
-    discard: [],
-    meadow: meadow,
-    reveal: [],
-    locations: newLocations,
-    journeys: journeys,
-    events: newEvents,
-    specialEvents: newSpecialEvents,
-    turn: firstPlayer,
-  };
-}
 
 const noop = (..._: any[]) => {};
 
 const GameContext = createContext<{
   game: GameState;
   endTurn: (playerId: string | null) => void;
+  resetTurn: (playerId: string | null) => void;
   setDiscarding: (playerId: string | null, discarding: boolean) => void;
   setPlaying: (playerId: string | null, playing: boolean) => void;
   setGiving: (playerId: string | null, giving: boolean) => void;
@@ -176,6 +87,7 @@ const GameContext = createContext<{
 }>({
   game: defaultGameState,
   endTurn: noop,
+  resetTurn: noop,
   setDiscarding: noop,
   setPlaying: noop,
   setGiving: noop,
@@ -247,6 +159,7 @@ export const GameProvider = ({
   const contextValue = {
     game: localGame,
     endTurn: wrapAction(Actions.endTurn),
+    resetTurn: wrapAction(Actions.resetTurn),
 
     // 3 main actions (visit, play, harvest)
     visitLocation: wrapAction(Actions.visitLocation),

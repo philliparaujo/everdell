@@ -119,8 +119,6 @@ export type Player = {
   discarding: boolean;
   playing: boolean;
   giving: boolean;
-  revealingDeck: boolean;
-  revealingDiscard: boolean;
 
   history: History;
 };
@@ -136,4 +134,5 @@ export type GameState = {
   events: Event[];
   specialEvents: SpecialEvent[];
   turn: PlayerColor;
+  previousState: GameState | null;
 };

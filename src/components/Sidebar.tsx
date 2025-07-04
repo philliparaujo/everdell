@@ -1,6 +1,7 @@
 import { useGame } from "../engine/GameContext";
-import { oppositePlayerOf } from "../utils/gameLogic";
+import { isNotYourTurn, oppositePlayerOf } from "../utils/gameLogic";
 import { getPlayerColor, getPlayerId } from "../utils/identity";
+import Button from "./Button";
 import Controls from "./Controls";
 import Id from "./Id";
 import Log from "./Log";
@@ -10,9 +11,10 @@ import ResourceBank from "./ResourceBank";
 import Reveal from "./Reveal";
 
 function Sidebar({ gameId }: { gameId: string | undefined }) {
-  const { game } = useGame();
+  const { game, resetTurn } = useGame();
 
   const storedId = getPlayerId();
+  const disabled = isNotYourTurn(game, storedId);
   const playerColor = getPlayerColor(game, storedId);
   const topStatusColor = playerColor ?? "Red";
 
@@ -54,6 +56,16 @@ function Sidebar({ gameId }: { gameId: string | undefined }) {
       <Reveal />
       <hr />
       <Log playerColor={topStatusColor} />
+      <hr />
+      <div className="grid grid-cols-2 gap-2 max-w-400px">
+        <Button
+          disabled={disabled}
+          variant="danger"
+          onClick={() => resetTurn(storedId)}
+        >
+          Reset Turn
+        </Button>
+      </div>
     </div>
   );
 }

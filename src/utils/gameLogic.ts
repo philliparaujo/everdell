@@ -1,10 +1,18 @@
+import { cardFrequencies, rawCards } from "../assets/data/cards";
+import { events } from "../assets/data/events";
+import { journeys } from "../assets/data/journey";
+import { locations } from "../assets/data/locations";
+import { specialEvents } from "../assets/data/specialEvents";
 import {
+  FIRST_PLAYER_HAND_SIZE,
   MAX_BASE_CITY_SIZE,
   MAX_HAND_SIZE,
   MAX_MEADOW_SIZE,
   MAX_REVEAL_SIZE,
   RESOURCE_COUNT,
+  SECOND_PLAYER_HAND_SIZE,
 } from "../engine/gameConstants";
+import { defaultPlayer, defaultPlayerCount } from "../engine/gameDefaults";
 import {
   Card,
   EffectType,
@@ -26,6 +34,7 @@ import {
   hasCards,
   isOnSpecialEvents,
 } from "./loops";
+import { pickNRandom, shuffleArray } from "./math";
 
 export function oppositePlayerOf(playerColor: PlayerColor): PlayerColor {
   return playerColor === "Red" ? "Blue" : "Red";
@@ -101,7 +110,85 @@ export function sanityCheck(state: GameState): boolean {
     if (resourceCount[resource] < 0) return false;
   }
 
+  // Check that previousState's previous state is null
+  if (state.previousState && state.previousState.previousState) return false;
+
   return true;
+}
+
+export function setupGame(firstPlayer: PlayerColor): GameState {
+  // Shuffle deck
+  const cards: Card[] = rawCards.flatMap((card) => {
+    const count = cardFrequencies[card.name] ?? 1;
+    return Array.from({ length: count }, () => ({
+      ...card,
+      discarding: false,
+      playing: false,
+      giving: false,
+    }));
+  });
+  const deck = shuffleArray(cards);
+
+  // Fill up meadow and deal cards
+  const MEADOW_END = MAX_MEADOW_SIZE;
+  const FIRST_END = MEADOW_END + FIRST_PLAYER_HAND_SIZE;
+  const SECOND_END = FIRST_END + SECOND_PLAYER_HAND_SIZE;
+
+  const meadow = deck.slice(0, MEADOW_END);
+  const firstHand = deck.slice(MEADOW_END, FIRST_END);
+  const secondHand = deck.slice(FIRST_END, SECOND_END);
+  const remainingDeck = deck.slice(SECOND_END);
+
+  // Set up remaining objects
+  const newLocations: Location[] = locations.map((location) => ({
+    ...location,
+    workers: defaultPlayerCount,
+  }));
+  const newEvents: Event[] = events.map((event) => ({
+    ...event,
+    used: false,
+    workers: defaultPlayerCount,
+  }));
+  const newSpecialEvents: SpecialEvent[] = pickNRandom(
+    4,
+    specialEvents.map((specialEvent) => ({
+      ...specialEvent,
+      used: false,
+      workers: defaultPlayerCount,
+    })),
+  );
+
+  const tempState: GameState = {
+    players: {
+      Red: {
+        ...defaultPlayer,
+        color: "Red",
+        hand: firstPlayer === "Red" ? firstHand : secondHand,
+      },
+      Blue: {
+        ...defaultPlayer,
+        color: "Blue",
+        hand: firstPlayer === "Blue" ? firstHand : secondHand,
+      },
+    },
+    deck: remainingDeck,
+    discard: [],
+    meadow: meadow,
+    reveal: [],
+    locations: newLocations,
+    journeys: journeys,
+    events: newEvents,
+    specialEvents: newSpecialEvents,
+    turn: firstPlayer,
+    previousState: null,
+  };
+
+  const newState: GameState = {
+    ...tempState,
+    previousState: structuredClone(tempState),
+  };
+
+  return newState;
 }
 
 function canVisitGeneric(

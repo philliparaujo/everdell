@@ -55,7 +55,40 @@ export function endTurn(state: GameState, playerId: string | null): GameState {
         history: updatedOpponentHistory,
       },
     },
+    previousState: structuredClone({
+      ...state,
+      turn: oppositePlayerOf(state.turn),
+      previousState: null,
+    }),
   };
+
+  if (!sanityCheck(newState)) return state;
+  return newState;
+}
+
+export function resetTurn(
+  state: GameState,
+  playerId: string | null,
+): GameState {
+  const playerColor = getPlayerColor(state, playerId);
+  if (playerColor !== state.turn) return state;
+
+  if (!state.previousState) return state;
+
+  const { previousState } = state;
+  let newState: GameState = { ...state.previousState, previousState };
+
+  // Preserve id, name, and color for all players
+  for (const color of Object.keys(
+    state.players,
+  ) as (keyof typeof state.players)[]) {
+    newState.players[color] = {
+      ...newState.players[color],
+      id: state.players[color].id,
+      name: state.players[color].name,
+      color: state.players[color].color,
+    };
+  }
 
   if (!sanityCheck(newState)) return state;
   return newState;

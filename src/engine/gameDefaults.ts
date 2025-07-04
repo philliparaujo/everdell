@@ -49,8 +49,6 @@ export const defaultPlayer: Player = {
   discarding: false,
   playing: false,
   giving: false,
-  revealingDeck: false,
-  revealingDiscard: false,
 
   history: {
     discarded: [],
@@ -65,7 +63,7 @@ export const defaultPlayer: Player = {
   },
 };
 
-export const defaultGameState: GameState = {
+const defaultPreviousState: GameState = {
   players: {
     Red: defaultPlayer,
     Blue: defaultPlayer,
@@ -79,6 +77,12 @@ export const defaultGameState: GameState = {
   events: [],
   specialEvents: [],
   turn: "Red",
+  previousState: null,
+};
+
+export const defaultGameState: GameState = {
+  ...defaultPreviousState,
+  previousState: structuredClone(defaultPreviousState),
 };
 
 export const RESOURCE_ORDER: ResourceType[] = [
