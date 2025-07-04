@@ -89,7 +89,7 @@ function CardInspect({
             {mapOverResources(
               card.storage,
               (key, val) => {
-                return key === "cards" ? (
+                return key === "cards" || key === "wildcards" ? (
                   <></>
                 ) : (
                   <div key={key} className="flex gap-1 justify-center">

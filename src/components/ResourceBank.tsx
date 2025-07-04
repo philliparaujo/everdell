@@ -1,8 +1,10 @@
+import { RESOURCE_COUNT } from "../engine/gameConstants";
 import { useGame } from "../engine/GameContext";
 import { defaultResources } from "../engine/gameDefaults";
 import { ResourceType } from "../engine/gameTypes";
 import {
   canGiveResources,
+  computeResourceCount,
   isNotYourTurn,
   oppositePlayerOf,
 } from "../utils/gameLogic";
@@ -32,6 +34,7 @@ export function ResourceDisplay({ resource }: { resource: ResourceType }) {
   };
 
   const canGive = canGiveResources(game, game.turn);
+  const resourceCount = computeResourceCount(game);
 
   return (
     <div className="flex items-center justify-center gap-1">
@@ -41,6 +44,7 @@ export function ResourceDisplay({ resource }: { resource: ResourceType }) {
         </Button>
       )}
       <ResourceIcon type={resource} />
+      <p className="text-xs">{resourceCount[resource]}</p>
       <Button disabled={disabled} onClick={decrementResource}>
         {"-"}
       </Button>
@@ -57,7 +61,7 @@ function ResourceBank() {
       {mapOverResources(
         defaultResources,
         (key, _) => {
-          return key === "cards" ? (
+          return key === "cards" || key === "wildcards" ? (
             <></>
           ) : (
             <ResourceDisplay key={key} resource={key} />

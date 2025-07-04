@@ -3,6 +3,7 @@ import {
   MAX_HAND_SIZE,
   MAX_MEADOW_SIZE,
   MAX_REVEAL_SIZE,
+  RESOURCE_COUNT,
 } from "../engine/gameConstants";
 import {
   Card,
@@ -13,6 +14,8 @@ import {
   Location,
   Player,
   PlayerColor,
+  ResourceCount,
+  ResourceType,
   SpecialEvent,
   Visitable,
 } from "../engine/gameTypes";
@@ -58,15 +61,45 @@ export function computeMaxCitySize(city: Card[]) {
   return MAX_BASE_CITY_SIZE + husbandWifePairs + wanderers;
 }
 
+export function computeResourceCount(state: GameState): ResourceCount {
+  let baseCount = { ...RESOURCE_COUNT };
+  for (const playerColor of Object.keys(state.players) as PlayerColor[]) {
+    const player = state.players[playerColor];
+
+    // Player resources
+    for (const resource of Object.keys(RESOURCE_COUNT) as ResourceType[]) {
+      baseCount[resource] -= player.resources[resource];
+    }
+
+    // Resources on city cards
+    for (const card of player.city) {
+      if (card.storage) {
+        for (const resource of Object.keys(RESOURCE_COUNT) as ResourceType[]) {
+          baseCount[resource] -= card.storage[resource];
+        }
+      }
+    }
+  }
+  return baseCount;
+}
+
 export function sanityCheck(state: GameState): boolean {
+  // Check player hand and city size
   for (const playerColor of Object.keys(state.players) as PlayerColor[]) {
     const player = state.players[playerColor];
     if (player.hand.length > MAX_HAND_SIZE) return false;
     if (player.city.length > computeMaxCitySize(player.city)) return false;
   }
 
+  // Check meadow and reveal size
   if (state.meadow.length > MAX_MEADOW_SIZE) return false;
   if (state.reveal.length > MAX_REVEAL_SIZE) return false;
+
+  // Check resource count
+  const resourceCount = computeResourceCount(state);
+  for (const resource of Object.keys(RESOURCE_COUNT) as ResourceType[]) {
+    if (resourceCount[resource] < 0) return false;
+  }
 
   return true;
 }
