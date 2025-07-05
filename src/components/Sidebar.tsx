@@ -1,6 +1,7 @@
 import { useGame } from "../engine/GameContext";
 import { isNotYourTurn, oppositePlayerOf } from "../utils/gameLogic";
 import { getPlayerColor, getPlayerId } from "../utils/identity";
+import { LOBBY_PATH } from "../utils/navigation";
 import Button from "./Button";
 import Controls from "./Controls";
 import Id from "./Id";
@@ -32,7 +33,7 @@ function Sidebar({ gameId }: { gameId: string | undefined }) {
     <div className="w-sidebar h-screen overflow-y-auto overflow-x-hidden fixed border-r bg-container border-container-border p-2 flex flex-col gap-1">
       <div className="flex flex-col gap-2">
         <Navigation
-          link="/lobby"
+          link={LOBBY_PATH}
           displayText="Back to Lobby"
           arrow="backward"
         />

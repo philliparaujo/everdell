@@ -1,4 +1,5 @@
 import { Card, PlayerColor, ResourceType } from "../engine/gameTypes";
+import { getCardPath } from "../utils/card";
 import { mapOverResources } from "../utils/loops";
 import { styleCardPreviewBorderColor } from "../utils/tailwind";
 import CardInspect from "./CardInspect";
@@ -53,7 +54,7 @@ function CardPreview({
             <div>
               <img
                 src={require(
-                  `../assets/cards/${card.expansionName}/${card.imageKey}.jpg`,
+                  `../${getCardPath(card.expansionName, card.imageKey)}`,
                 )}
                 alt={card.name}
                 className="w-full p-0 pb-0 h-[150px] object-cover rounded-t"

@@ -2,13 +2,14 @@ import { useState } from "react";
 import { useGame } from "../engine/GameContext";
 import { defaultResources } from "../engine/gameDefaults";
 import { Card, PlayerColor, ResourceType } from "../engine/gameTypes";
+import { getCardPath } from "../utils/card";
 import { canVisitCardInCity, isNotYourTurn } from "../utils/gameLogic";
 import { getPlayerColor, getPlayerId } from "../utils/identity";
 import { mapOverResources } from "../utils/loops";
+import { renderVisitButtons, renderVisitingWorkers } from "../utils/react";
 import Button from "./Button";
 import { ResourceIcon } from "./Icons";
 import Inspectable from "./Inspectable";
-import { renderVisitButtons, renderVisitingWorkers } from "../utils/react";
 
 function CardInspect({
   card,
@@ -47,9 +48,7 @@ function CardInspect({
   return (
     <Inspectable onClose={onClose}>
       <img
-        src={require(
-          `../assets/cards/${card.expansionName}/${card.imageKey}.jpg`,
-        )}
+        src={require(`../${getCardPath(card.expansionName, card.imageKey)}`)}
         alt={card.name}
         className={`max-w-[50%] object-contain rounded-lg aspect-5/7 bg-neutral-800 transition-opacity duration-0 ${
           imageLoaded ? "opacity-100" : "opacity-0"

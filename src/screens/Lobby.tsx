@@ -10,16 +10,20 @@ import {
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
+import Alert from "../components/Alert";
 import Button from "../components/Button";
 import GameList from "../components/GameList";
 import Navigation from "../components/Navigation";
+import { useCardManagement } from "../engine/CardManagementContext";
 import { GameState, PlayerColor } from "../engine/gameTypes";
 import { db } from "../server/firebase";
-import { getPlayerId, getPlayerName } from "../utils/identity";
 import { setupGame } from "../utils/gameLogic";
+import { getPlayerId, getPlayerName } from "../utils/identity";
+import { GAME_PATH, HOME_PATH } from "../utils/navigation";
 
 function Lobby() {
   const navigate = useNavigate();
+  const { cardFrequencies, isModified } = useCardManagement();
   const [gameList, setGameList] = useState<{ id: string; game: GameState }[]>(
     [],
   );
@@ -31,11 +35,11 @@ function Lobby() {
   const startGame = async () => {
     if (isDisabled) return;
     const gameId = uuidv4();
-    const gameState: GameState = setupGame("Red");
+    const gameState: GameState = setupGame("Red", cardFrequencies);
     gameState.players.Red.id = playerId!;
     gameState.players.Red.name = name;
     await setDoc(doc(db, `games/${gameId}`), gameState);
-    navigate(`/game/${gameId}`);
+    navigate(`${GAME_PATH}/${gameId}`);
   };
 
   const handleJoinGame = async (gameId: string, color: PlayerColor) => {
@@ -55,7 +59,7 @@ function Lobby() {
       [`players.${color}.id`]: playerId,
       [`players.${color}.name`]: name,
     });
-    navigate(`/game/${gameId}`);
+    navigate(`${GAME_PATH}/${gameId}`);
   };
 
   const handleRejoinGame = async (gameId: string) => {
@@ -81,11 +85,11 @@ function Lobby() {
     await updateDoc(gameRef, {
       [`players.${color}.name`]: name,
     });
-    navigate(`/game/${gameId}`);
+    navigate(`${GAME_PATH}/${gameId}`);
   };
 
   const handleSpectateGame = (gameId: string) => {
-    navigate(`/game/${gameId}`);
+    navigate(`${GAME_PATH}/${gameId}`);
   };
 
   const handleDeleteGame = async (gameId: string) => {
@@ -119,10 +123,10 @@ function Lobby() {
   }, []);
 
   return (
-    <div className="max-w-7xl mx-auto p-4 flex flex-col h-screen">
-      <div className="flex-shrink-0">
+    <div className="max-w-7xl mx-auto p-4 flex flex-col h-screen gap-4">
+      <div className="flex-shrink-0 flex flex-col gap-4">
         {/* Header */}
-        <div className="flex justify-between items-center flex-wrap mb-8">
+        <div className="flex justify-between items-center flex-wrap">
           <div>
             <span>
               <strong>Display Name:</strong> {name || "Not Set"}
@@ -134,17 +138,25 @@ function Lobby() {
           </div>
           <div className="flex gap-2">
             <Navigation
-              link="/home"
+              link={HOME_PATH}
               displayText="Back to Home"
               arrow="backward"
             />
           </div>
         </div>
 
-        {/* Title and start button */}
-        <h2 className="mb-4 text-lg font-bold">Available Games</h2>
+        {isModified && (
+          <Alert
+            displayText="Custom card frequencies are active"
+            secondaryText="New games will use these modified frequencies"
+            variant="warning"
+          />
+        )}
 
-        <div className="mb-4 flex gap-2">
+        {/* Title and start button */}
+        <h2 className="text-lg font-bold">Available Games</h2>
+
+        <div className="flex gap-2">
           <Button onClick={startGame} disabled={isDisabled} variant="important">
             Start New Game
           </Button>
@@ -157,7 +169,7 @@ function Lobby() {
           </Button>
         </div>
 
-        {gameList.length === 0 && <p className="italic">No games found.</p>}
+        {gameList.length === 0 && <p className="italic">No games found</p>}
       </div>
 
       {/* Game list grid */}

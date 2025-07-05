@@ -1,14 +1,11 @@
 import { doc, getFirestore, onSnapshot, setDoc } from "firebase/firestore";
 import { createContext, useContext, useEffect, useState } from "react";
 import * as Actions from "./gameActions";
-import { defaultGameState } from "./gameDefaults";
 import { GameState, PlayerColor, ResourceCount } from "./gameTypes";
 
 let actionQueue = Promise.resolve();
 
-const noop = (..._: any[]) => {};
-
-const GameContext = createContext<{
+interface GameContextType {
   game: GameState;
   endTurn: (playerId: string | null) => void;
   resetTurn: (playerId: string | null) => void;
@@ -84,33 +81,9 @@ const GameContext = createContext<{
     toColor: PlayerColor,
   ) => void;
   harvest: (playerId: string | null) => void;
-}>({
-  game: defaultGameState,
-  endTurn: noop,
-  resetTurn: noop,
-  setDiscarding: noop,
-  setPlaying: noop,
-  setGiving: noop,
-  toggleCardDiscarding: noop,
-  toggleCardPlaying: noop,
-  toggleCardGiving: noop,
-  discardSelectedCards: noop,
-  playSelectedCards: noop,
-  giveSelectedCards: noop,
-  drawCard: noop,
-  revealCard: noop,
-  refillMeadow: noop,
-  visitLocation: noop,
-  visitJourney: noop,
-  visitEvent: noop,
-  visitSpecialEvent: noop,
-  visitCardInCity: noop,
-  toggleOccupiedCardInCity: noop,
-  addResourcesToCardInCity: noop,
-  addResourcesToSelf: noop,
-  giveResources: noop,
-  harvest: noop,
-});
+}
+
+const GameContext = createContext<GameContextType | undefined>(undefined);
 
 export const GameProvider = ({
   children,
@@ -203,4 +176,10 @@ export const GameProvider = ({
   );
 };
 
-export const useGame = () => useContext(GameContext);
+export const useGame = () => {
+  const context = useContext(GameContext);
+  if (!context) {
+    throw new Error("useGame must be used within a GameProvider");
+  }
+  return context;
+};

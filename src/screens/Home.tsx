@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
+import Alert from "../components/Alert";
 import Navigation from "../components/Navigation";
+import { useCardManagement } from "../engine/CardManagementContext";
 import {
   getPlayerId,
   getPlayerName,
   storePlayerId,
   storePlayerName,
 } from "../utils/identity";
+import { CARD_MANAGEMENT_PATH, LOBBY_PATH } from "../utils/navigation";
 
 function Home() {
+  const { isModified } = useCardManagement();
+
   const [name, setName] = useState(() => {
     const storedName = getPlayerName();
     if (storedName) {
@@ -43,8 +48,16 @@ function Home() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-4 flex flex-col justify-center min-h-screen text-text">
-      <div className="mb-6">
+    <div className="max-w-2xl mx-auto p-4 flex gap-6 flex-col justify-center min-h-screen text-text">
+      {isModified && (
+        <Alert
+          displayText="Custom card frequencies are active"
+          secondaryText="New games will use these modified frequencies"
+          variant="warning"
+        />
+      )}
+
+      <div className="">
         <label htmlFor="player-name" className="block mb-2 font-bold text-sm">
           Display Name
         </label>
@@ -57,7 +70,7 @@ function Home() {
         />
       </div>
 
-      <div className="mb-8">
+      <div className="">
         <label htmlFor="player-id" className="block mb-2 font-bold text-sm">
           Player ID
         </label>
@@ -71,8 +84,16 @@ function Home() {
       </div>
 
       <div className="flex justify-between">
-        <Navigation link="/lobby" displayText="Go to Lobby" arrow="forward" />
-        <span></span>
+        <Navigation
+          link={LOBBY_PATH}
+          displayText="Go to Lobby"
+          arrow="forward"
+        />
+        <Navigation
+          link={CARD_MANAGEMENT_PATH}
+          displayText="Card Management"
+          arrow="forward"
+        />
       </div>
     </div>
   );

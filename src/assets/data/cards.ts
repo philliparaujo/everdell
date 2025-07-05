@@ -1,7 +1,7 @@
 import { defaultPlayerCount } from "../../engine/gameDefaults";
 import { Card } from "../../engine/gameTypes";
 
-export const cardFrequencies: Record<string, number> = {
+export const DEFAULT_CARD_FREQUENCIES: Record<string, number> = {
   Architect: 2,
   Bard: 2,
   "Barge Toad": 3,

@@ -1,4 +1,3 @@
-import { cardFrequencies, rawCards } from "../assets/data/cards";
 import { events } from "../assets/data/events";
 import { journeys } from "../assets/data/journey";
 import { locations } from "../assets/data/locations";
@@ -27,6 +26,7 @@ import {
   SpecialEvent,
   Visitable,
 } from "../engine/gameTypes";
+import { makeShuffledDeck } from "./card";
 import { getPlayerColor } from "./identity";
 import {
   countCardOccurrences,
@@ -34,7 +34,7 @@ import {
   hasCards,
   isOnSpecialEvents,
 } from "./loops";
-import { pickNRandom, shuffleArray } from "./math";
+import { pickNRandom } from "./math";
 
 export function oppositePlayerOf(playerColor: PlayerColor): PlayerColor {
   return playerColor === "Red" ? "Blue" : "Red";
@@ -116,18 +116,12 @@ export function sanityCheck(state: GameState): boolean {
   return true;
 }
 
-export function setupGame(firstPlayer: PlayerColor): GameState {
+export function setupGame(
+  firstPlayer: PlayerColor,
+  cardFrequencies: Record<string, number>,
+): GameState {
   // Shuffle deck
-  const cards: Card[] = rawCards.flatMap((card) => {
-    const count = cardFrequencies[card.name] ?? 1;
-    return Array.from({ length: count }, () => ({
-      ...card,
-      discarding: false,
-      playing: false,
-      giving: false,
-    }));
-  });
-  const deck = shuffleArray(cards);
+  const deck: Card[] = makeShuffledDeck(cardFrequencies);
 
   // Fill up meadow and deal cards
   const MEADOW_END = MAX_MEADOW_SIZE;
