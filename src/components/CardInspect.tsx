@@ -16,19 +16,20 @@ function CardInspect({
   index,
   cityColor,
   onClose,
-  placedDown,
+  location,
 }: {
   card: Card;
   index: number;
   cityColor: PlayerColor | null;
   onClose: () => void;
-  placedDown: boolean;
+  location: "hand" | "city" | "meadow" | "reveal" | "discard";
 }) {
   const {
     game,
     visitCardInCity,
     addResourcesToCardInCity,
     toggleOccupiedCardInCity,
+    playCard,
   } = useGame();
 
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -65,7 +66,20 @@ function CardInspect({
             <strong>Point value:</strong> {card.value}
           </p>
         )}
-        {placedDown && card.occupied !== null && cityColor ? (
+        {location !== "city" && (
+          <div>
+            <Button
+              disabled={disabled}
+              onClick={() => {
+                playCard(storedId, location, index);
+                onClose();
+              }}
+            >
+              Play
+            </Button>
+          </div>
+        )}
+        {location === "city" && card.occupied !== null && cityColor ? (
           <div className="flex gap-2 justify-center">
             <strong className={textColor}>Occupied:</strong>
             <Button
@@ -86,7 +100,7 @@ function CardInspect({
           <></>
         )}
 
-        {placedDown && card.storage && (
+        {location === "city" && card.storage && (
           <div className="grid grid-cols-2 gap-4 mx-auto">
             {mapOverResources(
               card.storage,
@@ -131,18 +145,19 @@ function CardInspect({
           </div>
         )}
 
-        {placedDown && card.maxDestinations != null && (
-          <div className="flex flex-col items-center text-center">
-            {cityColor !== null &&
-              renderVisitButtons(
+        {location === "city" &&
+          card.maxDestinations != null &&
+          cityColor != null && (
+            <div className="flex flex-col items-center text-center">
+              {renderVisitButtons(
                 disabled || !canVisit,
                 disabled || !canLeave,
                 () => visitCardInCity(storedId, cityColor, index, 1),
                 () => visitCardInCity(storedId, cityColor, index, -1),
               )}
-            {card.workers && renderVisitingWorkers(card)}
-          </div>
-        )}
+              {card.workers && renderVisitingWorkers(card)}
+            </div>
+          )}
       </div>
     </Inspectable>
   );

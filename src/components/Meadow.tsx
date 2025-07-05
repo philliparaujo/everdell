@@ -17,7 +17,7 @@ function Meadow() {
     <CardRow
       cards={game.meadow}
       maxLength={MAX_MEADOW_SIZE}
-      placedDown={false}
+      location="meadow"
       cityColor={null}
       onLeftClick={(index, card) => {
         if (isDiscarding && card) {

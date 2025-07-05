@@ -22,6 +22,11 @@ interface GameContextType {
     location: "hand" | "meadow" | "discard" | "reveal",
     index: number,
   ) => void;
+  playCard: (
+    playerId: string | null,
+    location: "hand" | "meadow" | "discard" | "reveal",
+    index: number,
+  ) => void;
   toggleCardGiving: (
     playerId: string | null,
     location: "hand" | "meadow" | "reveal",
@@ -144,6 +149,7 @@ export const GameProvider = ({
     setDiscarding: wrapAction(Actions.setDiscarding),
     setPlaying: wrapAction(Actions.setPlaying),
     setGiving: wrapAction(Actions.setGiving),
+    playCard: wrapAction(Actions.playCard),
     revealCard: wrapAction(Actions.revealCard),
 
     harvest: wrapAction(Actions.harvest),

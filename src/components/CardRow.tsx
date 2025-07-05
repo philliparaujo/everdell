@@ -4,13 +4,13 @@ import CardPreview from "./CardPreview";
 
 function CardRow({
   cards,
-  placedDown,
+  location,
   cityColor,
   onLeftClick,
   maxLength,
 }: {
   cards: Card[];
-  placedDown: boolean;
+  location: "hand" | "city" | "meadow" | "reveal" | "discard";
   cityColor: PlayerColor | null;
   onLeftClick: (index: number, card: Card | null) => void;
   maxLength?: number;
@@ -27,7 +27,7 @@ function CardRow({
             key={index}
             index={index}
             card={card}
-            placedDown={placedDown}
+            location={location}
             cityColor={cityColor}
             onLeftClick={() => onLeftClick(index, card)}
           />

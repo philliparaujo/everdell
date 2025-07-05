@@ -10,22 +10,24 @@ function CardPreview({
   card,
   index,
   onLeftClick,
-  placedDown,
+  location,
   cityColor,
 }: {
   card: Card | null;
   index: number;
   onLeftClick?: () => void;
-  placedDown: boolean;
+  location: "hand" | "city" | "meadow" | "reveal" | "discard";
   cityColor: PlayerColor | null;
 }) {
   const storable =
-    card && (card.storage || card.maxDestinations != null) && placedDown;
+    card &&
+    (card.storage || card.maxDestinations != null) &&
+    location === "city";
+  const isInteractive = !!(card && onLeftClick);
+
   const textColor = card?.occupied
     ? "text-cardPreviewOutline-occupied"
     : "text-text";
-
-  const isInteractive = !!(card && onLeftClick);
 
   return (
     <Hoverable
@@ -38,7 +40,7 @@ function CardPreview({
             index={index}
             cityColor={cityColor}
             onClose={closeInspector}
-            placedDown={placedDown}
+            location={location}
           />
         )
       }

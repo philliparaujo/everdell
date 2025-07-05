@@ -20,7 +20,7 @@ function Discard() {
     <CardRow
       cards={game.discard}
       maxLength={game.discard.length}
-      placedDown={false}
+      location="discard"
       cityColor={null}
       onLeftClick={(index, card) => {
         if (isPlaying && card) {

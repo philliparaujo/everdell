@@ -13,7 +13,7 @@ function City({ color }: { color: PlayerColor }) {
   return (
     <CardRow
       cards={cityOwner.city}
-      placedDown={true}
+      location="city"
       cityColor={color}
       onLeftClick={(index, card) => {
         if (isDiscarding && card) {

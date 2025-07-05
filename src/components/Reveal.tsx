@@ -37,7 +37,7 @@ function Reveal() {
         key={index}
         index={index}
         card={card}
-        placedDown={false}
+        location="reveal"
         cityColor={null}
         onLeftClick={() => onLeftClick(index, card)}
       />

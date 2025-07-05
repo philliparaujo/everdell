@@ -18,7 +18,7 @@ function Hand({ color }: { color: PlayerColor }) {
     <CardRow
       cards={handOwner.hand}
       maxLength={MAX_HAND_SIZE}
-      placedDown={false}
+      location="hand"
       cityColor={null}
       onLeftClick={(index, card) => {
         if (isDiscarding && card) {

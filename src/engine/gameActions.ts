@@ -691,6 +691,71 @@ export function toggleCardGiving(
   return toggleCardAction(state, playerId, location, index, "giving");
 }
 
+export function playCard(
+  state: GameState,
+  playerId: string | null,
+  location: "hand" | "meadow" | "discard" | "reveal",
+  index: number,
+): GameState {
+  const playerColor = getPlayerColor(state, playerId);
+  if (playerColor !== state.turn) return state;
+
+  const newState: GameState = {
+    ...state,
+    players: {
+      ...state.players,
+      [playerColor]: {
+        ...state.players[playerColor],
+        hand: [...state.players[playerColor].hand],
+        city: [...state.players[playerColor].city],
+      },
+    },
+    meadow: [...state.meadow],
+    reveal: [...state.reveal],
+    discard: [...state.discard],
+  };
+
+  let cardToPlay: Card | undefined;
+
+  if (location === "hand") {
+    if (index >= state.players[playerColor].hand.length) return state;
+    cardToPlay = state.players[playerColor].hand[index];
+
+    newState.players[playerColor].hand.splice(index, 1);
+  } else if (location === "meadow") {
+    if (index >= state.meadow.length) return state;
+    cardToPlay = state.meadow[index];
+
+    newState.meadow.splice(index, 1);
+  } else if (location === "discard") {
+    if (index >= state.discard.length) return state;
+    cardToPlay = state.discard[index];
+
+    newState.discard.splice(index, 1);
+  } else if (location === "reveal") {
+    if (index >= state.reveal.length) return state;
+    cardToPlay = state.reveal[index];
+
+    newState.reveal.splice(index, 1);
+  }
+
+  if (!cardToPlay) return state;
+  const updatedCard: Card = {
+    ...cardToPlay,
+    playing: false,
+    discarding: false,
+    giving: false,
+  };
+
+  newState.players[playerColor].city.push(updatedCard);
+  newState.players[playerColor].city = sortCity(
+    newState.players[playerColor].city,
+  );
+
+  if (!sanityCheck(newState)) return state;
+  return newState;
+}
+
 function updatedHistoryOnAction(
   state: GameState,
   playerColor: PlayerColor,
