@@ -2,6 +2,7 @@ import { useGame } from "../engine/GameContext";
 import { isNotYourTurn, oppositePlayerOf } from "../utils/gameLogic";
 import { getPlayerColor, getPlayerId } from "../utils/identity";
 import { LOBBY_PATH } from "../utils/navigation";
+import { renderActiveExpansions } from "../utils/react";
 import Button from "./Button";
 import Controls from "./Controls";
 import Id from "./Id";
@@ -38,6 +39,7 @@ function Sidebar({ gameId }: { gameId: string | undefined }) {
           arrow="backward"
         />
         <Id id={gameId ?? ""} />
+        {renderActiveExpansions(game.activeExpansions)}
         <h3 className="font-bold text-lg">
           {game.turn}'s Turn{" "}
           {turnStatusText && (

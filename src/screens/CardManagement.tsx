@@ -4,14 +4,17 @@ import Alert from "../components/Alert";
 import Button from "../components/Button";
 import Navigation from "../components/Navigation";
 import { useCardManagement } from "../engine/CardManagementContext";
-import { Card } from "../engine/gameTypes";
+import { Card, EXPANSION_NAMES, ExpansionName } from "../engine/gameTypes";
 import {
   findCard,
   formatExpansionName,
+  getActiveCards,
+  getBannedCards,
   getCardPath,
   groupCardsByExpansion,
 } from "../utils/card";
 import { HOME_PATH } from "../utils/navigation";
+import { renderActiveExpansions } from "../utils/react";
 
 const ActiveCard = ({
   card,
@@ -21,18 +24,23 @@ const ActiveCard = ({
 }: {
   card: Card;
   frequency: number;
-  updateCardFrequency: (cardName: string, frequency: number) => void;
+  updateCardFrequency: (
+    cardName: string,
+    expansionName: ExpansionName,
+    frequency: number,
+  ) => void;
   setPreviewedCard: (card: Card) => void;
 }) => {
   const cardName = card.name;
+  const expansionName = card.expansionName;
 
   const handleFrequencyChange = (newFrequency: number) => {
-    updateCardFrequency(cardName, newFrequency);
+    updateCardFrequency(cardName, expansionName, newFrequency);
     setPreviewedCard(card);
   };
 
   const handleBan = () => {
-    updateCardFrequency(cardName, 0);
+    updateCardFrequency(cardName, expansionName, 0);
     setPreviewedCard(card);
   };
 
@@ -45,7 +53,7 @@ const ActiveCard = ({
       <div className="flex-1">
         <h3 className="font-medium text-white">{cardName}</h3>
         <p className="text-sm text-green-200">
-          (Default: {DEFAULT_CARD_FREQUENCIES[cardName] ?? 1})
+          (Default: {DEFAULT_CARD_FREQUENCIES[expansionName][cardName] ?? 1})
         </p>
       </div>
       <div className="flex items-center gap-2">
@@ -83,13 +91,14 @@ const BannedCard = ({
   setPreviewedCard,
 }: {
   card: Card;
-  restoreCard: (cardName: string) => void;
+  restoreCard: (cardName: string, expansionName: ExpansionName) => void;
   setPreviewedCard: (card: Card) => void;
 }) => {
   const cardName = card.name;
+  const expansionName = card.expansionName;
 
   const handleRestore = () => {
-    restoreCard(cardName);
+    restoreCard(cardName, expansionName);
     setPreviewedCard(card);
   };
 
@@ -102,7 +111,7 @@ const BannedCard = ({
       <div className="flex-1">
         <h3 className="font-medium text-white">{cardName}</h3>
         <p className="text-sm text-red-200">
-          (Default: {DEFAULT_CARD_FREQUENCIES[cardName] ?? 1})
+          (Default: {DEFAULT_CARD_FREQUENCIES[expansionName][cardName] ?? 1})
         </p>
       </div>
       <Button
@@ -141,22 +150,51 @@ const CardPreview = ({ card }: { card: Card | null }) => {
 };
 
 const CardManagement: React.FC = () => {
-  const { cardFrequencies, updateCardFrequency, resetToDefaults, isModified } =
-    useCardManagement();
+  const {
+    cardFrequencies,
+    activeExpansions,
+    updateCardFrequency,
+    toggleExpansion,
+    resetToDefaults,
+    isModified,
+  } = useCardManagement();
   const [previewedCard, setPreviewedCard] = useState<Card | null>(null);
 
-  const handleRestoreCard = (cardName: string) => {
+  const handleRestoreCard = (
+    cardName: string,
+    expansionName: ExpansionName,
+  ) => {
     const originalCard = findCard(cardName);
     if (originalCard) {
-      updateCardFrequency(cardName, DEFAULT_CARD_FREQUENCIES[cardName] ?? 1);
+      updateCardFrequency(
+        cardName,
+        expansionName,
+        DEFAULT_CARD_FREQUENCIES[expansionName][cardName] ?? 1,
+      );
     }
   };
 
-  const bannedCards = Object.entries(cardFrequencies).filter(
-    ([_, frequency]) => frequency === 0,
+  const activeCards = getActiveCards(cardFrequencies);
+  const bannedCards = getBannedCards(cardFrequencies);
+
+  const totalActiveCards = activeCards.reduce(
+    (acc, [_, frequencies]) =>
+      acc +
+      Object.values(frequencies).reduce((acc, frequency) => acc + frequency, 0),
+    0,
   );
-  const activeCards = Object.entries(cardFrequencies).filter(
-    ([_, frequency]) => frequency > 0,
+  const totalBannedCards = bannedCards.reduce(
+    (acc, [expansionName, frequencies]) =>
+      acc +
+      Object.entries(frequencies).reduce(
+        (acc, [cardName, _]) =>
+          acc +
+          (DEFAULT_CARD_FREQUENCIES[expansionName as ExpansionName]?.[
+            cardName
+          ] ?? 1),
+        0,
+      ),
+    0,
   );
 
   return (
@@ -173,22 +211,30 @@ const CardManagement: React.FC = () => {
 
         {/* Modification Alert */}
         <Alert
-          displayText="Custom card frequencies are active"
-          secondaryText="New games will use these modified frequencies"
-          variant="warning"
-          visible={isModified}
+          displayText={
+            isModified
+              ? "Using custom card frequencies"
+              : "Using default card frequencies"
+          }
+          secondaryDisplay={renderActiveExpansions(activeExpansions)}
+          variant={isModified ? "warning" : "info"}
+          visible={true}
         />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Active Cards */}
           <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6">
             <h2 className="text-xl font-semibold text-white mb-4">
-              Active Cards ({activeCards.length})
+              Active Cards ({totalActiveCards})
             </h2>
             <div className="space-y-3 max-h-96 overflow-y-auto">
               {(() => {
                 const cardsByExpansion = groupCardsByExpansion(activeCards);
-                const sortedExpansions = Object.keys(cardsByExpansion).sort();
+                const sortedExpansions: ExpansionName[] = Object.keys(
+                  cardsByExpansion,
+                )
+                  .map((expansion) => expansion as ExpansionName)
+                  .sort();
 
                 return sortedExpansions.map((expansion) => (
                   <div key={expansion} className="space-y-2">
@@ -217,7 +263,7 @@ const CardManagement: React.FC = () => {
           {/* Banned Cards */}
           <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6">
             <h2 className="text-xl font-semibold text-white mb-4">
-              Banned Cards ({bannedCards.length})
+              Banned Cards ({totalBannedCards})
             </h2>
             <div className="space-y-3 max-h-96 overflow-y-auto">
               {bannedCards.length === 0 ? (
@@ -228,14 +274,16 @@ const CardManagement: React.FC = () => {
                 (() => {
                   const bannedCardsByExpansion =
                     groupCardsByExpansion(bannedCards);
-                  const sortedExpansions = Object.keys(
+                  const sortedExpansions: ExpansionName[] = Object.keys(
                     bannedCardsByExpansion,
-                  ).sort();
+                  )
+                    .map((expansion) => expansion as ExpansionName)
+                    .sort();
 
                   return sortedExpansions.map((expansion) => (
                     <div key={expansion} className="space-y-2">
                       <h3 className="text-lg font-semibold text-white border-b border-white/20 pb-1">
-                        {expansion.charAt(0).toUpperCase() + expansion.slice(1)}
+                        {formatExpansionName(expansion)}
                       </h3>
                       <div className="space-y-2 ml-4">
                         {bannedCardsByExpansion[expansion]
@@ -280,13 +328,14 @@ const CardManagement: React.FC = () => {
             >
               Reset to Defaults
             </Button>
-            <Button
+
+            {/* <Button
               variant="danger"
               onClick={() => {
                 rawCards
                   .filter((card) => card.expansionName === "base")
                   .forEach((card) => {
-                    updateCardFrequency(card.name, 0);
+                    updateCardFrequency(card.name, card.expansionName, 0);
                   });
               }}
             >
@@ -298,12 +347,41 @@ const CardManagement: React.FC = () => {
                 rawCards
                   .filter((card) => card.expansionName === "extra extra")
                   .forEach((card) => {
-                    updateCardFrequency(card.name, 0);
+                    updateCardFrequency(card.name, card.expansionName, 0);
                   });
               }}
             >
               Ban All Extra Extra Cards
-            </Button>
+            </Button> */}
+
+            {EXPANSION_NAMES.map((expansion) => (
+              <Button
+                key={expansion}
+                variant={
+                  activeExpansions.includes(expansion) ? "danger" : "important"
+                }
+                onClick={() => {
+                  const willInclude = !activeExpansions.includes(expansion);
+
+                  toggleExpansion(expansion);
+                  rawCards
+                    .filter((card) => card.expansionName === expansion)
+                    .forEach((card) => {
+                      updateCardFrequency(
+                        card.name,
+                        card.expansionName,
+                        willInclude
+                          ? DEFAULT_CARD_FREQUENCIES[expansion][card.name]
+                          : 0,
+                      );
+                    });
+                }}
+              >
+                {activeExpansions.includes(expansion)
+                  ? "Exclude " + formatExpansionName(expansion) + " Expansion"
+                  : "Include " + formatExpansionName(expansion) + " Expansion"}
+              </Button>
+            ))}
           </div>
         </div>
       </div>

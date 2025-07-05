@@ -78,6 +78,7 @@ const defaultPreviousState: GameState = {
   specialEvents: [],
   turn: "Red",
   previousState: null,
+  activeExpansions: [],
 };
 
 export const defaultGameState: GameState = {

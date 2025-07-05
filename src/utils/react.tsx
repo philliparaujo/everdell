@@ -1,7 +1,13 @@
 import Button from "../components/Button";
 import { EffectTypeIcon, ResourceIcon, WorkerIcon } from "../components/Icons";
 import { EFFECT_ORDER, RESOURCE_ORDER } from "../engine/gameDefaults";
-import { EffectType, ResourceType, Visitable } from "../engine/gameTypes";
+import {
+  EffectType,
+  ExpansionName,
+  ResourceType,
+  Visitable,
+} from "../engine/gameTypes";
+import { formatExpansionName } from "./card";
 
 export function renderVisitingWorkers(location: Visitable): React.ReactNode {
   return (
@@ -82,4 +88,15 @@ export function renderTextWithIcons(text: string): React.ReactNode[] {
     // Plain text or delimeter
     return part;
   });
+}
+
+export function renderActiveExpansions(
+  activeExpansions: ExpansionName[],
+): React.ReactNode {
+  return (
+    <div className="text-sm flex gap-1">
+      <p className="font-semibold">Active expansions: </p>
+      <p>{activeExpansions.map(formatExpansionName).sort().join(", ")}</p>
+    </div>
+  );
 }

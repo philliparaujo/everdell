@@ -1,4 +1,4 @@
-import { rawCards } from "../assets/data/cards";
+import { DEFAULT_CARD_FREQUENCIES, rawCards } from "../assets/data/cards";
 import { Card, ExpansionName } from "../engine/gameTypes";
 import { shuffleArray } from "./math";
 
@@ -36,10 +36,16 @@ export const findCard = (cardName: string): Card | undefined => {
 };
 
 export const makeShuffledDeck = (
-  cardFrequencies: Record<string, number>,
+  cardFrequencies: Record<ExpansionName, Record<string, number>>,
 ): Card[] => {
+  // Extract all card frequencies into a flat structure
+  const flatCardFrequencies = Object.values(cardFrequencies).reduce(
+    (acc, expansionCards) => ({ ...acc, ...expansionCards }),
+    {} as Record<string, number>,
+  );
+
   const cards = rawCards.flatMap((card) => {
-    const count = cardFrequencies[card.name] ?? 1;
+    const count = flatCardFrequencies[card.name] ?? 1;
     return Array.from({ length: count }, () => ({
       ...card,
       discarding: false,
@@ -59,20 +65,72 @@ export const formatExpansionName = (expansionName: string): string => {
 };
 
 export const groupCardsByExpansion = (
-  cards: [string, number][],
-): Record<string, { card: Card; frequency: number }[]> => {
+  cards: [ExpansionName, Record<string, number>][],
+): Record<ExpansionName, { card: Card; frequency: number }[]> => {
   return cards.reduce(
-    (acc, [cardName, frequency]) => {
-      const card = findCard(cardName);
-      if (!card) return acc;
+    (acc, [expansionName, cardFrequencies]) => {
+      acc[expansionName] = Object.entries(cardFrequencies)
+        .map(([cardName, frequency]) => {
+          const card = findCard(cardName);
+          return card ? { card, frequency } : null;
+        })
+        .filter(
+          (item): item is { card: Card; frequency: number } => item !== null,
+        );
 
-      const expansion = card.expansionName;
-      if (!acc[expansion]) {
-        acc[expansion] = [];
-      }
-      acc[expansion].push({ card, frequency });
       return acc;
     },
     {} as Record<string, { card: Card; frequency: number }[]>,
+  );
+};
+
+export const getBannedCards = (
+  cardFrequencies: Record<ExpansionName, Record<string, number>>,
+): [ExpansionName, Record<string, number>][] => {
+  return Object.entries(cardFrequencies).map(
+    ([expansionName, cardFrequencies]) => [
+      expansionName as ExpansionName,
+      Object.fromEntries(
+        Object.entries(cardFrequencies).filter(
+          ([_, frequency]) => frequency === 0,
+        ),
+      ),
+    ],
+  );
+};
+
+export const getActiveCards = (
+  cardFrequencies: Record<ExpansionName, Record<string, number>>,
+): [ExpansionName, Record<string, number>][] => {
+  return Object.entries(cardFrequencies).map(
+    ([expansionName, cardFrequencies]) => [
+      expansionName as ExpansionName,
+      Object.fromEntries(
+        Object.entries(cardFrequencies).filter(
+          ([_, frequency]) => frequency > 0,
+        ),
+      ),
+    ],
+  );
+};
+
+export const isAllDefault = (
+  cardFrequencies: Record<ExpansionName, Record<string, number>>,
+): boolean => {
+  return Object.entries(cardFrequencies).every(
+    ([expansionName, frequencies]) => {
+      return (
+        Object.entries(frequencies).every(
+          ([cardName, frequency]) =>
+            frequency ===
+            DEFAULT_CARD_FREQUENCIES[expansionName as ExpansionName]?.[
+              cardName
+            ],
+        ) ||
+        Object.entries(frequencies).every(
+          ([cardName, frequency]) => frequency === 0,
+        )
+      );
+    },
   );
 };

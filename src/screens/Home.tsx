@@ -10,9 +10,10 @@ import {
   storePlayerName,
 } from "../utils/identity";
 import { CARD_MANAGEMENT_PATH, LOBBY_PATH } from "../utils/navigation";
+import { renderActiveExpansions } from "../utils/react";
 
 function Home() {
-  const { isModified } = useCardManagement();
+  const { isModified, activeExpansions } = useCardManagement();
 
   const [name, setName] = useState(() => {
     const storedName = getPlayerName();
@@ -49,13 +50,16 @@ function Home() {
 
   return (
     <div className="max-w-2xl mx-auto p-4 flex gap-6 flex-col justify-center min-h-screen text-text">
-      {isModified && (
-        <Alert
-          displayText="Custom card frequencies are active"
-          secondaryText="New games will use these modified frequencies"
-          variant="warning"
-        />
-      )}
+      <Alert
+        displayText={
+          isModified
+            ? "Using custom card frequencies"
+            : "Using default card frequencies"
+        }
+        secondaryDisplay={renderActiveExpansions(activeExpansions)}
+        variant={isModified ? "warning" : "info"}
+        visible={true}
+      />
 
       <div className="">
         <label htmlFor="player-name" className="block mb-2 font-bold text-sm">

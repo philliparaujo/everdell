@@ -1,14 +1,28 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { DEFAULT_CARD_FREQUENCIES } from "../assets/data/cards";
 import {
+  DEFAULT_ACTIVE_EXPANSIONS,
+  DEFAULT_CARD_FREQUENCIES,
+} from "../assets/data/cards";
+import { isAllDefault } from "../utils/card";
+import {
+  clearActiveExpansions,
   clearCardFrequencies,
+  getActiveExpansions,
   getCardFrequencies,
+  storeActiveExpansions,
   storeCardFrequencies,
 } from "../utils/identity";
+import { ExpansionName } from "./gameTypes";
 
 interface CardManagementContextType {
-  cardFrequencies: Record<string, number>;
-  updateCardFrequency: (cardName: string, frequency: number) => void;
+  cardFrequencies: Record<ExpansionName, Record<string, number>>;
+  activeExpansions: ExpansionName[];
+  updateCardFrequency: (
+    cardName: string,
+    expansionName: ExpansionName,
+    frequency: number,
+  ) => void;
+  toggleExpansion: (expansion: ExpansionName) => void;
   resetToDefaults: () => void;
   isModified: boolean;
 }
@@ -22,47 +36,85 @@ export const CardManagementProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [cardFrequencies, setCardFrequencies] = useState<
-    Record<string, number>
-  >(DEFAULT_CARD_FREQUENCIES);
-  const [isModified, setIsModified] = useState(false);
+  const [cardFrequencies, setCardFrequencies] = useState(() => {
+    const savedFrequencies = getCardFrequencies();
+    return savedFrequencies || DEFAULT_CARD_FREQUENCIES;
+  });
 
-  // Load saved frequencies from local storage on mount
-  useEffect(() => {
-    const saved = getCardFrequencies();
-    if (saved) {
-      try {
-        setCardFrequencies(saved);
-        setIsModified(true);
-      } catch (error) {
-        console.error("Failed to load saved card frequencies:", error);
-      }
-    }
-  }, []);
+  const [activeExpansions, setActiveExpansions] = useState(() => {
+    const savedExpansions = getActiveExpansions();
+    return savedExpansions || DEFAULT_ACTIVE_EXPANSIONS;
+  });
+
+  const [isModified, setIsModified] = useState(false);
 
   // Save to local storage whenever frequencies change
   useEffect(() => {
     storeCardFrequencies(cardFrequencies);
+    setIsModified(!isAllDefault(cardFrequencies));
   }, [cardFrequencies]);
 
-  const updateCardFrequency = (cardName: string, frequency: number) => {
-    setCardFrequencies((prev) => ({
-      ...prev,
-      [cardName]: Math.max(0, frequency),
-    }));
-    setIsModified(true);
+  useEffect(() => {
+    storeActiveExpansions(activeExpansions);
+  }, [activeExpansions]);
+
+  const updateCardFrequency = (
+    cardName: string,
+    expansionName: ExpansionName,
+    frequency: number,
+  ) => {
+    setCardFrequencies((prev) => {
+      const updatedFrequencies = {
+        ...prev,
+        [expansionName]: {
+          ...prev[expansionName],
+          [cardName]: Math.max(0, frequency),
+        },
+      };
+
+      // Check if all cards in this expansion now have frequency 0
+      const allCardsZero = Object.values(
+        updatedFrequencies[expansionName],
+      ).every((freq) => freq === 0);
+
+      // Update active expansions based on the new state
+      setActiveExpansions((prev) => {
+        const isCurrentlyActive = prev.includes(expansionName);
+        const shouldBeActive = frequency > 0 || !allCardsZero;
+
+        if (shouldBeActive && !isCurrentlyActive) {
+          return [...prev, expansionName];
+        } else if (!shouldBeActive && isCurrentlyActive) {
+          return prev.filter((e) => e !== expansionName);
+        }
+        return prev;
+      });
+
+      return updatedFrequencies;
+    });
+  };
+
+  const toggleExpansion = (expansion: ExpansionName) => {
+    setActiveExpansions((prev) =>
+      prev.includes(expansion)
+        ? prev.filter((e) => e !== expansion)
+        : [...prev, expansion],
+    );
   };
 
   const resetToDefaults = () => {
     setCardFrequencies(DEFAULT_CARD_FREQUENCIES);
-    setIsModified(false);
+    setActiveExpansions(DEFAULT_ACTIVE_EXPANSIONS);
     clearCardFrequencies();
+    clearActiveExpansions();
   };
 
   return (
     <CardManagementContext.Provider
       value={{
         cardFrequencies,
+        activeExpansions,
+        toggleExpansion,
         updateCardFrequency,
         resetToDefaults,
         isModified,

@@ -16,8 +16,10 @@ export type ResourceCount = Record<ResourceType, number>;
 export type PlayerColor = "Red" | "Blue";
 export type PlayerCount = Record<PlayerColor, number>;
 
-export type Action = "discarding" | "playing" | "giving";
 export type ExpansionName = "base" | "extra extra";
+export const EXPANSION_NAMES: ExpansionName[] = ["base", "extra extra"];
+
+export type Action = "discarding" | "playing" | "giving";
 export type Card = {
   name: string;
   cost: ResourceCount;
@@ -135,4 +137,5 @@ export type GameState = {
   specialEvents: SpecialEvent[];
   turn: PlayerColor;
   previousState: GameState | null;
+  activeExpansions: ExpansionName[];
 };

@@ -1,8 +1,9 @@
-import { GameState, PlayerColor } from "../engine/gameTypes";
+import { ExpansionName, GameState, PlayerColor } from "../engine/gameTypes";
 
 const PLAYER_NAME_KEY = "playerName";
 const PLAYER_ID_KEY = "playerId";
 const CARD_FREQUENCIES_KEY = "cardFrequencies";
+const ACTIVE_EXPANSIONS_KEY = "activeExpansions";
 
 export function storePlayerName(name: string) {
   console.log("Storing", name);
@@ -14,12 +15,22 @@ export function storePlayerId(id: string) {
   sessionStorage.setItem(PLAYER_ID_KEY, id);
 }
 
-export function storeCardFrequencies(frequencies: Record<string, number>) {
+export function storeCardFrequencies(
+  frequencies: Record<ExpansionName, Record<string, number>>,
+) {
   localStorage.setItem(CARD_FREQUENCIES_KEY, JSON.stringify(frequencies));
+}
+
+export function storeActiveExpansions(expansions: ExpansionName[]) {
+  localStorage.setItem(ACTIVE_EXPANSIONS_KEY, JSON.stringify(expansions));
 }
 
 export function clearCardFrequencies() {
   localStorage.removeItem(CARD_FREQUENCIES_KEY);
+}
+
+export function clearActiveExpansions() {
+  localStorage.removeItem(ACTIVE_EXPANSIONS_KEY);
 }
 
 export function getPlayerName(): string | null {
@@ -30,10 +41,21 @@ export function getPlayerId(): string | null {
   return sessionStorage.getItem(PLAYER_ID_KEY);
 }
 
-export function getCardFrequencies(): Record<string, number> | null {
+export function getCardFrequencies(): Record<
+  ExpansionName,
+  Record<string, number>
+> | null {
   const frequencies = localStorage.getItem(CARD_FREQUENCIES_KEY);
   if (frequencies) {
     return JSON.parse(frequencies);
+  }
+  return null;
+}
+
+export function getActiveExpansions(): ExpansionName[] | null {
+  const expansions = localStorage.getItem(ACTIVE_EXPANSIONS_KEY);
+  if (expansions) {
+    return JSON.parse(expansions);
   }
   return null;
 }

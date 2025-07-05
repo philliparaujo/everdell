@@ -16,6 +16,7 @@ import {
   Card,
   EffectType,
   Event,
+  ExpansionName,
   GameState,
   Journey,
   Location,
@@ -124,7 +125,8 @@ export function sanityCheck(state: GameState): boolean {
 
 export function setupGame(
   firstPlayer: PlayerColor,
-  cardFrequencies: Record<string, number>,
+  cardFrequencies: Record<ExpansionName, Record<string, number>>,
+  activeExpansions: ExpansionName[],
 ): GameState {
   // Shuffle deck
   const deck: Card[] = makeShuffledDeck(cardFrequencies);
@@ -181,6 +183,7 @@ export function setupGame(
     specialEvents: newSpecialEvents,
     turn: firstPlayer,
     previousState: null,
+    activeExpansions: activeExpansions,
   };
 
   const newState: GameState = {

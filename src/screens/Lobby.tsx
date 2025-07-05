@@ -20,10 +20,11 @@ import { db } from "../server/firebase";
 import { setupGame } from "../utils/gameLogic";
 import { getPlayerId, getPlayerName } from "../utils/identity";
 import { GAME_PATH, HOME_PATH } from "../utils/navigation";
+import { renderActiveExpansions } from "../utils/react";
 
 function Lobby() {
   const navigate = useNavigate();
-  const { cardFrequencies, isModified } = useCardManagement();
+  const { cardFrequencies, isModified, activeExpansions } = useCardManagement();
   const [gameList, setGameList] = useState<{ id: string; game: GameState }[]>(
     [],
   );
@@ -35,7 +36,11 @@ function Lobby() {
   const startGame = async () => {
     if (isDisabled) return;
     const gameId = uuidv4();
-    const gameState: GameState = setupGame("Red", cardFrequencies);
+    const gameState: GameState = setupGame(
+      "Red",
+      cardFrequencies,
+      activeExpansions,
+    );
     gameState.players.Red.id = playerId!;
     gameState.players.Red.name = name;
     await setDoc(doc(db, `games/${gameId}`), gameState);
@@ -145,13 +150,16 @@ function Lobby() {
           </div>
         </div>
 
-        {isModified && (
-          <Alert
-            displayText="Custom card frequencies are active"
-            secondaryText="New games will use these modified frequencies"
-            variant="warning"
-          />
-        )}
+        <Alert
+          displayText={
+            isModified
+              ? "Using custom card frequencies"
+              : "Using default card frequencies"
+          }
+          secondaryDisplay={renderActiveExpansions(activeExpansions)}
+          variant={isModified ? "warning" : "info"}
+          visible={true}
+        />
 
         {/* Title and start button */}
         <h2 className="text-lg font-bold">Available Games</h2>

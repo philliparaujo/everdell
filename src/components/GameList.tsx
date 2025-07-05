@@ -1,4 +1,5 @@
 import { GameState, Player, PlayerColor } from "../engine/gameTypes";
+import { renderActiveExpansions } from "../utils/react";
 import Button from "./Button";
 import Id from "./Id";
 
@@ -61,14 +62,16 @@ function GameList({
         return (
           <li
             key={id}
-            className="border-container-border bg-container rounded-lg p-4 flex flex-col gap-4"
+            className="border-container-border bg-container rounded-lg p-4 flex flex-col gap-2"
           >
             <div className="flex items-baseline gap-1">
               <strong>Game ID:</strong>
               <Id id={id} />
             </div>
 
-            <div className="flex justify-between min-h-[40px]">
+            {renderActiveExpansions(game.activeExpansions)}
+
+            <div className="flex justify-between min-h-[40px] mt-2">
               <GamePlayerDisplay
                 player={redPlayer}
                 isYou={playerId === redPlayer.id}
