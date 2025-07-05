@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/everdell/static/css/main.1c59d3bc.css",
-    "main.js": "/everdell/static/js/main.8cbbdfb6.js",
+    "main.css": "/everdell/static/css/main.431d3da2.css",
+    "main.js": "/everdell/static/js/main.f84fe5c8.js",
     "static/media/juggler.jpg": "/everdell/static/media/juggler.e980bbc6ffc4129b9181.jpg",
     "static/media/carnival.jpg": "/everdell/static/media/carnival.42144c28c2adb7c6efdd.jpg",
     "static/media/scurrblechampion.jpg": "/everdell/static/media/scurrblechampion.c3197e85ee68558fb95f.jpg",
@@ -75,11 +75,11 @@
     "static/media/twig.png": "/everdell/static/media/twig.5305380c21de87a0bf10.png",
     "static/media/blueworker.PNG": "/everdell/static/media/blueworker.581774b3542fb04dc0e9.PNG",
     "index.html": "/everdell/index.html",
-    "main.1c59d3bc.css.map": "/everdell/static/css/main.1c59d3bc.css.map",
-    "main.8cbbdfb6.js.map": "/everdell/static/js/main.8cbbdfb6.js.map"
+    "main.431d3da2.css.map": "/everdell/static/css/main.431d3da2.css.map",
+    "main.f84fe5c8.js.map": "/everdell/static/js/main.f84fe5c8.js.map"
   },
   "entrypoints": [
-    "static/css/main.1c59d3bc.css",
-    "static/js/main.8cbbdfb6.js"
+    "static/css/main.431d3da2.css",
+    "static/js/main.f84fe5c8.js"
   ]
 }
