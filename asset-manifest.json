@@ -1,8 +1,10 @@
 {
   "files": {
-    "main.css": "/everdell/static/css/main.ce149e3c.css",
-    "main.js": "/everdell/static/js/main.7971db5d.js",
+    "main.css": "/everdell/static/css/main.dfc7ca14.css",
+    "main.js": "/everdell/static/js/main.b3e91b2d.js",
     "static/media/background.png": "/everdell/static/media/background.a40d28dce6a079aa06c0.png",
+    "static/media/cardback.png": "/everdell/static/media/cardback.997d29a3915450c27cab.png",
+    "static/media/icon.png": "/everdell/static/media/icon.2a5002c6e3285f5f0f63.png",
     "static/media/postoffice.jpg": "/everdell/static/media/postoffice.864beee783c293333622.jpg",
     "static/media/cemetery.jpg": "/everdell/static/media/cemetery.882e3325553fe4e3edb8.jpg",
     "static/media/crane.jpg": "/everdell/static/media/crane.068d84f7adda53efb8b1.jpg",
@@ -51,23 +53,27 @@
     "static/media/mine.jpg": "/everdell/static/media/mine.394e07f2fdc2f04d1b2a.jpg",
     "static/media/teacher.jpg": "/everdell/static/media/teacher.3dbea59c798f09ddf341.jpg",
     "static/media/historian.jpg": "/everdell/static/media/historian.f80cc77a493f6175f128.jpg",
-    "static/media/lightblueworker.png": "/everdell/static/media/lightblueworker.1a7bfd048a6d5805dc95.png",
-    "static/media/redworker.png": "/everdell/static/media/redworker.a6297542e83216fdb2a5.png",
-    "static/media/redtype.png": "/everdell/static/media/redtype.7e057881a4cc508a96c6.png",
+    "static/media/blueworker.png": "/everdell/static/media/blueworker.1a7bfd048a6d5805dc95.png",
     "static/media/bluetype.png": "/everdell/static/media/bluetype.e6fd79fe0ca5d51877c1.png",
-    "static/media/purpletype.png": "/everdell/static/media/purpletype.bd14150eaecb3f9ee2ec.png",
+    "static/media/redtype.png": "/everdell/static/media/redtype.7e057881a4cc508a96c6.png",
     "static/media/greentype.png": "/everdell/static/media/greentype.229901bfdac213531a68.png",
+    "static/media/purpletype.png": "/everdell/static/media/purpletype.bd14150eaecb3f9ee2ec.png",
     "static/media/tantype.png": "/everdell/static/media/tantype.00053750a3554a33a535.png",
+    "static/media/redworker.png": "/everdell/static/media/redworker.a6297542e83216fdb2a5.png",
     "static/media/wildcard.png": "/everdell/static/media/wildcard.3e07ecaaac402725d222.png",
     "static/media/coin.png": "/everdell/static/media/coin.acd7f875bba1efee8305.png",
-    "static/media/card.png": "/everdell/static/media/card.5073eb99c1e5b01b798a.png",
     "static/media/resin.png": "/everdell/static/media/resin.cec5fd7d594d86eec2a3.png",
+    "static/media/card.png": "/everdell/static/media/card.5073eb99c1e5b01b798a.png",
+    "static/media/berry.png": "/everdell/static/media/berry.1f0e409a50a49a9a8d2f.png",
+    "static/media/pebble.png": "/everdell/static/media/pebble.2aafde9a7d42cb8eb191.png",
+    "static/media/twig.png": "/everdell/static/media/twig.5305380c21de87a0bf10.png",
+    "static/media/blueworker.PNG": "/everdell/static/media/blueworker.581774b3542fb04dc0e9.PNG",
     "index.html": "/everdell/index.html",
-    "main.ce149e3c.css.map": "/everdell/static/css/main.ce149e3c.css.map",
-    "main.7971db5d.js.map": "/everdell/static/js/main.7971db5d.js.map"
+    "main.dfc7ca14.css.map": "/everdell/static/css/main.dfc7ca14.css.map",
+    "main.b3e91b2d.js.map": "/everdell/static/js/main.b3e91b2d.js.map"
   },
   "entrypoints": [
-    "static/css/main.ce149e3c.css",
-    "static/js/main.7971db5d.js"
+    "static/css/main.dfc7ca14.css",
+    "static/js/main.b3e91b2d.js"
   ]
 }
