@@ -50,12 +50,12 @@ function CardInspect({
       <img
         src={require(`../${getCardPath(card.expansionName, card.imageKey)}`)}
         alt={card.name}
-        className={`max-w-[50%] object-contain aspect-5/7 transition-opacity duration-0 ${
+        className={`w-[30vw] object-contain transition-opacity duration-0 ${
           imageLoaded ? "opacity-100" : "opacity-0"
         }`}
         onLoad={() => setImageLoaded(true)}
       />
-      <div className="flex flex-1 flex-col gap-4 overflow-y-auto min-w-0">
+      <div className="flex flex-1 flex-col gap-4 overflow-y-auto w-[20vw] min-w-[20%]">
         <h1 className="text-3xl font-bold">{card.name}</h1>
         <p>
           <strong>Expansion:</strong> {formatExpansionName(card.expansionName)}
