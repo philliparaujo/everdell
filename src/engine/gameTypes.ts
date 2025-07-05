@@ -17,7 +17,7 @@ export type PlayerColor = "Red" | "Blue";
 export type PlayerCount = Record<PlayerColor, number>;
 
 export type Action = "discarding" | "playing" | "giving";
-export type ExpansionName = "base";
+export type ExpansionName = "base" | "extra extra";
 export type Card = {
   name: string;
   cost: ResourceCount;

@@ -52,7 +52,10 @@ export const makeShuffledDeck = (
 };
 
 export const formatExpansionName = (expansionName: string): string => {
-  return expansionName.charAt(0).toUpperCase() + expansionName.slice(1);
+  return expansionName
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
 };
 
 export const groupCardsByExpansion = (

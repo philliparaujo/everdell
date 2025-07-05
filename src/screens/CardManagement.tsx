@@ -274,7 +274,7 @@ const CardManagement: React.FC = () => {
           </h2>
           <div className="flex flex-wrap gap-2">
             <Button
-              variant="danger"
+              variant="important"
               onClick={resetToDefaults}
               disabled={!isModified}
             >
@@ -283,15 +283,26 @@ const CardManagement: React.FC = () => {
             <Button
               variant="danger"
               onClick={() => {
-                // Ban all purple cards
                 rawCards
-                  .filter((card) => card.effectType === "Purple")
+                  .filter((card) => card.expansionName === "base")
                   .forEach((card) => {
                     updateCardFrequency(card.name, 0);
                   });
               }}
             >
-              Ban All Purple Cards (TBD)
+              Ban All Base Cards
+            </Button>
+            <Button
+              variant="danger"
+              onClick={() => {
+                rawCards
+                  .filter((card) => card.expansionName === "extra extra")
+                  .forEach((card) => {
+                    updateCardFrequency(card.name, 0);
+                  });
+              }}
+            >
+              Ban All Extra Extra Cards
             </Button>
           </div>
         </div>

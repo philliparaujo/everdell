@@ -50,7 +50,7 @@ function SpecialEventDisplay({
         resourceChildren={
           <div>
             {specialEvent.cardRequirement.map((cardName) => (
-              <p className="font-bold text-xs">{cardName}</p>
+              <p className="font-bold text-[11px]">{cardName}</p>
             ))}
             <div className="flex flex-wrap justify-center gap-2 text-[10px]">
               {mapOverEffectTypes(

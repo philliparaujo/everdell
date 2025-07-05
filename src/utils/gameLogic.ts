@@ -66,8 +66,14 @@ export function computeMaxCitySize(city: Card[]) {
     countCardOccurrences(city, "Wife"),
   );
   const wanderers = countCardOccurrences(city, "Wanderer");
+  const scurrbleChampions = countCardOccurrences(city, "Scurrble Champion");
 
-  return MAX_BASE_CITY_SIZE + husbandWifePairs + wanderers;
+  return (
+    MAX_BASE_CITY_SIZE +
+    husbandWifePairs +
+    wanderers +
+    Math.max(0, scurrbleChampions - 1)
+  );
 }
 
 export function computeResourceCount(state: GameState): ResourceCount {
@@ -348,7 +354,6 @@ export function canGiveToSelf(
   const greenCardsList: string[] = [];
   const nonGreenCardsList: string[] = ["Undertaker"];
   const givesOpponentPermissionList: string[] = [];
-
   const specialEventsList: string[] = [
     "A Brilliant Marketing Plan",
     "Ancient Scrolls Discovered",
@@ -369,7 +374,7 @@ export function canGiveToOpponent(
   playerColor: PlayerColor,
 ): boolean {
   // Cards and events that can give cards to opponent
-  const greenCardsList: string[] = ["Teacher"];
+  const greenCardsList: string[] = ["Teacher", "Town Crier"];
   const nonGreenCardsList: string[] = ["Post Office"];
   const givesOpponentPermissionList: string[] = ["Post Office"];
   const specialEventsList: string[] = [];
@@ -390,7 +395,7 @@ export function canRevealDeck(
 ): boolean {
   // Cards and events that can reveal deck
   const greenCardsList: string[] = ["Postal Pigeon"];
-  const nonGreenCardsList: string[] = ["Cemetery"];
+  const nonGreenCardsList: string[] = ["Cemetery", "Juggler"];
   const givesOpponentPermissionList: string[] = [];
   const specialEventsList: string[] = ["Ancient Scrolls Discovered"];
 

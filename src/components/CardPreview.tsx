@@ -51,20 +51,24 @@ function CardPreview({
       >
         {card ? (
           <>
-            <div>
+            <div className="flex-grow flex flex-col">
               <img
                 src={require(
                   `../${getCardPath(card.expansionName, card.imageKey)}`,
                 )}
                 alt={card.name}
-                className="w-full p-0 pb-0 h-[150px] object-cover rounded-t"
+                className="w-full p-0 pb-0 h-[138px] object-cover rounded-t flex-shrink-0"
                 draggable={false}
               />
-              <p className={`text-xs font-bold ${textColor}`}>{card.name}</p>
+              <div
+                className={`text-[11px] leading-tight font-bold ${textColor} flex-grow flex items-center justify-center`}
+              >
+                {card.name}
+              </div>
             </div>
 
             {storable && (
-              <div className="flex-grow flex flex-wrap justify-evenly items-center rounded bg-storage">
+              <div className="h-[40px] flex-shrink-0 flex flex-wrap justify-evenly items-center rounded-b bg-storage p-1">
                 {card.storage &&
                   mapOverResources(card.storage, (key, val) => (
                     <div key={key} className="flex items-center text-[10px]">
