@@ -32,6 +32,7 @@ export const findCard = (cardName: string): Card | undefined => {
     discarding: false,
     playing: false,
     giving: false,
+    below: null,
   };
 };
 
@@ -54,6 +55,7 @@ export const makeShuffledDeck = (
       discarding: false,
       playing: false,
       giving: false,
+      below: null,
     }));
   });
 
@@ -73,6 +75,7 @@ export const makeLegendsDecks = (
         discarding: false,
         playing: false,
         giving: false,
+        below: null,
       }));
     });
   const constructions = legends
@@ -84,6 +87,7 @@ export const makeLegendsDecks = (
         discarding: false,
         playing: false,
         giving: false,
+        below: null,
       }));
     });
   return {

@@ -1,7 +1,7 @@
 import { doc, getFirestore, onSnapshot, setDoc } from "firebase/firestore";
 import { createContext, useContext, useEffect, useState } from "react";
 import * as Actions from "./gameActions";
-import { GameState, PlayerColor, ResourceCount } from "./gameTypes";
+import { Card, GameState, PlayerColor, ResourceCount } from "./gameTypes";
 
 let actionQueue = Promise.resolve();
 
@@ -31,6 +31,11 @@ interface GameContextType {
     playerId: string | null,
     location: "hand" | "meadow" | "reveal",
     index: number,
+  ) => void;
+  moveCardBelowInCity: (
+    playerId: string | null,
+    index: number,
+    below: Card | null,
   ) => void;
   discardSelectedCards: (playerId: string | null) => void;
   playSelectedCards: (playerId: string | null) => void;
@@ -164,6 +169,7 @@ export const GameProvider = ({
       Actions.toggleOccupiedCardInCity,
       true,
     ),
+    moveCardBelowInCity: wrapAction(Actions.moveCardBelowInCity, true),
     giveResources: wrapAction(Actions.giveResources, true),
     addResourcesToCardInCity: wrapAction(
       Actions.addResourcesToCardInCity,

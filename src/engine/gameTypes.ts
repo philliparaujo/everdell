@@ -41,6 +41,9 @@ export type Card = {
   occupied: boolean | null; // For constructions
   constructionRequirement: string | null; // For critters
 
+  // Some Legends cards can be placed below a card
+  below: string | null;
+
   // Some cards can be visited by workers
   activeDestinations: number | null;
   maxDestinations: number | null;

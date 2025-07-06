@@ -513,3 +513,33 @@ export function canGiveResources(
     specialEventsList,
   );
 }
+
+export function canMoveCardBelowInCity(
+  state: GameState,
+  playerColor: PlayerColor,
+  card: Card,
+  below: Card | null,
+): boolean {
+  if (below === null) {
+    if (card.below === null) return false;
+    return true;
+  }
+  if (card.below !== null) return false;
+
+  if (!hasCards(state.players[playerColor].city, [below.name])) return false;
+  if (card.name === below.name) return false;
+
+  if (card.cardType === "Critter") {
+    if (["Dungeon"].includes(below.name)) return true;
+  }
+
+  if (
+    card.name === "Bridge of the Sky" ||
+    card.name === "Silver Scale Spring"
+  ) {
+    if (below.cardType === "Construction" && card.name !== below.name)
+      return true;
+  }
+
+  return false;
+}

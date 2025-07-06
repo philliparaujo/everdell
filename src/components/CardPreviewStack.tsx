@@ -4,14 +4,14 @@ import CardPreviewBottom from "./CardPreviewBottom";
 
 function CardPreviewStack({
   cards,
-  index,
+  indices,
   location,
   cityColor,
   onLeftClick,
   onDrop,
 }: {
   cards: Card[] | null;
-  index: number;
+  indices: number[];
   location: "hand" | "city" | "meadow" | "reveal" | "discard" | "legends";
   cityColor: PlayerColor | null;
   onLeftClick: (index: number, card: Card | null) => void;
@@ -27,22 +27,22 @@ function CardPreviewStack({
       <div className="flex flex-col overflow-x-hidden h-full rounded-[4px]">
         <CardPreview
           card={cards?.[0] ?? null}
-          index={index}
+          index={indices[0]}
           location={location}
           cityColor={cityColor}
-          onLeftClick={() => onLeftClick(index, cards?.[0] ?? null)}
+          onLeftClick={() => onLeftClick(indices[0], cards?.[0] ?? null)}
           onDrop={onDrop}
           isDropTarget={false}
         />
         {cards
           ?.slice(1)
-          .map((card, index) => (
+          .map((card, i) => (
             <CardPreviewBottom
               card={card}
-              index={index}
+              index={indices[i + 1]}
               location={location}
               cityColor={cityColor}
-              onLeftClick={() => onLeftClick(index, card)}
+              onLeftClick={() => onLeftClick(indices[i + 1], card)}
             />
           ))}
       </div>

@@ -3,7 +3,11 @@ import { useGame } from "../engine/GameContext";
 import { defaultResources } from "../engine/gameDefaults";
 import { Card, PlayerColor, ResourceType } from "../engine/gameTypes";
 import { formatExpansionName, getCardPath } from "../utils/card";
-import { canVisitCardInCity, isNotYourTurn } from "../utils/gameLogic";
+import {
+  canMoveCardBelowInCity,
+  canVisitCardInCity,
+  isNotYourTurn,
+} from "../utils/gameLogic";
 import { getPlayerColor, getPlayerId } from "../utils/identity";
 import { mapOverResources } from "../utils/loops";
 import { renderVisitButtons, renderVisitingWorkers } from "../utils/react";
@@ -29,6 +33,7 @@ function CardInspect({
     visitCardInCity,
     addResourcesToCardInCity,
     toggleOccupiedCardInCity,
+    moveCardBelowInCity,
     playCard,
   } = useGame();
 
@@ -98,6 +103,40 @@ function CardInspect({
           </div>
         ) : (
           <></>
+        )}
+        {/* TEMP */}
+        {location === "city" && card.below !== null && (
+          <div className="flex gap-2 justify-center">
+            <strong className={textColor}>Below:</strong>
+            <span>{card.below}</span>
+          </div>
+        )}
+        {location === "city" && cityColor && (
+          <div className="flex flex-col items-center text-center gap-2">
+            {game.players[cityColor].city.map((aboveCard) => {
+              if (canMoveCardBelowInCity(game, cityColor, card, aboveCard)) {
+                return (
+                  <Button
+                    onClick={() => {
+                      moveCardBelowInCity(storedId, index, aboveCard);
+                    }}
+                  >
+                    Move below {aboveCard.name}
+                  </Button>
+                );
+              }
+              return <></>;
+            })}
+            {canMoveCardBelowInCity(game, cityColor, card, null) && (
+              <Button
+                onClick={() => {
+                  moveCardBelowInCity(storedId, index, null);
+                }}
+              >
+                Move off of {card.below}
+              </Button>
+            )}
+          </div>
         )}
 
         {location === "city" && card.storage && (

@@ -1,6 +1,7 @@
 import {
   canAchieveEvent,
   canAchieveSpecialEvent,
+  canMoveCardBelowInCity,
   canVisitCardInCity,
   canVisitEvent,
   canVisitJourney,
@@ -899,6 +900,40 @@ export function playCard(
       [],
       [],
     ),
+  };
+
+  if (!sanityCheck(newState)) return state;
+  return newState;
+}
+
+export function moveCardBelowInCity(
+  state: GameState,
+  playerId: string | null,
+  index: number,
+  below: Card | null,
+): GameState {
+  const playerColor = getPlayerColor(state, playerId);
+  if (playerColor !== state.turn) return state;
+
+  if (index >= state.players[playerColor].city.length) return state;
+  const card = state.players[playerColor].city[index];
+
+  if (!canMoveCardBelowInCity(state, playerColor, card, below)) return state;
+
+  const updatedCard: Card = {
+    ...card,
+    below: below?.name ?? null,
+  };
+  const updatedCity = state.players[playerColor].city.map((c, i) =>
+    i === index ? updatedCard : c,
+  );
+
+  const newState: GameState = {
+    ...state,
+    players: {
+      ...state.players,
+      [playerColor]: { ...state.players[playerColor], city: updatedCity },
+    },
   };
 
   if (!sanityCheck(newState)) return state;
