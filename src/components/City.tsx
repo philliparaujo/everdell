@@ -23,11 +23,17 @@ function City({ color }: { color: PlayerColor }) {
         sourceLocation === "hand" ||
         sourceLocation === "meadow" ||
         sourceLocation === "discard" ||
-        sourceLocation === "reveal"
+        sourceLocation === "reveal" ||
+        sourceLocation === "legends"
       ) {
         playCard(
           storedId,
-          sourceLocation as "hand" | "meadow" | "discard" | "reveal",
+          sourceLocation as
+            | "hand"
+            | "meadow"
+            | "discard"
+            | "reveal"
+            | "legends",
           sourceIndex,
         );
       }

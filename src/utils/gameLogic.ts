@@ -6,6 +6,7 @@ import {
   FIRST_PLAYER_HAND_SIZE,
   MAX_BASE_CITY_SIZE,
   MAX_HAND_SIZE,
+  MAX_LEGENDS_SIZE,
   MAX_MEADOW_SIZE,
   MAX_REVEAL_SIZE,
   RESOURCE_COUNT,
@@ -27,7 +28,7 @@ import {
   SpecialEvent,
   Visitable,
 } from "../engine/gameTypes";
-import { makeShuffledDeck } from "./card";
+import { makeLegendsDecks, makeShuffledDeck } from "./card";
 import { getPlayerColor } from "./identity";
 import {
   countCardOccurrences,
@@ -68,12 +69,17 @@ export function computeMaxCitySize(city: Card[]) {
   );
   const wanderers = countCardOccurrences(city, "Wanderer");
   const scurrbleChampions = countCardOccurrences(city, "Scurrble Champion");
+  const legends = city.reduce(
+    (acc, curr) => acc + (curr.expansionName === "legends" ? 1 : 0),
+    0,
+  );
 
   return (
     MAX_BASE_CITY_SIZE +
     husbandWifePairs +
     wanderers +
-    Math.max(0, scurrbleChampions - 1)
+    Math.max(0, scurrbleChampions - 1) +
+    legends
   );
 }
 
@@ -141,6 +147,24 @@ export function setupGame(
   const secondHand = deck.slice(FIRST_END, SECOND_END);
   const remainingDeck = deck.slice(SECOND_END);
 
+  // Deal Legends cards to players if Legends expansion is active
+  let firstPlayerLegends: Card[] = [];
+  let secondPlayerLegends: Card[] = [];
+  if (activeExpansions.includes("legends")) {
+    const { critters, constructions } = makeLegendsDecks(
+      cardFrequencies["legends"],
+    );
+    const legendsPerPlayer = MAX_LEGENDS_SIZE;
+    firstPlayerLegends = [
+      ...critters.slice(0, legendsPerPlayer / 2),
+      ...constructions.slice(0, legendsPerPlayer / 2),
+    ];
+    secondPlayerLegends = [
+      ...critters.slice(legendsPerPlayer / 2, legendsPerPlayer),
+      ...constructions.slice(legendsPerPlayer / 2, legendsPerPlayer),
+    ];
+  }
+
   // Set up remaining objects
   const newLocations: Location[] = locations.map((location) => ({
     ...location,
@@ -166,11 +190,15 @@ export function setupGame(
         ...defaultPlayer,
         color: "Red",
         hand: firstPlayer === "Red" ? firstHand : secondHand,
+        legends:
+          firstPlayer === "Red" ? firstPlayerLegends : secondPlayerLegends,
       },
       Blue: {
         ...defaultPlayer,
         color: "Blue",
         hand: firstPlayer === "Blue" ? firstHand : secondHand,
+        legends:
+          firstPlayer === "Blue" ? firstPlayerLegends : secondPlayerLegends,
       },
     },
     deck: remainingDeck,

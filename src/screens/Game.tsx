@@ -5,6 +5,7 @@ import EventsDisplay from "../components/EventsDisplay";
 import Hand from "../components/Hand";
 import { ResourceIcon } from "../components/Icons";
 import JourneysDisplay from "../components/JourneysDisplay";
+import Legends from "../components/Legends";
 import LocationsDisplay from "../components/LocationsDisplay";
 import Meadow from "../components/Meadow";
 import Sidebar from "../components/Sidebar";
@@ -13,8 +14,6 @@ import { useGame } from "../engine/GameContext";
 import { oppositePlayerOf } from "../utils/gameLogic";
 import { getPlayerColor, getPlayerId } from "../utils/identity";
 import { stylePlayerColor } from "../utils/tailwind";
-import { useCardManagement } from "../engine/CardManagementContext";
-import Legends from "../components/Legends";
 
 const HalfSection = ({
   title,
@@ -62,7 +61,6 @@ const FullSection = ({
 function Game() {
   const { game } = useGame();
   const { gameId } = useParams();
-  const { activeExpansions } = useCardManagement();
 
   const storedId = getPlayerId();
   const playerColor = getPlayerColor(game, storedId) ?? game.turn;
@@ -113,8 +111,11 @@ function Game() {
               <Hand color={playerColor} />
             </HalfSection>
 
-            {activeExpansions.includes("legends") && (
-              <HalfSection title="Legends">
+            {game.activeExpansions.includes("legends") && (
+              <HalfSection
+                title="Legends"
+                titleColor={stylePlayerColor(playerColor)}
+              >
                 <Legends color={playerColor} />
               </HalfSection>
             )}

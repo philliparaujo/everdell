@@ -658,6 +658,7 @@ function toggleCardAction(
         ...state.players[playerColor],
         hand: [...state.players[playerColor].hand],
         city: [...state.players[playerColor].city],
+        legends: [...state.players[playerColor].legends],
       },
     },
     meadow: [...state.meadow],
@@ -765,6 +766,7 @@ export function playCard(
         ...state.players[playerColor],
         hand: [...state.players[playerColor].hand],
         city: [...state.players[playerColor].city],
+        legends: [...state.players[playerColor].legends],
       },
     },
     meadow: [...state.meadow],
@@ -796,6 +798,13 @@ export function playCard(
     cardToPlay = state.reveal[index];
 
     newState.reveal = newState.reveal.filter((_, i) => i !== index);
+  } else if (location === "legends") {
+    if (index >= state.players[playerColor].legends.length) return state;
+    cardToPlay = state.players[playerColor].legends[index];
+
+    newState.players[playerColor].legends = newState.players[
+      playerColor
+    ].legends.filter((_, i) => i !== index);
   }
 
   if (!cardToPlay) return state;
@@ -827,6 +836,7 @@ export function playCard(
       [],
       [],
       [],
+      [],
     ),
   };
 
@@ -843,6 +853,7 @@ function updatedHistoryOnAction(
   meadowAct: Card[],
   revealAct: Card[],
   discardAct: Card[],
+  legendsAct: Card[],
 ): History {
   const history = state.players[playerColor].history;
 
@@ -867,6 +878,7 @@ function updatedHistoryOnAction(
           ...discardAct,
           ...meadowAct,
           ...revealAct,
+          ...legendsAct,
         ],
       };
     case "giving":
@@ -903,6 +915,10 @@ function actOnSelectedCards(
     state.discard,
     (card) => !card[action],
   );
+  const [legendsKeep, legendsAct] = partition(
+    state.players[playerColor].legends,
+    (card) => !card[action],
+  );
 
   const updatedHistory = updatedHistoryOnAction(
     state,
@@ -913,6 +929,7 @@ function actOnSelectedCards(
     meadowAct,
     revealAct,
     discardAct,
+    legendsAct,
   );
 
   let newState: GameState = {
@@ -924,6 +941,7 @@ function actOnSelectedCards(
         hand: handKeep,
         city: cityKeep,
         history: updatedHistory,
+        legends: legendsKeep,
       },
     },
     meadow: meadowKeep,
@@ -955,6 +973,7 @@ function actOnSelectedCards(
         ...meadowAct,
         ...revealAct,
         ...discardAct,
+        ...legendsAct,
       ];
       const [otherPlayedCards, myCity] = partition(
         city,

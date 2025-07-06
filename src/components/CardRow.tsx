@@ -27,7 +27,7 @@ function CardRow({
   const rowLength = maxLength ?? computeMaxCitySize(cards);
 
   return (
-    <div className="flex overflow-y-hidden scrollbar-thin w-full gap-1 px-0 py-1 rounded-[4px]">
+    <div className="flex overflow-y-hidden scrollbar-thin w-full gap-1 py-1 pr-1 rounded-[4px]">
       {Array.from({ length: rowLength }).map((_, index) => {
         const card = cards[index] ?? null;
 

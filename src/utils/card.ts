@@ -45,6 +45,9 @@ export const makeShuffledDeck = (
   );
 
   const cards = rawCards.flatMap((card) => {
+    // Skip legends cards
+    if (card.expansionName === "legends") return [];
+
     const count = flatCardFrequencies[card.name] ?? 1;
     return Array.from({ length: count }, () => ({
       ...card,
@@ -55,6 +58,35 @@ export const makeShuffledDeck = (
   });
 
   return shuffleArray(cards);
+};
+
+export const makeLegendsDecks = (
+  cardFrequencies: Record<string, number>,
+): { critters: Card[]; constructions: Card[] } => {
+  const legends = rawCards.filter((card) => card.expansionName === "legends");
+  const critters = legends
+    .filter((card) => card.cardType === "Critter")
+    .flatMap((card) => {
+      const count = cardFrequencies[card.name] ?? 1;
+      return Array.from({ length: count }, () => ({
+        ...card,
+        discarding: false,
+        playing: false,
+        giving: false,
+      }));
+    });
+  const constructions = legends
+    .filter((card) => card.cardType === "Construction")
+    .flatMap((card) => {
+      const count = cardFrequencies[card.name] ?? 1;
+      return Array.from({ length: count }, () => ({
+        ...card,
+        discarding: false,
+        playing: false,
+        giving: false,
+      }));
+    });
+  return { critters, constructions };
 };
 
 export const formatExpansionName = (expansionName: string): string => {
