@@ -13,17 +13,23 @@ import { useGame } from "../engine/GameContext";
 import { oppositePlayerOf } from "../utils/gameLogic";
 import { getPlayerColor, getPlayerId } from "../utils/identity";
 import { stylePlayerColor } from "../utils/tailwind";
+import { useCardManagement } from "../engine/CardManagementContext";
+import Legends from "../components/Legends";
 
 const HalfSection = ({
   title,
+  titleColor = "",
   children,
 }: {
   title: React.ReactNode;
+  titleColor?: string;
   children: React.ReactNode;
 }) => {
   return (
     <section className="flex-0-1-auto min-w-0 overflow-x-auto">
-      <h3 className="flex items-center gap-0.5 font-bold">{title}</h3>
+      <h3 className={`flex items-center gap-0.5 font-bold ${titleColor}`}>
+        {title}
+      </h3>
       <div
         className="flex flex-1 overflow-y-hidden"
         style={{ scrollbarWidth: "thin" }}
@@ -56,6 +62,7 @@ const FullSection = ({
 function Game() {
   const { game } = useGame();
   const { gameId } = useParams();
+  const { activeExpansions } = useCardManagement();
 
   const storedId = getPlayerId();
   const playerColor = getPlayerColor(game, storedId) ?? game.turn;
@@ -98,9 +105,20 @@ function Game() {
 
         {/* --- Full Width Rows --- */}
         {!spectating && (
-          <FullSection title="Hand" titleColor={stylePlayerColor(playerColor)}>
-            <Hand color={playerColor} />
-          </FullSection>
+          <div className="flex gap-8">
+            <HalfSection
+              title="Hand"
+              titleColor={stylePlayerColor(playerColor)}
+            >
+              <Hand color={playerColor} />
+            </HalfSection>
+
+            {activeExpansions.includes("legends") && (
+              <HalfSection title="Legends">
+                <Legends color={playerColor} />
+              </HalfSection>
+            )}
+          </div>
         )}
 
         <FullSection title="Meadow">

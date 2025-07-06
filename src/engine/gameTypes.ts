@@ -121,6 +121,7 @@ export type Player = {
   resources: ResourceCount;
   workers: Workers;
   season: Season;
+  legends: Card[]; // Only in Legends expansion
 
   discarding: boolean;
   playing: boolean;

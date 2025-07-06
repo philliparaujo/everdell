@@ -22,7 +22,7 @@ function CardInspect({
   index: number;
   cityColor: PlayerColor | null;
   onClose: () => void;
-  location: "hand" | "city" | "meadow" | "reveal" | "discard";
+  location: "hand" | "city" | "meadow" | "reveal" | "discard" | "legends";
 }) {
   const {
     game,

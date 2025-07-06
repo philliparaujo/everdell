@@ -45,6 +45,7 @@ export const defaultPlayer: Player = {
   resources: defaultResources,
   workers: defaultWorkers,
   season: "Winter",
+  legends: [],
 
   discarding: false,
   playing: false,

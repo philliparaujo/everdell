@@ -12,7 +12,7 @@ function CardRow({
   isDropTarget = false,
 }: {
   cards: Card[];
-  location: "hand" | "city" | "meadow" | "reveal" | "discard";
+  location: "hand" | "city" | "meadow" | "reveal" | "discard" | "legends";
   cityColor: PlayerColor | null;
   onLeftClick: (index: number, card: Card | null) => void;
   maxLength?: number;

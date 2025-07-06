@@ -643,7 +643,7 @@ export function setGiving(
 function toggleCardAction(
   state: GameState,
   playerId: string | null,
-  location: "hand" | "city" | "meadow" | "reveal" | "discard",
+  location: "hand" | "city" | "meadow" | "reveal" | "discard" | "legends",
   index: number,
   action: Action,
 ) {
@@ -707,6 +707,14 @@ function toggleCardAction(
         [action]: !cardToToggle[action],
       };
     }
+  } else if (location === "legends") {
+    cardToToggle = state.players[playerColor].legends[index];
+    if (cardToToggle) {
+      newState.players[playerColor].legends[index] = {
+        ...cardToToggle,
+        [action]: !cardToToggle[action],
+      };
+    }
   }
 
   if (!sanityCheck(newState)) return state;
@@ -725,7 +733,7 @@ export function toggleCardDiscarding(
 export function toggleCardPlaying(
   state: GameState,
   playerId: string | null,
-  location: "hand" | "meadow" | "discard" | "reveal",
+  location: "hand" | "meadow" | "discard" | "reveal" | "legends",
   index: number,
 ): GameState {
   return toggleCardAction(state, playerId, location, index, "playing");
@@ -743,7 +751,7 @@ export function toggleCardGiving(
 export function playCard(
   state: GameState,
   playerId: string | null,
-  location: "hand" | "meadow" | "discard" | "reveal",
+  location: "hand" | "meadow" | "discard" | "reveal" | "legends",
   index: number,
 ): GameState {
   const playerColor = getPlayerColor(state, playerId);

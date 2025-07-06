@@ -19,12 +19,12 @@ interface GameContextType {
   ) => void;
   toggleCardPlaying: (
     playerId: string | null,
-    location: "hand" | "meadow" | "discard" | "reveal",
+    location: "hand" | "meadow" | "discard" | "reveal" | "legends",
     index: number,
   ) => void;
   playCard: (
     playerId: string | null,
-    location: "hand" | "meadow" | "discard" | "reveal",
+    location: "hand" | "meadow" | "discard" | "reveal" | "legends",
     index: number,
   ) => void;
   toggleCardGiving: (
