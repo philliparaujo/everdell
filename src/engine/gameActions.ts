@@ -9,7 +9,7 @@ import {
   sanityCheck,
 } from "../utils/gameLogic";
 import { getPlayerColor } from "../utils/identity";
-import { sortCity } from "../utils/loops";
+import { countCardOccurrences, sortCity } from "../utils/loops";
 import { partition } from "../utils/math";
 import {
   MAX_HAND_SIZE,
@@ -150,28 +150,39 @@ export function harvest(state: GameState, playerId: string | null): GameState {
   const { season } = player;
 
   let newSeason: Season = season;
-  let additionalWorkers = 0;
+  let maxWorkers;
 
   if (season === "Winter") {
     newSeason = "Spring";
-    additionalWorkers = 1;
+    maxWorkers = 3;
   } else if (season === "Spring") {
     newSeason = "Summer";
-    additionalWorkers = 1;
+    maxWorkers = 4;
   } else if (season === "Summer") {
     newSeason = "Autumn";
-    additionalWorkers = 2;
+    maxWorkers = 6;
   } else {
     return state;
   }
+
+  const workersLost = player.city.reduce((acc, card) => {
+    return acc + (card.name === "Cemetery" ? card.workers[playerColor] : 0);
+  }, 0);
 
   const updatedPlayer: Player = {
     ...player,
     season: newSeason,
     workers: {
-      maxWorkers: player.workers.maxWorkers + additionalWorkers,
-      workersLeft: player.workers.workersLeft + additionalWorkers,
+      maxWorkers: maxWorkers,
+      workersLeft: maxWorkers - workersLost,
     },
+    city: player.city.map((card) => ({
+      ...card,
+      workers: {
+        ...card.workers,
+        [playerColor]: card.name === "Cemetery" ? card.workers[playerColor] : 0,
+      },
+    })),
   };
 
   const newState: GameState = {
@@ -179,7 +190,45 @@ export function harvest(state: GameState, playerId: string | null): GameState {
     players: {
       ...state.players,
       [playerColor]: updatedPlayer,
+      [oppositePlayerOf(playerColor)]: {
+        ...state.players[oppositePlayerOf(playerColor)],
+        city: state.players[oppositePlayerOf(playerColor)].city.map((card) => ({
+          ...card,
+          workers: {
+            ...card.workers,
+            [playerColor]: 0,
+          },
+        })),
+      },
     },
+    locations: state.locations.map((location) => ({
+      ...location,
+      workers: {
+        ...location.workers,
+        [playerColor]: 0,
+      },
+    })),
+    journeys: state.journeys.map((journey) => ({
+      ...journey,
+      workers: {
+        ...journey.workers,
+        [playerColor]: 0,
+      },
+    })),
+    events: state.events.map((event) => ({
+      ...event,
+      workers: {
+        ...event.workers,
+        [playerColor]: 0,
+      },
+    })),
+    specialEvents: state.specialEvents.map((specialEvent) => ({
+      ...specialEvent,
+      workers: {
+        ...specialEvent.workers,
+        [playerColor]: 0,
+      },
+    })),
   };
 
   if (!sanityCheck(newState)) return state;
@@ -721,22 +770,24 @@ export function playCard(
     if (index >= state.players[playerColor].hand.length) return state;
     cardToPlay = state.players[playerColor].hand[index];
 
-    newState.players[playerColor].hand.splice(index, 1);
+    newState.players[playerColor].hand = newState.players[
+      playerColor
+    ].hand.filter((_, i) => i !== index);
   } else if (location === "meadow") {
     if (index >= state.meadow.length) return state;
     cardToPlay = state.meadow[index];
 
-    newState.meadow.splice(index, 1);
+    newState.meadow = newState.meadow.filter((_, i) => i !== index);
   } else if (location === "discard") {
     if (index >= state.discard.length) return state;
     cardToPlay = state.discard[index];
 
-    newState.discard.splice(index, 1);
+    newState.discard = newState.discard.filter((_, i) => i !== index);
   } else if (location === "reveal") {
     if (index >= state.reveal.length) return state;
     cardToPlay = state.reveal[index];
 
-    newState.reveal.splice(index, 1);
+    newState.reveal = newState.reveal.filter((_, i) => i !== index);
   }
 
   if (!cardToPlay) return state;
@@ -944,19 +995,32 @@ function actOnSelectedCards(
         ...revealAct,
       ];
 
-      newState.players[playerColor].hand = hand.map((card) => ({
+      // Create new hand arrays with proper mapping
+      const newHand = hand.map((card) => ({
         ...card,
         playing: false,
         discarding: false,
         giving: false,
       }));
+
+      const newPlayerToHand = playerToHand.map((card) => ({
+        ...card,
+        playing: false,
+        discarding: false,
+        giving: false,
+      }));
+
+      // Update players with new hand arrays
+      newState.players[playerColor] = {
+        ...newState.players[playerColor],
+        hand: newHand,
+      };
+
       if (playerColor !== toColor) {
-        newState.players[toColor].hand = playerToHand.map((card) => ({
-          ...card,
-          playing: false,
-          discarding: false,
-          giving: false,
-        }));
+        newState.players[toColor] = {
+          ...newState.players[toColor],
+          hand: newPlayerToHand,
+        };
       }
 
       break;
