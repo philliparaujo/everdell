@@ -23,29 +23,27 @@ function CardPreviewStack({
   ) => void;
 }) {
   return (
-    <div className="flex flex-1 overflow-y-hidden">
-      <div className="flex flex-col overflow-x-hidden h-full rounded-[4px]">
-        <CardPreview
-          card={cards?.[0] ?? null}
-          index={indices[0]}
-          location={location}
-          cityColor={cityColor}
-          onLeftClick={() => onLeftClick(indices[0], cards?.[0] ?? null)}
-          onDrop={onDrop}
-          isDropTarget={false}
-        />
-        {cards
-          ?.slice(1)
-          .map((card, i) => (
-            <CardPreviewBottom
-              card={card}
-              index={indices[i + 1]}
-              location={location}
-              cityColor={cityColor}
-              onLeftClick={() => onLeftClick(indices[i + 1], card)}
-            />
-          ))}
-      </div>
+    <div className="flex flex-col h-full rounded-[4px]">
+      <CardPreview
+        card={cards?.[0] ?? null}
+        index={indices[0]}
+        location={location}
+        cityColor={cityColor}
+        onLeftClick={() => onLeftClick(indices[0], cards?.[0] ?? null)}
+        onDrop={onDrop}
+        isDropTarget={false}
+      />
+      {cards
+        ?.slice(1)
+        .map((card, i) => (
+          <CardPreviewBottom
+            card={card}
+            index={indices[i + 1]}
+            location={location}
+            cityColor={cityColor}
+            onLeftClick={() => onLeftClick(indices[i + 1], card)}
+          />
+        ))}
     </div>
   );
 }

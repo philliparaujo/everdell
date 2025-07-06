@@ -107,7 +107,7 @@ function CardInspect({
         {/* TEMP */}
         {location === "city" && card.below !== null && (
           <div className="flex gap-2 justify-center">
-            <strong className={textColor}>Below:</strong>
+            <strong className="text-text">Below:</strong>
             <span>{card.below}</span>
           </div>
         )}
@@ -119,6 +119,7 @@ function CardInspect({
                   <Button
                     onClick={() => {
                       moveCardBelowInCity(storedId, index, aboveCard);
+                      onClose();
                     }}
                   >
                     Move below {aboveCard.name}
@@ -131,6 +132,7 @@ function CardInspect({
               <Button
                 onClick={() => {
                   moveCardBelowInCity(storedId, index, null);
+                  onClose();
                 }}
               >
                 Move off of {card.below}

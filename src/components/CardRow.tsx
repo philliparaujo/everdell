@@ -1,6 +1,8 @@
 import { Card, PlayerColor } from "../engine/gameTypes";
+import { groupCardsByBelow } from "../utils/card";
 import { computeMaxCitySize } from "../utils/gameLogic";
 import CardPreview from "./CardPreview";
+import CardPreviewStack from "./CardPreviewStack";
 
 function CardRow({
   cards,
@@ -26,24 +28,67 @@ function CardRow({
 }) {
   const rowLength = maxLength ?? computeMaxCitySize(cards);
 
-  return (
-    <div className="flex overflow-y-hidden scrollbar-thin w-full gap-1 py-1 pr-1 rounded-[4px]">
-      {Array.from({ length: rowLength }).map((_, index) => {
-        const card = cards[index] ?? null;
+  if (location !== "city" || !cityColor || !onDrop) {
+    return (
+      <div className="flex overflow-y-hidden scrollbar-thin w-full pr-1 gap-1 rounded-[4px]">
+        {Array.from({ length: rowLength }).map((_, index) => {
+          const card = cards[index] ?? null;
 
-        return (
-          <CardPreview
-            key={index}
-            index={index}
-            card={card}
-            location={location}
-            cityColor={cityColor}
-            onLeftClick={() => onLeftClick(index, card)}
-            onDrop={onDrop}
-            isDropTarget={isDropTarget}
-          />
-        );
-      })}
+          return (
+            <CardPreview
+              key={index}
+              index={index}
+              card={card}
+              location={location}
+              cityColor={cityColor}
+              onLeftClick={() => onLeftClick(index, card)}
+              onDrop={onDrop}
+              isDropTarget={isDropTarget}
+            />
+          );
+        })}
+      </div>
+    );
+  }
+
+  const indexedCards: { card: Card; index: number }[] = cards.map(
+    (card, index) => ({
+      card,
+      index,
+    }),
+  );
+  const groupedCards: { card: Card; index: number }[][] =
+    groupCardsByBelow(indexedCards);
+  console.log(cards, groupedCards);
+
+  const numGroupedCards = groupedCards.reduce(
+    (acc, group) => acc + group.length,
+    0,
+  );
+
+  return (
+    <div className="flex overflow-y-hidden scrollbar-thin w-full gap-1 rounded-[4px]">
+      {groupedCards.map((group) => (
+        <CardPreviewStack
+          cards={group.map(({ card }) => card)}
+          indices={group.map(({ index }) => index)}
+          location="city"
+          cityColor={cityColor}
+          onLeftClick={() => onLeftClick(group[0].index, group[0].card)}
+          onDrop={onDrop}
+        />
+      ))}
+      {Array.from({ length: rowLength - numGroupedCards }).map((_, index) => (
+        <CardPreview
+          key={index}
+          index={index}
+          card={null}
+          location="city"
+          cityColor={cityColor}
+          onLeftClick={() => onLeftClick(index, null)}
+          onDrop={onDrop}
+        />
+      ))}
     </div>
   );
 }

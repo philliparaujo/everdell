@@ -173,3 +173,53 @@ export const isAllDefault = (
     },
   );
 };
+
+// TODO: Remove assumption of no duplicate top cards
+export const groupCardsByBelow = (
+  indexedCards: { card: Card; index: number }[],
+): { card: Card; index: number }[][] => {
+  // Create a map to group cards by their below property
+  const groups = new Map<string, { card: Card; index: number }[]>();
+
+  // First pass: group all cards by their below property
+  indexedCards.forEach(({ card, index }) => {
+    if (card.below) {
+      if (!groups.has(card.below)) {
+        groups.set(card.below, []);
+      }
+      groups.get(card.below)!.push({ card, index });
+    }
+  });
+
+  // Second pass: find the top card for each group and add it to the beginning
+  const result: { card: Card; index: number }[][] = [];
+
+  groups.forEach((group, belowName) => {
+    // Find the top card (the card whose name matches the belowName)
+    const topCardIndex = indexedCards.findIndex(
+      ({ card }) => card.name === belowName,
+    );
+
+    if (topCardIndex !== -1) {
+      // Top card exists, add it to the beginning of the group
+      const topCard = indexedCards[topCardIndex];
+      result.push([topCard, ...group]);
+    } else {
+      // No top card found, just use the group as is
+      result.push(group);
+    }
+  });
+
+  // Third pass: add cards that don't have a below property as individual groups
+  indexedCards.forEach(({ card, index }) => {
+    if (!card.below) {
+      // Check if this card is not already included as a top card in any group
+      const isTopCard = groups.has(card.name);
+      if (!isTopCard) {
+        result.push([{ card, index }]);
+      }
+    }
+  });
+
+  return result;
+};

@@ -541,5 +541,7 @@ export function canMoveCardBelowInCity(
       return true;
   }
 
+  if (card.name === "Wife" && below.name === "Husband") return true;
+
   return false;
 }
