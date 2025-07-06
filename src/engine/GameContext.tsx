@@ -53,11 +53,13 @@ interface GameContextType {
     index: number,
     workersVisiting: 1 | -1,
   ) => void;
+  achieveEvent: (playerId: string | null, index: number) => void;
   visitSpecialEvent: (
     playerId: string | null,
     index: number,
     workersVisiting: 1 | -1,
   ) => void;
+  achieveSpecialEvent: (playerId: string | null, index: number) => void;
   visitCardInCity: (
     playerId: string | null,
     cityColor: PlayerColor,
@@ -143,7 +145,9 @@ export const GameProvider = ({
     visitLocation: wrapAction(Actions.visitLocation),
     visitJourney: wrapAction(Actions.visitJourney),
     visitEvent: wrapAction(Actions.visitEvent),
+    achieveEvent: wrapAction(Actions.achieveEvent),
     visitSpecialEvent: wrapAction(Actions.visitSpecialEvent),
+    achieveSpecialEvent: wrapAction(Actions.achieveSpecialEvent),
     visitCardInCity: wrapAction(Actions.visitCardInCity),
 
     setDiscarding: wrapAction(Actions.setDiscarding),

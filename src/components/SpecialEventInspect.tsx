@@ -1,6 +1,10 @@
 import { useGame } from "../engine/GameContext";
 import { EffectType, SpecialEvent } from "../engine/gameTypes";
-import { canVisitSpecialEvent, isNotYourTurn } from "../utils/gameLogic";
+import {
+  canAchieveSpecialEvent,
+  canVisitSpecialEvent,
+  isNotYourTurn,
+} from "../utils/gameLogic";
 import { getPlayerColor, getPlayerId } from "../utils/identity";
 import { listCardNames, mapOverEffectTypes } from "../utils/loops";
 import {
@@ -20,7 +24,7 @@ function SpecialEventInspect({
   onClose: () => void;
   index: number;
 }) {
-  const { game, visitSpecialEvent } = useGame();
+  const { game, visitSpecialEvent, achieveSpecialEvent } = useGame();
 
   const storedId = getPlayerId();
   const playerColor = getPlayerColor(game, storedId);
@@ -30,6 +34,8 @@ function SpecialEventInspect({
     playerColor && canVisitSpecialEvent(game, specialEvent, playerColor, 1);
   const canLeave =
     playerColor && canVisitSpecialEvent(game, specialEvent, playerColor, -1);
+  const canAchieve =
+    playerColor && canAchieveSpecialEvent(game, specialEvent, playerColor);
 
   const requiredEffects = Object.entries(
     specialEvent.effectTypeRequirement,
@@ -97,6 +103,12 @@ function SpecialEventInspect({
             disabled || !canLeave,
             () => visitSpecialEvent(storedId, index, 1),
             () => visitSpecialEvent(storedId, index, -1),
+            game.activeExpansions.includes("legends")
+              ? disabled || !canAchieve
+              : undefined,
+            game.activeExpansions.includes("legends")
+              ? () => achieveSpecialEvent(storedId, index)
+              : undefined,
           )}
           {renderVisitingWorkers(specialEvent)}
         </div>

@@ -1,13 +1,17 @@
 import { useGame } from "../engine/GameContext";
 import { Event } from "../engine/gameTypes";
-import { canVisitEvent, isNotYourTurn } from "../utils/gameLogic";
+import {
+  canAchieveEvent,
+  canVisitEvent,
+  isNotYourTurn,
+} from "../utils/gameLogic";
 import { getPlayerColor, getPlayerId } from "../utils/identity";
 import { renderVisitButtons, renderVisitingWorkers } from "../utils/react";
 import { EffectTypeIcon, ResourceIcon } from "./Icons";
 import { BaseLocationDisplay } from "./LocationsDisplay";
 
 function EventDisplay({ event, index }: { event: Event; index: number }) {
-  const { game, visitEvent } = useGame();
+  const { game, visitEvent, achieveEvent } = useGame();
 
   const storedId = getPlayerId();
   const playerColor = getPlayerColor(game, storedId);
@@ -15,6 +19,7 @@ function EventDisplay({ event, index }: { event: Event; index: number }) {
   const disabled = isNotYourTurn(game, storedId);
   const canVisit = playerColor && canVisitEvent(game, event, playerColor, 1);
   const canLeave = playerColor && canVisitEvent(game, event, playerColor, -1);
+  const canAchieve = playerColor && canAchieveEvent(game, event, playerColor);
 
   return (
     <BaseLocationDisplay
@@ -24,6 +29,12 @@ function EventDisplay({ event, index }: { event: Event; index: number }) {
         disabled || !canLeave,
         () => visitEvent(storedId, index, 1),
         () => visitEvent(storedId, index, -1),
+        game.activeExpansions.includes("legends")
+          ? disabled || !canAchieve
+          : undefined,
+        game.activeExpansions.includes("legends")
+          ? () => achieveEvent(storedId, index)
+          : undefined,
       )}
       workerChildren={renderVisitingWorkers(event)}
       resourceChildren={

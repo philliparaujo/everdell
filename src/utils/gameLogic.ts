@@ -304,6 +304,23 @@ export function canVisitEvent(
   return true;
 }
 
+export function canAchieveEvent(
+  state: GameState,
+  event: Event,
+  playerColor: PlayerColor,
+): boolean {
+  const player = state.players[playerColor];
+
+  // Cannot achieve event that is already used
+  if (event.used) return false;
+
+  // Cannot achieve event if Amilla Glistendew is not in city
+  if (countCardOccurrences(player.city, "Amilla Glistendew") === 0)
+    return false;
+
+  return true;
+}
+
 export function canVisitSpecialEvent(
   state: GameState,
   specialEvent: SpecialEvent,
@@ -329,6 +346,23 @@ export function canVisitSpecialEvent(
       required,
   );
   if (workersVisiting > 0 && (!cardRequirementMet || !effectTypeRequirementMet))
+    return false;
+
+  return true;
+}
+
+export function canAchieveSpecialEvent(
+  state: GameState,
+  specialEvent: SpecialEvent,
+  playerColor: PlayerColor,
+): boolean {
+  const player = state.players[playerColor];
+
+  // Cannot achieve special event that is already used
+  if (specialEvent.used) return false;
+
+  // Cannot achieve special event if Amilla Glistendew is not in city
+  if (countCardOccurrences(player.city, "Amilla Glistendew") === 0)
     return false;
 
   return true;

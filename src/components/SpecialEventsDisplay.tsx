@@ -1,6 +1,10 @@
 import { useGame } from "../engine/GameContext";
 import { EffectType, SpecialEvent } from "../engine/gameTypes";
-import { canVisitSpecialEvent, isNotYourTurn } from "../utils/gameLogic";
+import {
+  canAchieveSpecialEvent,
+  canVisitSpecialEvent,
+  isNotYourTurn,
+} from "../utils/gameLogic";
 import { getPlayerColor, getPlayerId } from "../utils/identity";
 import { mapOverEffectTypes } from "../utils/loops";
 import { renderVisitButtons, renderVisitingWorkers } from "../utils/react";
@@ -16,7 +20,7 @@ function SpecialEventDisplay({
   specialEvent: SpecialEvent;
   index: number;
 }) {
-  const { game, visitSpecialEvent } = useGame();
+  const { game, visitSpecialEvent, achieveSpecialEvent } = useGame();
 
   const storedId = getPlayerId();
   const playerColor = getPlayerColor(game, storedId);
@@ -26,6 +30,8 @@ function SpecialEventDisplay({
     playerColor && canVisitSpecialEvent(game, specialEvent, playerColor, 1);
   const canLeave =
     playerColor && canVisitSpecialEvent(game, specialEvent, playerColor, -1);
+  const canAchieve =
+    playerColor && canAchieveSpecialEvent(game, specialEvent, playerColor);
 
   return (
     <Hoverable
@@ -45,6 +51,12 @@ function SpecialEventDisplay({
           disabled || !canLeave,
           () => visitSpecialEvent(storedId, index, 1),
           () => visitSpecialEvent(storedId, index, -1),
+          game.activeExpansions.includes("legends")
+            ? disabled || !canAchieve
+            : undefined,
+          game.activeExpansions.includes("legends")
+            ? () => achieveSpecialEvent(storedId, index)
+            : undefined,
         )}
         workerChildren={renderVisitingWorkers(specialEvent)}
         resourceChildren={

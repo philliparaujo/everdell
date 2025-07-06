@@ -31,6 +31,8 @@ export function renderVisitButtons(
   leaveDisabled: boolean,
   onVisit: () => void,
   onLeave: () => void,
+  achieveDisabled?: boolean,
+  onAchieve?: () => void,
 ): React.ReactNode {
   return (
     <div>
@@ -40,6 +42,11 @@ export function renderVisitButtons(
       <Button disabled={leaveDisabled} onClick={onLeave}>
         Leave
       </Button>
+      {onAchieve && (
+        <Button disabled={achieveDisabled} onClick={onAchieve} variant="rare">
+          Achieve
+        </Button>
+      )}
     </div>
   );
 }

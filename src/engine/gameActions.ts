@@ -1,4 +1,6 @@
 import {
+  canAchieveEvent,
+  canAchieveSpecialEvent,
   canVisitCardInCity,
   canVisitEvent,
   canVisitJourney,
@@ -9,7 +11,7 @@ import {
   sanityCheck,
 } from "../utils/gameLogic";
 import { getPlayerColor } from "../utils/identity";
-import { countCardOccurrences, sortCity } from "../utils/loops";
+import { sortCity } from "../utils/loops";
 import { partition } from "../utils/math";
 import {
   MAX_HAND_SIZE,
@@ -581,6 +583,65 @@ export function visitCardInCity(
       }),
     },
   };
+
+  if (!sanityCheck(newState)) return state;
+  return newState;
+}
+
+export function achieveEvent(
+  state: GameState,
+  playerId: string | null,
+  index: number,
+): GameState {
+  const playerColor = getPlayerColor(state, playerId);
+  if (playerColor !== state.turn) return state;
+
+  if (index >= state.events.length) return state;
+  const event = state.events[index];
+
+  if (!canAchieveEvent(state, event, playerColor)) return state;
+
+  const updatedEvent = { ...event, used: true };
+  const newState: GameState = {
+    ...state,
+    events: state.events.map((event, i) =>
+      i === index ? updatedEvent : event,
+    ),
+  };
+
+  return addResourcesToSelf(newState, playerId, {
+    ...defaultResources,
+    coins: event.value,
+  });
+}
+
+export function achieveSpecialEvent(
+  state: GameState,
+  playerId: string | null,
+  index: number,
+): GameState {
+  const playerColor = getPlayerColor(state, playerId);
+  if (playerColor !== state.turn) return state;
+
+  if (index >= state.specialEvents.length) return state;
+  const specialEvent = state.specialEvents[index];
+
+  if (!canAchieveSpecialEvent(state, specialEvent, playerColor)) return state;
+
+  const updatedSpecialEvent = { ...specialEvent, used: true };
+  const newState: GameState = {
+    ...state,
+    specialEvents: state.specialEvents.map((specialEvent, i) =>
+      i === index ? updatedSpecialEvent : specialEvent,
+    ),
+  };
+
+  if (specialEvent.value) {
+    return addResourcesToSelf(newState, playerId, {
+      ...defaultResources,
+      coins: specialEvent.value,
+    });
+  }
 
   if (!sanityCheck(newState)) return state;
   return newState;

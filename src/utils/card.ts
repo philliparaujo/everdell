@@ -86,7 +86,10 @@ export const makeLegendsDecks = (
         giving: false,
       }));
     });
-  return { critters, constructions };
+  return {
+    critters: shuffleArray(critters),
+    constructions: shuffleArray(constructions),
+  };
 };
 
 export const formatExpansionName = (expansionName: string): string => {
