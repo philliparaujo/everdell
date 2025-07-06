@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Card, PlayerColor, ResourceType } from "../engine/gameTypes";
 import { getCardPath } from "../utils/card";
 import { mapOverResources } from "../utils/loops";
@@ -12,12 +13,21 @@ function CardPreview({
   onLeftClick,
   location,
   cityColor,
+  onDrop,
+  isDropTarget = false,
 }: {
   card: Card | null;
   index: number;
   onLeftClick?: () => void;
   location: "hand" | "city" | "meadow" | "reveal" | "discard";
   cityColor: PlayerColor | null;
+  onDrop?: (
+    droppedCard: Card,
+    sourceLocation: string,
+    sourceIndex: number,
+    targetIndex: number,
+  ) => void;
+  isDropTarget?: boolean;
 }) {
   const storable =
     card &&
@@ -28,6 +38,62 @@ function CardPreview({
   const textColor = card?.occupied
     ? "text-cardPreviewOutline-occupied"
     : "text-text";
+
+  // Only allow dragging from playable locations (hand, meadow, discard, reveal)
+  const isDraggable = !!card && location !== "city";
+  const [dropping, setDropping] = useState<boolean>(false);
+
+  const handleDragStart = (e: React.DragEvent) => {
+    if (!card) return;
+
+    // Set the drag data
+    e.dataTransfer.setData(
+      "application/json",
+      JSON.stringify({
+        card,
+        sourceLocation: location,
+        sourceIndex: index,
+      }),
+    );
+
+    e.dataTransfer.effectAllowed = "move";
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    if (isDropTarget && !card) {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = "move";
+      setDropping(true);
+    }
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    if (isDropTarget && !card) {
+      e.preventDefault();
+      setDropping(false);
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    if (!isDropTarget || card || !onDrop) return;
+
+    e.preventDefault();
+
+    try {
+      const dragData = JSON.parse(e.dataTransfer.getData("application/json"));
+      const droppedCard: Card = dragData.card;
+      const sourceLocation: string = dragData.sourceLocation;
+      const sourceIndex: number = dragData.sourceIndex;
+
+      // Only allow dropping if this is an empty slot
+      if (!card) {
+        onDrop(droppedCard, sourceLocation, sourceIndex, index);
+        setDropping(false);
+      }
+    } catch (error) {
+      console.error("Failed to parse drag data:", error);
+    }
+  };
 
   return (
     <Hoverable
@@ -50,6 +116,11 @@ function CardPreview({
         style={{
           height: storable ? "210px" : "170px",
         }}
+        draggable={isDraggable}
+        onDragStart={handleDragStart}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
       >
         {card ? (
           <>
@@ -90,7 +161,16 @@ function CardPreview({
               </div>
             )}
           </>
-        ) : null}
+        ) : (
+          // Show drop zone indicator when empty and is drop target
+          isDropTarget && (
+            <div
+              className={`flex-grow flex items-center justify-center text-gray-400 text-xs ${
+                dropping ? "bg-highlight" : ""
+              }`}
+            ></div>
+          )
+        )}
       </div>
     </Hoverable>
   );

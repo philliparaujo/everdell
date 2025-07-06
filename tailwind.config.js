@@ -59,6 +59,7 @@ module.exports = {
           danger: "#844",
         },
         "inspect-background": inspectBackground,
+        highlight: "rgba(255, 220, 0, 0.3)",
       },
       fontFamily: {
         sans: [

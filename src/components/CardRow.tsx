@@ -8,12 +8,21 @@ function CardRow({
   cityColor,
   onLeftClick,
   maxLength,
+  onDrop,
+  isDropTarget = false,
 }: {
   cards: Card[];
   location: "hand" | "city" | "meadow" | "reveal" | "discard";
   cityColor: PlayerColor | null;
   onLeftClick: (index: number, card: Card | null) => void;
   maxLength?: number;
+  onDrop?: (
+    droppedCard: Card,
+    sourceLocation: string,
+    sourceIndex: number,
+    targetIndex: number,
+  ) => void;
+  isDropTarget?: boolean;
 }) {
   const rowLength = maxLength ?? computeMaxCitySize(cards);
 
@@ -30,6 +39,8 @@ function CardRow({
             location={location}
             cityColor={cityColor}
             onLeftClick={() => onLeftClick(index, card)}
+            onDrop={onDrop}
+            isDropTarget={isDropTarget}
           />
         );
       })}

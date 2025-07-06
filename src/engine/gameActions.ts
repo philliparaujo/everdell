@@ -747,10 +747,29 @@ export function playCard(
     giving: false,
   };
 
-  newState.players[playerColor].city.push(updatedCard);
-  newState.players[playerColor].city = sortCity(
-    newState.players[playerColor].city,
-  );
+  // Determine which player's city to add the card to
+  const targetPlayerColor =
+    updatedCard.name === "Fool" ? oppositePlayerOf(playerColor) : playerColor;
+
+  // Update the state with the new city
+  newState.players[targetPlayerColor] = {
+    ...newState.players[targetPlayerColor],
+    city: sortCity([...newState.players[targetPlayerColor].city, updatedCard]),
+  };
+
+  newState.players[playerColor] = {
+    ...newState.players[playerColor],
+    history: updatedHistoryOnAction(
+      state,
+      playerColor,
+      "playing",
+      [cardToPlay],
+      [],
+      [],
+      [],
+      [],
+    ),
+  };
 
   if (!sanityCheck(newState)) return state;
   return newState;
@@ -882,22 +901,33 @@ function actOnSelectedCards(
         city,
         (card) => card.name === "Fool" && card.playing,
       );
-      const oppositeCity = [...oppositePlayer.city, ...otherPlayedCards];
 
-      newState.players[playerColor].city = sortCity(myCity).map((card) => ({
+      // Create new city arrays with proper sorting
+      const newMyCity = sortCity(myCity).map((card) => ({
         ...card,
         playing: false,
         discarding: false,
         giving: false,
       }));
-      newState.players[oppositePlayerOf(playerColor)].city = oppositeCity.map(
-        (card) => ({
-          ...card,
-          playing: false,
-          discarding: false,
-          giving: false,
-        }),
-      );
+
+      const newOppositeCity = sortCity([
+        ...oppositePlayer.city,
+        ...otherPlayedCards,
+      ]).map((card) => ({
+        ...card,
+        playing: false,
+        discarding: false,
+        giving: false,
+      }));
+
+      newState.players[playerColor] = {
+        ...newState.players[playerColor],
+        city: newMyCity,
+      };
+      newState.players[oppositePlayerOf(playerColor)] = {
+        ...newState.players[oppositePlayerOf(playerColor)],
+        city: newOppositeCity,
+      };
       break;
     case "giving":
       if (toColor === null) return state;
