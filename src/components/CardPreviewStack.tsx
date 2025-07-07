@@ -9,6 +9,7 @@ function CardPreviewStack({
   cityColor,
   onLeftClick,
   onDrop,
+  isDropTarget = false,
 }: {
   cards: Card[] | null;
   indices: number[];
@@ -21,6 +22,7 @@ function CardPreviewStack({
     sourceIndex: number,
     targetIndex: number,
   ) => void;
+  isDropTarget?: boolean;
 }) {
   return (
     <div className="flex flex-col h-full rounded-[4px]">
@@ -31,7 +33,7 @@ function CardPreviewStack({
         cityColor={cityColor}
         onLeftClick={() => onLeftClick(indices[0], cards?.[0] ?? null)}
         onDrop={onDrop}
-        isDropTarget={false}
+        isDropTarget={isDropTarget}
       />
       {cards
         ?.slice(1)

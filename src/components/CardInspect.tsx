@@ -113,21 +113,28 @@ function CardInspect({
         )}
         {location === "city" && cityColor && (
           <div className="flex flex-col items-center text-center gap-2">
-            {game.players[cityColor].city.map((aboveCard) => {
-              if (canMoveCardBelowInCity(game, cityColor, card, aboveCard)) {
-                return (
-                  <Button
-                    onClick={() => {
-                      moveCardBelowInCity(storedId, index, aboveCard);
-                      onClose();
-                    }}
-                  >
-                    Move below {aboveCard.name}
-                  </Button>
-                );
-              }
-              return <></>;
-            })}
+            {game.players[cityColor].city
+              .filter(
+                (aboveCard, aboveIndex, array) =>
+                  // Only include the first occurrence of each card name
+                  array.findIndex((c) => c.name === aboveCard.name) ===
+                  aboveIndex,
+              )
+              .map((aboveCard) => {
+                if (canMoveCardBelowInCity(game, cityColor, card, aboveCard)) {
+                  return (
+                    <Button
+                      onClick={() => {
+                        moveCardBelowInCity(storedId, index, aboveCard);
+                        onClose();
+                      }}
+                    >
+                      Move below {aboveCard.name}
+                    </Button>
+                  );
+                }
+                return <></>;
+              })}
             {canMoveCardBelowInCity(game, cityColor, card, null) && (
               <Button
                 onClick={() => {

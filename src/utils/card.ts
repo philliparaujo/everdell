@@ -174,7 +174,6 @@ export const isAllDefault = (
   );
 };
 
-// TODO: Remove assumption of no duplicate top cards
 export const groupCardsByBelow = (
   indexedCards: { card: Card; index: number }[],
 ): { card: Card; index: number }[][] => {
@@ -191,22 +190,35 @@ export const groupCardsByBelow = (
     }
   });
 
-  // Second pass: find the top card for each group and add it to the beginning
   const result: { card: Card; index: number }[][] = [];
 
-  groups.forEach((group, belowName) => {
-    // Find the top card (the card whose name matches the belowName)
-    const topCardIndex = indexedCards.findIndex(
-      ({ card }) => card.name === belowName,
-    );
+  // Second pass: handle each group, creating separate groups for duplicate top cards
+  groups.forEach((belowCards, belowName) => {
+    // Find all top cards (cards whose name matches the belowName)
+    const topCards = indexedCards.filter(({ card }) => card.name === belowName);
 
-    if (topCardIndex !== -1) {
-      // Top card exists, add it to the beginning of the group
-      const topCard = indexedCards[topCardIndex];
-      result.push([topCard, ...group]);
+    if (topCards.length > 0) {
+      // Distribute below cards among top cards
+      const belowCardsPerTop = Math.ceil(belowCards.length / topCards.length);
+
+      topCards.forEach((topCard, topIndex) => {
+        const startIndex = topIndex * belowCardsPerTop;
+        const endIndex = Math.min(
+          startIndex + belowCardsPerTop,
+          belowCards.length,
+        );
+        const groupBelowCards = belowCards.slice(startIndex, endIndex);
+
+        if (groupBelowCards.length > 0) {
+          result.push([topCard, ...groupBelowCards]);
+        } else {
+          // No below cards for this top card, add it as individual group
+          result.push([topCard]);
+        }
+      });
     } else {
       // No top card found, just use the group as is
-      result.push(group);
+      result.push(belowCards);
     }
   });
 

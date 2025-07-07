@@ -70,23 +70,26 @@ function CardRow({
     <div className="flex overflow-y-hidden scrollbar-thin w-full gap-1 rounded-[4px]">
       {groupedCards.map((group) => (
         <CardPreviewStack
+          key={group[0].index}
           cards={group.map(({ card }) => card)}
           indices={group.map(({ index }) => index)}
           location="city"
           cityColor={cityColor}
           onLeftClick={() => onLeftClick(group[0].index, group[0].card)}
           onDrop={onDrop}
+          isDropTarget={isDropTarget}
         />
       ))}
       {Array.from({ length: rowLength - numGroupedCards }).map((_, index) => (
         <CardPreview
           key={index}
-          index={index}
+          index={numGroupedCards + index}
           card={null}
           location="city"
           cityColor={cityColor}
-          onLeftClick={() => onLeftClick(index, null)}
+          onLeftClick={() => onLeftClick(numGroupedCards + index, null)}
           onDrop={onDrop}
+          isDropTarget={isDropTarget}
         />
       ))}
     </div>
