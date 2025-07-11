@@ -66,8 +66,19 @@ export function computeResourceDelta(
   return delta;
 }
 
+export function countCardValue(city: Card[]): number {
+  return city.reduce(
+    (acc, curr) => acc + (curr.below === "Dungeon" ? 0 : curr.value),
+    0,
+  );
+}
+
 export function countCardOccurrences(city: Card[], cardName: string): number {
-  return city.reduce((acc, curr) => acc + (curr.name === cardName ? 1 : 0), 0);
+  return city.reduce(
+    (acc, curr) =>
+      acc + (curr.name === cardName && curr.below !== "Dungeon" ? 1 : 0),
+    0,
+  );
 }
 
 // True if any of the cards are on the list
@@ -80,7 +91,9 @@ export function countEffectTypeOccurrences(
   effectType: EffectType,
 ): number {
   return city.reduce(
-    (acc, curr) => acc + (curr.effectType === effectType ? 1 : 0),
+    (acc, curr) =>
+      acc +
+      (curr.effectType === effectType && curr.below !== "Dungeon" ? 1 : 0),
     0,
   );
 }
@@ -98,19 +111,36 @@ export function isOnSpecialEvents(
   );
 }
 
-export function resetActions(cards: Card[]): Card[] {
-  return cards.map((card) => ({
-    ...card,
-    playing: false,
-    discarding: false,
-    giving: false,
-  }));
-}
-
 export function sortCity(city: Card[]): Card[] {
   return city
     .sort((a, b) => (a.name < b.name ? -1 : 1))
     .sort((a, b) =>
       a.effectType.toString() < b.effectType.toString() ? -1 : 1,
     );
+}
+
+export function sortGroupedCards(
+  groupedCards: { card: Card; index: number }[][],
+): { card: Card; index: number }[][] {
+  // The .sort() method sorts the array in place.
+  return groupedCards.sort((stackA, stackB) => {
+    // Get the top card from each stack.
+    // Based on your groupCardsByBelow function, the top card is the first one.
+    const topCardA = stackA[0].card;
+    const topCardB = stackB[0].card;
+
+    // 1. Primary Sort: by effectType (e.g., Green, Purple, Red)
+    const effectTypeComparison = topCardA.effectType
+      .toString()
+      .localeCompare(topCardB.effectType.toString());
+
+    // If the effect types are different, we're done sorting these two.
+    if (effectTypeComparison !== 0) {
+      return effectTypeComparison;
+    }
+
+    // 2. Secondary Sort: by card name (alphabetical)
+    // This only runs if the effect types are the same.
+    return topCardA.name.localeCompare(topCardB.name);
+  });
 }

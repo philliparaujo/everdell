@@ -1,6 +1,7 @@
 import { Card, PlayerColor } from "../engine/gameTypes";
 import { groupCardsByBelow } from "../utils/card";
 import { computeMaxCitySize } from "../utils/gameLogic";
+import { sortCity, sortGroupedCards } from "../utils/loops";
 import CardPreview from "./CardPreview";
 import CardPreviewStack from "./CardPreviewStack";
 
@@ -59,23 +60,24 @@ function CardRow({
   );
   const groupedCards: { card: Card; index: number }[][] =
     groupCardsByBelow(indexedCards);
-  console.log(cards, groupedCards);
+  const sortedGroupedCards = sortGroupedCards(groupedCards);
+  console.log(sortedGroupedCards);
 
-  const numGroupedCards = groupedCards.reduce(
+  const numGroupedCards = sortedGroupedCards.reduce(
     (acc, group) => acc + group.length,
     0,
   );
 
   return (
     <div className="flex overflow-y-hidden scrollbar-thin w-full gap-1 rounded-[4px]">
-      {groupedCards.map((group) => (
+      {sortedGroupedCards.map((group, slotIndex) => (
         <CardPreviewStack
-          key={group[0].index}
+          key={slotIndex}
           cards={group.map(({ card }) => card)}
           indices={group.map(({ index }) => index)}
           location="city"
           cityColor={cityColor}
-          onLeftClick={() => onLeftClick(group[0].index, group[0].card)}
+          onLeftClick={onLeftClick}
           onDrop={onDrop}
           isDropTarget={isDropTarget}
         />

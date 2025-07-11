@@ -45,7 +45,7 @@ function CardPreviewBottom({
             <div
               className={`text-[11px] leading-tight font-bold ${textColor} flex-grow flex items-center justify-center`}
             >
-              {card?.name}
+              {card?.below === "Dungeon" ? <s>{card.name}</s> : card?.name}
             </div>
           </div>
         }

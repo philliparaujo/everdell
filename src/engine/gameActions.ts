@@ -12,7 +12,7 @@ import {
   sanityCheck,
 } from "../utils/gameLogic";
 import { getPlayerColor } from "../utils/identity";
-import { sortCity } from "../utils/loops";
+import { countCardOccurrences, hasCards, sortCity } from "../utils/loops";
 import { partition } from "../utils/math";
 import {
   MAX_HAND_SIZE,
@@ -813,6 +813,60 @@ export function toggleCardGiving(
   return toggleCardAction(state, playerId, location, index, "giving");
 }
 
+function updateCardsBelow(
+  state: GameState,
+  playerColor: PlayerColor,
+): GameState {
+  const player = state.players[playerColor];
+  const city = player.city;
+
+  const hasDungeon = hasCards(city, ["Dungeon"]);
+  const wifeCount = countCardOccurrences(city, "Wife");
+  const husbandCount = countCardOccurrences(city, "Husband");
+  const maxPairs = Math.min(wifeCount, husbandCount);
+
+  let pairsFormed = 0;
+
+  const updatedCity = city.map((card) => {
+    // Always keep dungeon attachments
+    if (card.below === "Dungeon" && hasDungeon) {
+      return { ...card, below: "Dungeon" };
+    }
+
+    // Pair wives under husbands
+    if (card.name === "Wife") {
+      if (pairsFormed < maxPairs) {
+        pairsFormed++;
+        return { ...card, below: "Husband" };
+      }
+      return { ...card, below: null };
+    }
+
+    // Husbands should never sit under wives
+    if (card.name === "Husband") {
+      return { ...card, below: null };
+    }
+
+    // Clear invalid dungeon attachments
+    if (card.below === "Dungeon" && !hasDungeon) {
+      return { ...card, below: null };
+    }
+
+    return card;
+  });
+
+  return {
+    ...state,
+    players: {
+      ...state.players,
+      [playerColor]: {
+        ...player,
+        city: updatedCity,
+      },
+    },
+  };
+}
+
 export function playCard(
   state: GameState,
   playerId: string | null,
@@ -822,7 +876,7 @@ export function playCard(
   const playerColor = getPlayerColor(state, playerId);
   if (playerColor !== state.turn) return state;
 
-  const newState: GameState = {
+  let newState: GameState = {
     ...state,
     players: {
       ...state.players,
@@ -877,6 +931,7 @@ export function playCard(
     playing: false,
     discarding: false,
     giving: false,
+    below: null,
   };
 
   // Determine which player's city to add the card to
@@ -904,6 +959,7 @@ export function playCard(
     ),
   };
 
+  newState = updateCardsBelow(newState, playerColor);
   if (!sanityCheck(newState)) return state;
   return newState;
 }
@@ -1062,7 +1118,10 @@ function actOnSelectedCards(
         playing: false,
         discarding: false,
         giving: false,
+        below: null,
       }));
+
+      newState = updateCardsBelow(newState, playerColor);
       break;
     case "playing":
       const city = [
@@ -1104,6 +1163,7 @@ function actOnSelectedCards(
         ...newState.players[oppositePlayerOf(playerColor)],
         city: newOppositeCity,
       };
+      newState = updateCardsBelow(newState, playerColor);
       break;
     case "giving":
       if (toColor === null) return state;
@@ -1126,6 +1186,7 @@ function actOnSelectedCards(
         playing: false,
         discarding: false,
         giving: false,
+        below: null,
       }));
 
       const newPlayerToHand = playerToHand.map((card) => ({
@@ -1133,6 +1194,7 @@ function actOnSelectedCards(
         playing: false,
         discarding: false,
         giving: false,
+        below: null,
       }));
 
       // Update players with new hand arrays

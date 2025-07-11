@@ -174,15 +174,29 @@ export const isAllDefault = (
   );
 };
 
+/**
+ * Groups cards into stacks based on their `below` property.
+ * Special-case: all "Scurrble Champion" cards stack together.
+ */
 export const groupCardsByBelow = (
   indexedCards: { card: Card; index: number }[],
 ): { card: Card; index: number }[][] => {
-  // Create a map to group cards by their below property
-  const groups = new Map<string, { card: Card; index: number }[]>();
+  const result: { card: Card; index: number }[][] = [];
+  const processedIndices = new Set<number>();
 
-  // First pass: group all cards by their below property
+  // === Special case: stack all Scurrble Champions together ===
+  const championStack = indexedCards.filter(
+    ({ card }) => card.name === "Scurrble Champion",
+  );
+  if (championStack.length > 0) {
+    result.push(championStack);
+    championStack.forEach(({ index }) => processedIndices.add(index));
+  }
+
+  // === Group by below property for remaining cards ===
+  const groups = new Map<string, { card: Card; index: number }[]>();
   indexedCards.forEach(({ card, index }) => {
-    if (card.below) {
+    if (!processedIndices.has(index) && card.below) {
       if (!groups.has(card.below)) {
         groups.set(card.below, []);
       }
@@ -190,46 +204,39 @@ export const groupCardsByBelow = (
     }
   });
 
-  const result: { card: Card; index: number }[][] = [];
-
-  // Second pass: handle each group, creating separate groups for duplicate top cards
   groups.forEach((belowCards, belowName) => {
-    // Find all top cards (cards whose name matches the belowName)
-    const topCards = indexedCards.filter(({ card }) => card.name === belowName);
+    // Find top cards matching the belowName
+    const topCards = indexedCards.filter(
+      ({ card, index }) =>
+        card.name === belowName && !processedIndices.has(index),
+    );
 
     if (topCards.length > 0) {
-      // Distribute below cards among top cards
-      const belowCardsPerTop = Math.ceil(belowCards.length / topCards.length);
-
-      topCards.forEach((topCard, topIndex) => {
-        const startIndex = topIndex * belowCardsPerTop;
-        const endIndex = Math.min(
-          startIndex + belowCardsPerTop,
-          belowCards.length,
-        );
-        const groupBelowCards = belowCards.slice(startIndex, endIndex);
-
-        if (groupBelowCards.length > 0) {
-          result.push([topCard, ...groupBelowCards]);
-        } else {
-          // No below cards for this top card, add it as individual group
-          result.push([topCard]);
+      // Evenly distribute belowCards among topCards
+      const perTop = Math.ceil(belowCards.length / topCards.length);
+      topCards.forEach((topCardData, idx) => {
+        const start = idx * perTop;
+        const end = Math.min(start + perTop, belowCards.length);
+        const slice = belowCards.slice(start, end);
+        if (slice.length > 0) {
+          result.push([topCardData, ...slice]);
+          // Mark processed
+          processedIndices.add(topCardData.index);
+          slice.forEach(({ index }) => processedIndices.add(index));
         }
       });
     } else {
-      // No top card found, just use the group as is
+      // No top cards found, group as-is
       result.push(belowCards);
+      belowCards.forEach(({ index }) => processedIndices.add(index));
     }
   });
 
-  // Third pass: add cards that don't have a below property as individual groups
-  indexedCards.forEach(({ card, index }) => {
-    if (!card.below) {
-      // Check if this card is not already included as a top card in any group
-      const isTopCard = groups.has(card.name);
-      if (!isTopCard) {
-        result.push([{ card, index }]);
-      }
+  // === Remaining cards as individual stacks ===
+  indexedCards.forEach((data) => {
+    if (!processedIndices.has(data.index)) {
+      result.push([data]);
+      processedIndices.add(data.index);
     }
   });
 

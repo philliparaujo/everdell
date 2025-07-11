@@ -14,6 +14,7 @@ import { useGame } from "../engine/GameContext";
 import { oppositePlayerOf } from "../utils/gameLogic";
 import { getPlayerColor, getPlayerId } from "../utils/identity";
 import { stylePlayerColor } from "../utils/tailwind";
+import { countCardValue } from "../utils/loops";
 
 const HalfSection = ({
   title,
@@ -130,8 +131,7 @@ function Game() {
           title={
             <>
               {spectating ? `${playerColor}'s` : "My"} City (
-              <ResourceIcon type={"coins"} />{" "}
-              {player.city.reduce((acc, curr) => acc + curr.value, 0)})
+              <ResourceIcon type={"coins"} /> {countCardValue(player.city)})
             </>
           }
           titleColor={stylePlayerColor(playerColor)}
@@ -145,7 +145,7 @@ function Game() {
               {spectating ? `${oppositePlayerOf(playerColor)}'s` : "Opponent"}{" "}
               City (
               <ResourceIcon type={"coins"} />{" "}
-              {oppositePlayer.city.reduce((acc, curr) => acc + curr.value, 0)})
+              {countCardValue(oppositePlayer.city)})
             </>
           }
           titleColor={stylePlayerColor(oppositePlayerOf(playerColor))}

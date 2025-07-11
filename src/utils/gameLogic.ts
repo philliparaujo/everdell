@@ -293,10 +293,9 @@ export function canVisitEvent(
   if (workersVisiting > 0 && event.used) return false;
 
   // Cannot visit event if requirement not met
-  const requirementCount = player.city.reduce(
-    (acc, curr) =>
-      acc + (curr.effectType === event.effectTypeRequirement ? 1 : 0),
-    0,
+  const requirementCount = countEffectTypeOccurrences(
+    player.city,
+    event.effectTypeRequirement,
   );
   if (workersVisiting > 0 && requirementCount < event.effectTypeCount)
     return false;
@@ -520,19 +519,23 @@ export function canMoveCardBelowInCity(
   card: Card,
   below: Card | null,
 ): boolean {
+  // Can set below to null if card already has a below
   if (below === null) {
     if (card.below === null) return false;
     return true;
   }
+  // Cannot set below to a card if card already has a below
   if (card.below !== null) return false;
 
+  // Cannot set below to a card that is not in city
   if (!hasCards(state.players[playerColor].city, [below.name])) return false;
-  if (card.name === below.name) return false;
 
+  // Any critter can be below a Dungeon
   if (card.cardType === "Critter") {
     if (["Dungeon"].includes(below.name)) return true;
   }
 
+  // Bridge of the Sky and Silver Scale Spring can be below any Construction
   if (
     card.name === "Bridge of the Sky" ||
     card.name === "Silver Scale Spring"
@@ -541,7 +544,12 @@ export function canMoveCardBelowInCity(
       return true;
   }
 
+  // Wife can be below Husband
   if (card.name === "Wife" && below.name === "Husband") return true;
+
+  // Scurrble Champion will always be considered stacked to simplify grouping logic
+  // if (card.name === "Scurrble Champion" && below.name === "Scurrble Champion")
+  //   return true;
 
   return false;
 }

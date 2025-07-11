@@ -68,7 +68,14 @@ function CardInspect({
         </p>
         {card.value !== undefined && (
           <p>
-            <strong>Point value:</strong> {card.value}
+            <strong>Point value:</strong>{" "}
+            {card.below === "Dungeon" ? (
+              <>
+                <s>{card.value}</s> 0
+              </>
+            ) : (
+              card.value
+            )}
           </p>
         )}
         {location !== "city" && (
