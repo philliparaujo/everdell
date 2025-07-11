@@ -181,6 +181,8 @@ export function harvest(state: GameState, playerId: string | null): GameState {
     },
     city: player.city.map((card) => ({
       ...card,
+      activeDestinations:
+        card.name === "Cemetery" ? card.workers[playerColor] : 0,
       workers: {
         ...card.workers,
         [playerColor]: card.name === "Cemetery" ? card.workers[playerColor] : 0,
