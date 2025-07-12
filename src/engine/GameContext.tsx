@@ -19,9 +19,11 @@ interface GameContextType {
   ) => void;
   toggleCardPlaying: (
     playerId: string | null,
-    location: "hand" | "meadow" | "discard" | "reveal" | "legends",
+    location: "hand" | "meadow" | "discard" | "reveal" | "legends" | "city",
     index: number,
+    fromCityColor: PlayerColor | null,
   ) => void;
+  playToOppositeCity: (playerId: string | null, index: number) => void;
   playCard: (
     playerId: string | null,
     location: "hand" | "meadow" | "discard" | "reveal" | "legends",
@@ -40,6 +42,7 @@ interface GameContextType {
   discardSelectedCards: (playerId: string | null) => void;
   playSelectedCards: (playerId: string | null) => void;
   giveSelectedCards: (playerId: string | null, toColor: PlayerColor) => void;
+  swapHands: (playerId: string | null, toColor: PlayerColor) => void;
   drawCard: (playerId: string | null) => void;
   revealCard: (playerId: string | null, location: "deck" | "discard") => void;
   refillMeadow: (playerId: string | null) => void;
@@ -159,7 +162,9 @@ export const GameProvider = ({
     setPlaying: wrapAction(Actions.setPlaying),
     setGiving: wrapAction(Actions.setGiving),
     playCard: wrapAction(Actions.playCard),
+    playToOppositeCity: wrapAction(Actions.playToOppositeCity),
     revealCard: wrapAction(Actions.revealCard),
+    swapHands: wrapAction(Actions.swapHands),
 
     harvest: wrapAction(Actions.harvest),
 

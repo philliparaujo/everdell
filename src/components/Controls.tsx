@@ -4,6 +4,8 @@ import {
   canGiveToSelf,
   canRevealDeck,
   canRevealDiscard,
+  canStealCard,
+  canSwapHands,
   isNotYourTurn,
   isSafeToEndTurn,
   oppositePlayerOf,
@@ -25,6 +27,7 @@ function Controls() {
     refillMeadow,
     harvest,
     revealCard,
+    swapHands,
   } = useGame();
 
   const storedId = getPlayerId();
@@ -39,6 +42,8 @@ function Controls() {
   const canGiveOpponent = canGiveToOpponent(game, game.turn);
   const revealDeck = canRevealDeck(game, game.turn);
   const revealDiscard = canRevealDiscard(game, game.turn);
+  const canSwap = canSwapHands(game, game.turn);
+  const canSteal = canStealCard(game, game.turn);
 
   return (
     <div className="grid grid-cols-2 gap-2 max-w-400px">
@@ -121,6 +126,27 @@ function Controls() {
           onClick={() => revealCard(storedId, "discard")}
         >
           Reveal discard
+        </Button>
+      )}
+      {canSwap && (
+        <Button
+          disabled={disabled}
+          variant="rare"
+          onClick={() => swapHands(storedId, oppositePlayerOf(game.turn))}
+        >
+          Swap hands
+        </Button>
+      )}
+      {canSteal && (
+        <Button
+          disabled={disabled}
+          variant="rare"
+          onClick={() => {
+            if (isPlaying) playSelectedCards(storedId);
+            setPlaying(storedId, !isPlaying);
+          }}
+        >
+          {isPlaying ? "Confirm steal" : "Steal cards"}
         </Button>
       )}
     </div>

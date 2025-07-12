@@ -2,6 +2,9 @@ import {
   canAchieveEvent,
   canAchieveSpecialEvent,
   canMoveCardBelowInCity,
+  canPlayToOppositeCity,
+  canStealCard,
+  canSwapHands,
   canVisitCardInCity,
   canVisitEvent,
   canVisitJourney,
@@ -79,7 +82,24 @@ export function resetTurn(
   if (!state.previousState) return state;
 
   const { previousState } = state;
-  let newState: GameState = { ...state.previousState, previousState };
+  let newState: GameState = {
+    ...state.previousState,
+    previousState,
+    players: {
+      ...state.previousState.players,
+      [playerColor]: {
+        ...state.previousState.players[playerColor],
+        history: {
+          ...state.previousState.players[playerColor].history,
+          discarded: [],
+          cityDiscarded: [],
+          drew: [],
+          played: [],
+          gave: [],
+        },
+      },
+    },
+  };
 
   // Preserve id, name, and color for all players
   for (const color of Object.keys(
@@ -272,6 +292,37 @@ export function drawCard(state: GameState, playerId: string | null): GameState {
     ...state,
     deck,
     players,
+  };
+
+  if (!sanityCheck(newState)) return state;
+  return newState;
+}
+
+export function swapHands(
+  state: GameState,
+  playerId: string | null,
+  toColor: PlayerColor,
+): GameState {
+  const playerColor = getPlayerColor(state, playerId);
+  if (playerColor !== state.turn) return state;
+
+  if (!canSwapHands(state, playerColor)) return state;
+
+  const updatedPlayers: Record<PlayerColor, Player> = {
+    ...state.players,
+    [playerColor]: {
+      ...state.players[playerColor],
+      hand: state.players[toColor].hand,
+    },
+    [toColor]: {
+      ...state.players[toColor],
+      hand: state.players[playerColor].hand,
+    },
+  };
+
+  const newState: GameState = {
+    ...state,
+    players: updatedPlayers,
   };
 
   if (!sanityCheck(newState)) return state;
@@ -710,6 +761,7 @@ function toggleCardAction(
   location: "hand" | "city" | "meadow" | "reveal" | "discard" | "legends",
   index: number,
   action: Action,
+  fromCityColor: PlayerColor | null = null,
 ) {
   const playerColor = getPlayerColor(state, playerId);
   if (playerColor !== state.turn) return state;
@@ -724,6 +776,12 @@ function toggleCardAction(
         city: [...state.players[playerColor].city],
         legends: [...state.players[playerColor].legends],
       },
+      ...(fromCityColor !== null && {
+        [fromCityColor]: {
+          ...state.players[fromCityColor],
+          city: [...state.players[fromCityColor].city],
+        },
+      }),
     },
     meadow: [...state.meadow],
     reveal: [...state.reveal],
@@ -736,6 +794,14 @@ function toggleCardAction(
     cardToToggle = state.players[playerColor].hand[index];
     if (cardToToggle) {
       newState.players[playerColor].hand[index] = {
+        ...cardToToggle,
+        [action]: !cardToToggle[action],
+      };
+    }
+  } else if (location === "city" && fromCityColor !== null) {
+    cardToToggle = state.players[fromCityColor].city[index];
+    if (cardToToggle) {
+      newState.players[fromCityColor].city[index] = {
         ...cardToToggle,
         [action]: !cardToToggle[action],
       };
@@ -792,16 +858,25 @@ export function toggleCardDiscarding(
   location: "hand" | "city" | "meadow" | "reveal",
   index: number,
 ): GameState {
-  return toggleCardAction(state, playerId, location, index, "discarding");
+  return toggleCardAction(state, playerId, location, index, "discarding", null);
 }
 
 export function toggleCardPlaying(
   state: GameState,
   playerId: string | null,
-  location: "hand" | "meadow" | "discard" | "reveal" | "legends",
+  location: "hand" | "meadow" | "discard" | "reveal" | "legends" | "city",
   index: number,
+  fromCityColor: PlayerColor | null,
 ): GameState {
-  return toggleCardAction(state, playerId, location, index, "playing");
+  if (location === "city" && fromCityColor === null) return state;
+  return toggleCardAction(
+    state,
+    playerId,
+    location,
+    index,
+    "playing",
+    fromCityColor,
+  );
 }
 
 export function toggleCardGiving(
@@ -810,7 +885,7 @@ export function toggleCardGiving(
   location: "hand" | "meadow" | "reveal",
   index: number,
 ): GameState {
-  return toggleCardAction(state, playerId, location, index, "giving");
+  return toggleCardAction(state, playerId, location, index, "giving", null);
 }
 
 function updateCardsBelow(
@@ -956,10 +1031,51 @@ export function playCard(
       [],
       [],
       [],
+      [],
     ),
   };
 
   newState = updateCardsBelow(newState, playerColor);
+  if (!sanityCheck(newState)) return state;
+  return newState;
+}
+
+export function playToOppositeCity(
+  state: GameState,
+  playerId: string | null,
+  index: number,
+): GameState {
+  const playerColor = getPlayerColor(state, playerId);
+  if (playerColor !== state.turn) return state;
+
+  if (index >= state.players[playerColor].city.length) return state;
+  const card = state.players[playerColor].city[index];
+
+  if (!canPlayToOppositeCity(state, playerColor, card)) return state;
+
+  const player = state.players[playerColor];
+  const oppositePlayer = state.players[oppositePlayerOf(playerColor)];
+
+  const updatedCity = state.players[playerColor].city.filter(
+    (_, i) => i !== index,
+  );
+  const updatedOppositeCity = [
+    ...oppositePlayer.city,
+    { ...card, playing: false, discarding: false, giving: false },
+  ];
+
+  const newState: GameState = {
+    ...state,
+    players: {
+      ...state.players,
+      [playerColor]: { ...player, city: updatedCity },
+      [oppositePlayerOf(playerColor)]: {
+        ...oppositePlayer,
+        city: updatedOppositeCity,
+      },
+    },
+  };
+
   if (!sanityCheck(newState)) return state;
   return newState;
 }
@@ -1008,6 +1124,7 @@ function updatedHistoryOnAction(
   revealAct: Card[],
   discardAct: Card[],
   legendsAct: Card[],
+  oppositeCityAct: Card[],
 ): History {
   const history = state.players[playerColor].history;
 
@@ -1033,6 +1150,7 @@ function updatedHistoryOnAction(
           ...meadowAct,
           ...revealAct,
           ...legendsAct,
+          ...oppositeCityAct,
         ],
       };
     case "giving":
@@ -1073,6 +1191,10 @@ function actOnSelectedCards(
     state.players[playerColor].legends,
     (card) => !card[action],
   );
+  const [oppositeCityKeep, oppositeCityAct] = partition(
+    state.players[oppositePlayerOf(playerColor)].city,
+    (card) => !card[action],
+  );
 
   const updatedHistory = updatedHistoryOnAction(
     state,
@@ -1084,6 +1206,7 @@ function actOnSelectedCards(
     revealAct,
     discardAct,
     legendsAct,
+    oppositeCityAct,
   );
 
   let newState: GameState = {
@@ -1097,6 +1220,12 @@ function actOnSelectedCards(
         history: updatedHistory,
         legends: legendsKeep,
       },
+      ...(toColor !== null && {
+        [toColor]: {
+          ...state.players[toColor],
+          city: oppositeCityKeep,
+        },
+      }),
     },
     meadow: meadowKeep,
     reveal: revealKeep,
@@ -1131,6 +1260,7 @@ function actOnSelectedCards(
         ...revealAct,
         ...discardAct,
         ...legendsAct,
+        ...oppositeCityAct,
       ];
       const [otherPlayedCards, myCity] = partition(
         city,
@@ -1146,7 +1276,7 @@ function actOnSelectedCards(
       }));
 
       const newOppositeCity = sortCity([
-        ...oppositePlayer.city,
+        ...oppositeCityKeep,
         ...otherPlayedCards,
       ]).map((card) => ({
         ...card,

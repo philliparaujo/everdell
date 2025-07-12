@@ -24,7 +24,7 @@ function Discard() {
       cityColor={null}
       onLeftClick={(index, card) => {
         if (isPlaying && card) {
-          toggleCardPlaying(storedId, "discard", index);
+          toggleCardPlaying(storedId, "discard", index, null);
         }
       }}
     />

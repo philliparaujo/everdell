@@ -14,6 +14,11 @@ function PlayerStatus({ playerColor }: { playerColor: PlayerColor }) {
   const storedId = getPlayerId();
   const player = game.players[playerColor];
 
+  const cardsUnderDungeon = player.city.reduce(
+    (acc, curr) => acc + (curr.below === "Dungeon" ? 1 : 0),
+    0,
+  );
+
   return (
     <div key={playerColor} className="flex flex-col gap-2">
       <div>
@@ -40,7 +45,8 @@ function PlayerStatus({ playerColor }: { playerColor: PlayerColor }) {
             Hand: {player.hand.length} / {MAX_HAND_SIZE}
           </div>
           <div>
-            City: {player.city.length} / {computeMaxCitySize(player.city)}
+            City: {player.city.length - cardsUnderDungeon} /{" "}
+            {computeMaxCitySize(player.city) - cardsUnderDungeon}
           </div>
         </div>
       </div>

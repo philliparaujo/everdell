@@ -73,13 +73,18 @@ export function computeMaxCitySize(city: Card[]) {
     (acc, curr) => acc + (curr.expansionName === "legends" ? 1 : 0),
     0,
   );
+  const cardsUnderDungeon = city.reduce(
+    (acc, curr) => acc + (curr.below === "Dungeon" ? 1 : 0),
+    0,
+  );
 
   return (
     MAX_BASE_CITY_SIZE +
     husbandWifePairs +
     wanderers +
     Math.max(0, scurrbleChampions - 1) +
-    legends
+    legends +
+    cardsUnderDungeon
   );
 }
 
@@ -511,6 +516,55 @@ export function canGiveResources(
     givesOpponentPermissionList,
     specialEventsList,
   );
+}
+
+export function canSwapHands(
+  state: GameState,
+  playerColor: PlayerColor,
+): boolean {
+  // Cards and events that can swap hands
+  const greenCardsList: string[] = [];
+  const nonGreenCardsList: string[] = ["Rugwort the Robber"];
+  const givesOpponentPermissionList: string[] = [];
+  const specialEventsList: string[] = [];
+
+  return hasPermission(
+    state,
+    playerColor,
+    greenCardsList,
+    nonGreenCardsList,
+    givesOpponentPermissionList,
+    specialEventsList,
+  );
+}
+
+export function canStealCard(
+  state: GameState,
+  playerColor: PlayerColor,
+): boolean {
+  // Cards and events that can steal cards
+  const greenCardsList: string[] = [];
+  const nonGreenCardsList: string[] = ["Rugwort the Rowdy"];
+  const givesOpponentPermissionList: string[] = [];
+  const specialEventsList: string[] = [];
+
+  return hasPermission(
+    state,
+    playerColor,
+    greenCardsList,
+    nonGreenCardsList,
+    givesOpponentPermissionList,
+    specialEventsList,
+  );
+}
+
+export function canPlayToOppositeCity(
+  state: GameState,
+  playerColor: PlayerColor,
+  card: Card,
+): boolean {
+  if (card.name === "Rugwort the Rowdy") return true;
+  return false;
 }
 
 export function canMoveCardBelowInCity(

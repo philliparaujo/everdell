@@ -5,6 +5,7 @@ import { Card, PlayerColor, ResourceType } from "../engine/gameTypes";
 import { formatExpansionName, getCardPath } from "../utils/card";
 import {
   canMoveCardBelowInCity,
+  canPlayToOppositeCity,
   canVisitCardInCity,
   isNotYourTurn,
 } from "../utils/gameLogic";
@@ -34,6 +35,7 @@ function CardInspect({
     addResourcesToCardInCity,
     toggleOccupiedCardInCity,
     moveCardBelowInCity,
+    playToOppositeCity,
     playCard,
   } = useGame();
 
@@ -46,6 +48,8 @@ function CardInspect({
     playerColor && canVisitCardInCity(game, card, playerColor, 1);
   const canLeave =
     playerColor && canVisitCardInCity(game, card, playerColor, -1);
+  const canPlayToOpposite =
+    playerColor && canPlayToOppositeCity(game, playerColor, card);
 
   const textColor = card?.occupied
     ? "text-cardPreviewOutline-occupied"
@@ -111,7 +115,6 @@ function CardInspect({
         ) : (
           <></>
         )}
-        {/* TEMP */}
         {location === "city" && card.below !== null && (
           <div className="flex gap-2 justify-center">
             <strong className="text-text">Below:</strong>
@@ -152,6 +155,18 @@ function CardInspect({
                 Move off of {card.below}
               </Button>
             )}
+          </div>
+        )}
+        {location === "city" && cityColor && canPlayToOpposite && (
+          <div className="flex justify-center">
+            <Button
+              onClick={() => {
+                playToOppositeCity(storedId, index);
+                onClose();
+              }}
+            >
+              Play to opposite city
+            </Button>
           </div>
         )}
 

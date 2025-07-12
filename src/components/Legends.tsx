@@ -19,7 +19,7 @@ function Legends({ color }: { color: PlayerColor }) {
       cityColor={color}
       onLeftClick={(index, card) => {
         if (isPlaying && card) {
-          toggleCardPlaying(storedId, "legends", index);
+          toggleCardPlaying(storedId, "legends", index, null);
         }
       }}
     />

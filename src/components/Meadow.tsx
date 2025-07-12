@@ -23,7 +23,7 @@ function Meadow() {
         if (isDiscarding && card) {
           toggleCardDiscarding(storedId, "meadow", index);
         } else if (isPlaying && card) {
-          toggleCardPlaying(storedId, "meadow", index);
+          toggleCardPlaying(storedId, "meadow", index, null);
         } else if (isGiving && card) {
           toggleCardGiving(storedId, "meadow", index);
         }

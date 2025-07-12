@@ -19,7 +19,7 @@ function Reveal() {
     if (isDiscarding && card) {
       toggleCardDiscarding(storedId, "reveal", index);
     } else if (isPlaying && card) {
-      toggleCardPlaying(storedId, "reveal", index);
+      toggleCardPlaying(storedId, "reveal", index, null);
     } else if (isGiving && card) {
       toggleCardGiving(storedId, "reveal", index);
     }

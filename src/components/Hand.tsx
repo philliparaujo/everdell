@@ -24,7 +24,7 @@ function Hand({ color }: { color: PlayerColor }) {
         if (isDiscarding && card) {
           toggleCardDiscarding(storedId, "hand", index);
         } else if (isPlaying && card) {
-          toggleCardPlaying(storedId, "hand", index);
+          toggleCardPlaying(storedId, "hand", index, null);
         } else if (isGiving && card) {
           toggleCardGiving(storedId, "hand", index);
         }

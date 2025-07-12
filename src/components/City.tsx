@@ -1,14 +1,18 @@
 import { useGame } from "../engine/GameContext";
 import { Card, PlayerColor } from "../engine/gameTypes";
+import { canStealCard, oppositePlayerOf } from "../utils/gameLogic";
 import { getPlayerId } from "../utils/identity";
 import CardRow from "./CardRow";
 
 function City({ color }: { color: PlayerColor }) {
-  const { game, toggleCardDiscarding, playCard } = useGame();
+  const { game, toggleCardDiscarding, toggleCardPlaying, playCard } = useGame();
   const cityOwner = game.players[color];
   const isDiscarding = cityOwner.discarding;
 
   const storedId = getPlayerId();
+
+  const opponentCanSteal = canStealCard(game, game.turn);
+  const opponentIsPlaying = game.players[oppositePlayerOf(color)].playing;
 
   const handleDrop = (
     droppedCard: Card,
@@ -48,6 +52,8 @@ function City({ color }: { color: PlayerColor }) {
       onLeftClick={(index, card) => {
         if (isDiscarding && card) {
           toggleCardDiscarding(storedId, "city", index);
+        } else if (opponentCanSteal && opponentIsPlaying && card) {
+          toggleCardPlaying(storedId, "city", index, color);
         }
       }}
       onDrop={handleDrop}
