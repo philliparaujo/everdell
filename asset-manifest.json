@@ -1,12 +1,15 @@
 {
   "files": {
     "main.css": "/everdell/static/css/main.b1d2e53e.css",
-    "main.js": "/everdell/static/js/main.20c452da.js",
+    "main.js": "/everdell/static/js/main.86d39b01.js",
+    "static/media/rugworttheruler.jpg": "/everdell/static/media/rugworttheruler.970ec7f8dc86296a49ec.jpg",
+    "static/media/rugworttherowdy.jpg": "/everdell/static/media/rugworttherowdy.08665194b82178f218b6.jpg",
     "static/media/juggler.jpg": "/everdell/static/media/juggler.e980bbc6ffc4129b9181.jpg",
     "static/media/carnival.jpg": "/everdell/static/media/carnival.42144c28c2adb7c6efdd.jpg",
     "static/media/scurrblechampion.jpg": "/everdell/static/media/scurrblechampion.c3197e85ee68558fb95f.jpg",
     "static/media/scurrblestadium.jpg": "/everdell/static/media/scurrblestadium.745901790d28d847be84.jpg",
     "static/media/gazette.jpg": "/everdell/static/media/gazette.bbfde5641e4bbfed7d03.jpg",
+    "static/media/rugworttherobber.jpg": "/everdell/static/media/rugworttherobber.d6381a20010ac268ed01.jpg",
     "static/media/towncrier.jpg": "/everdell/static/media/towncrier.eac466120df6fc9df2c6.jpg",
     "static/media/background.png": "/everdell/static/media/background.a40d28dce6a079aa06c0.png",
     "static/media/thegreenacorn.jpg": "/everdell/static/media/thegreenacorn.f584779db84a7f39a955.jpg",
@@ -86,10 +89,10 @@
     "static/media/blueworker.PNG": "/everdell/static/media/blueworker.581774b3542fb04dc0e9.PNG",
     "index.html": "/everdell/index.html",
     "main.b1d2e53e.css.map": "/everdell/static/css/main.b1d2e53e.css.map",
-    "main.20c452da.js.map": "/everdell/static/js/main.20c452da.js.map"
+    "main.86d39b01.js.map": "/everdell/static/js/main.86d39b01.js.map"
   },
   "entrypoints": [
     "static/css/main.b1d2e53e.css",
-    "static/js/main.20c452da.js"
+    "static/js/main.86d39b01.js"
   ]
 }
