@@ -1,9 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import {
-  DEFAULT_ACTIVE_EXPANSIONS,
-  DEFAULT_CARD_FREQUENCIES,
-} from "../assets/data/cards";
-import { isAllDefault } from "../utils/card";
+import { DEFAULT_ACTIVE_EXPANSIONS } from "../assets/data/cards";
+import { generateDefaultCardFrequencies, isAllDefault } from "../utils/card";
 import {
   clearActiveExpansions,
   clearCardFrequencies,
@@ -38,7 +35,10 @@ export const CardManagementProvider = ({
 }) => {
   const [cardFrequencies, setCardFrequencies] = useState(() => {
     const savedFrequencies = getCardFrequencies();
-    return savedFrequencies || DEFAULT_CARD_FREQUENCIES;
+    return (
+      savedFrequencies ||
+      generateDefaultCardFrequencies(DEFAULT_ACTIVE_EXPANSIONS)
+    );
   });
 
   const [activeExpansions, setActiveExpansions] = useState(() => {
@@ -103,7 +103,10 @@ export const CardManagementProvider = ({
   };
 
   const resetToDefaults = () => {
-    setCardFrequencies(DEFAULT_CARD_FREQUENCIES);
+    const defaultFrequencies = generateDefaultCardFrequencies(
+      DEFAULT_ACTIVE_EXPANSIONS,
+    );
+    setCardFrequencies(defaultFrequencies);
     setActiveExpansions(DEFAULT_ACTIVE_EXPANSIONS);
     clearCardFrequencies();
     clearActiveExpansions();

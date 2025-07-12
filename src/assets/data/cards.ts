@@ -1,14 +1,16 @@
 import { defaultPlayerCount } from "../../engine/gameDefaults";
 import { Card, ExpansionName } from "../../engine/gameTypes";
+import { generateDefaultCardFrequencies } from "../../utils/card";
 
 export const DEFAULT_ACTIVE_EXPANSIONS: ExpansionName[] = [
   "base",
-  "extra extra",
-  "legends",
+  // "extra extra",
+  // "legends",
   // "rugwort",
 ];
 
-export const DEFAULT_CARD_FREQUENCIES: Record<
+// Base card frequencies for all expansions
+export const BASE_CARD_FREQUENCIES: Record<
   ExpansionName,
   Record<string, number>
 > = {
@@ -88,6 +90,12 @@ export const DEFAULT_CARD_FREQUENCIES: Record<
     "Rugwort the Ruler": 1,
   },
 };
+
+// Default card frequencies based on DEFAULT_ACTIVE_EXPANSIONS
+export const DEFAULT_CARD_FREQUENCIES: Record<
+  ExpansionName,
+  Record<string, number>
+> = generateDefaultCardFrequencies(DEFAULT_ACTIVE_EXPANSIONS);
 
 export const rawCards: Omit<
   Card,

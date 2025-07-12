@@ -1,4 +1,8 @@
-import { DEFAULT_CARD_FREQUENCIES, rawCards } from "../assets/data/cards";
+import {
+  BASE_CARD_FREQUENCIES,
+  DEFAULT_CARD_FREQUENCIES,
+  rawCards,
+} from "../assets/data/cards";
 import { Card, ExpansionName } from "../engine/gameTypes";
 import { shuffleArray } from "./math";
 
@@ -153,6 +157,32 @@ export const getActiveCards = (
   );
 };
 
+// Function to generate default card frequencies based on active expansions
+export function generateDefaultCardFrequencies(
+  activeExpansions: ExpansionName[],
+): Record<ExpansionName, Record<string, number>> {
+  const result = {} as Record<ExpansionName, Record<string, number>>;
+
+  // Get all expansion names from the base frequencies
+  const allExpansions = Object.keys(BASE_CARD_FREQUENCIES) as ExpansionName[];
+
+  allExpansions.forEach((expansion) => {
+    if (activeExpansions.includes(expansion)) {
+      // If expansion is active, use the base frequencies
+      result[expansion] = { ...BASE_CARD_FREQUENCIES[expansion] };
+    } else {
+      // If expansion is not active, set all frequencies to 0
+      const zeroFrequencies: Record<string, number> = {};
+      Object.keys(BASE_CARD_FREQUENCIES[expansion]).forEach((cardName) => {
+        zeroFrequencies[cardName] = 0;
+      });
+      result[expansion] = zeroFrequencies;
+    }
+  });
+
+  return result;
+}
+
 export const isAllDefault = (
   cardFrequencies: Record<ExpansionName, Record<string, number>>,
 ): boolean => {
@@ -162,9 +192,7 @@ export const isAllDefault = (
         Object.entries(frequencies).every(
           ([cardName, frequency]) =>
             frequency ===
-            DEFAULT_CARD_FREQUENCIES[expansionName as ExpansionName]?.[
-              cardName
-            ],
+            BASE_CARD_FREQUENCIES[expansionName as ExpansionName]?.[cardName],
         ) ||
         Object.entries(frequencies).every(
           ([cardName, frequency]) => frequency === 0,

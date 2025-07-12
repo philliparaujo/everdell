@@ -1,5 +1,9 @@
 import React, { useState } from "react";
-import { DEFAULT_CARD_FREQUENCIES, rawCards } from "../assets/data/cards";
+import {
+  BASE_CARD_FREQUENCIES,
+  DEFAULT_CARD_FREQUENCIES,
+  rawCards,
+} from "../assets/data/cards";
 import Alert from "../components/Alert";
 import Button from "../components/Button";
 import Navigation from "../components/Navigation";
@@ -53,7 +57,7 @@ const ActiveCard = ({
       <div className="flex-1">
         <h3 className="font-medium text-white">{cardName}</h3>
         <p className="text-sm text-green-200">
-          (Default: {DEFAULT_CARD_FREQUENCIES[expansionName][cardName] ?? 1})
+          (Default: {BASE_CARD_FREQUENCIES[expansionName][cardName] ?? 1})
         </p>
       </div>
       <div className="flex items-center gap-2">
@@ -111,7 +115,7 @@ const BannedCard = ({
       <div className="flex-1">
         <h3 className="font-medium text-white">{cardName}</h3>
         <p className="text-sm text-red-200">
-          (Default: {DEFAULT_CARD_FREQUENCIES[expansionName][cardName] ?? 1})
+          (Default: {BASE_CARD_FREQUENCIES[expansionName][cardName] ?? 1})
         </p>
       </div>
       <Button
@@ -169,7 +173,7 @@ const CardManagement: React.FC = () => {
       updateCardFrequency(
         cardName,
         expansionName,
-        DEFAULT_CARD_FREQUENCIES[expansionName][cardName] ?? 1,
+        BASE_CARD_FREQUENCIES[expansionName][cardName] ?? 1,
       );
     }
   };
@@ -328,32 +332,6 @@ const CardManagement: React.FC = () => {
             >
               Reset to Defaults
             </Button>
-
-            {/* <Button
-              variant="danger"
-              onClick={() => {
-                rawCards
-                  .filter((card) => card.expansionName === "base")
-                  .forEach((card) => {
-                    updateCardFrequency(card.name, card.expansionName, 0);
-                  });
-              }}
-            >
-              Ban All Base Cards
-            </Button>
-            <Button
-              variant="danger"
-              onClick={() => {
-                rawCards
-                  .filter((card) => card.expansionName === "extra extra")
-                  .forEach((card) => {
-                    updateCardFrequency(card.name, card.expansionName, 0);
-                  });
-              }}
-            >
-              Ban All Extra Extra Cards
-            </Button> */}
-
             {EXPANSION_NAMES.map((expansion) => (
               <Button
                 key={expansion}
@@ -371,7 +349,7 @@ const CardManagement: React.FC = () => {
                         card.name,
                         card.expansionName,
                         willInclude
-                          ? DEFAULT_CARD_FREQUENCIES[expansion][card.name]
+                          ? BASE_CARD_FREQUENCIES[expansion][card.name]
                           : 0,
                       );
                     });
