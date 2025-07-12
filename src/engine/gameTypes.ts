@@ -16,11 +16,12 @@ export type ResourceCount = Record<ResourceType, number>;
 export type PlayerColor = "Red" | "Blue";
 export type PlayerCount = Record<PlayerColor, number>;
 
-export type ExpansionName = "base" | "extra extra" | "legends";
+export type ExpansionName = "base" | "extra extra" | "legends" | "rugwort";
 export const EXPANSION_NAMES: ExpansionName[] = [
   "base",
   "extra extra",
   "legends",
+  "rugwort",
 ];
 
 export type Action = "discarding" | "playing" | "giving";
@@ -38,8 +39,11 @@ export type Card = {
   imageKey: string;
 
   // Constructions can be occupied to play free critters
+  // Some critters can be used to play free Legends cards
+  // Constructions of a specific type can be used to play free Rugwort cards
   occupied: boolean | null; // For constructions
-  constructionRequirement: string | null; // For critters
+  cardNameFreeBonus: string | null; // For critters
+  effectTypeFreeBonus: EffectType[] | null; // For Rugwort cards
 
   // Some Legends cards can be placed below a card
   below: string | null;
