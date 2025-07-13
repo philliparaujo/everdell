@@ -122,7 +122,7 @@ export const rawCards: Omit<
     expansionName: "base",
     imageKey: "architect",
     description:
-      "At game end, worth 1 point for each of your leftover resin and pebbles, up to 6 points total.:contentReference[oaicite:0]{index=0}",
+      "1 coin for each of your unused resin and pebbles, to a maximum of 6.",
 
     occupied: null,
     activeDestinations: null,
@@ -149,8 +149,7 @@ export const rawCards: Omit<
     workers: defaultPlayerCount,
     expansionName: "base",
     imageKey: "bard",
-    description:
-      "Discard up to 5 cards from your hand to gain 1 point token for each card.:contentReference[oaicite:1]{index=1}",
+    description: "You may discard up to 5 cards to gain 1 coin each.",
 
     occupied: null,
     activeDestinations: null,
@@ -177,8 +176,7 @@ export const rawCards: Omit<
     workers: defaultPlayerCount,
     expansionName: "base",
     imageKey: "bargetoad",
-    description:
-      "When played and during Production, gain 2 twigs for each Farm in your city.:contentReference[oaicite:2]{index=2}",
+    description: "Gain 2 twigs for each Farm in your city.",
 
     occupied: null,
     activeDestinations: null,
@@ -205,8 +203,7 @@ export const rawCards: Omit<
     workers: defaultPlayerCount,
     expansionName: "base",
     imageKey: "castle",
-    description:
-      "At game end, worth 1 point for each Common Construction in your city.:contentReference[oaicite:3]{index=3}",
+    description: "1 coin for each Common Construction in your city.",
 
     occupied: false,
     activeDestinations: null,
@@ -234,7 +231,7 @@ export const rawCards: Omit<
     expansionName: "base",
     imageKey: "cemetery",
     description:
-      "When you place a worker here, reveal 4 cards from the draw pile or discard pile and play 1 of them for free. Discard the others. (Your worker stays here permanently; Cemetery can only have 2 workers, and the second spot is unlocked by having an Undertaker in your city.):contentReference[oaicite:4]{index=4}",
+      "Reveal 4 cards from the deck or discard pile and play 1 for free. Discard the others.",
 
     occupied: false,
     activeDestinations: 0,
@@ -262,7 +259,7 @@ export const rawCards: Omit<
     expansionName: "base",
     imageKey: "chapel",
     description:
-      "When you place a worker here, place 1 point token on the Chapel. Draw 2 cards for every 1 point token on the Chapel.:contentReference[oaicite:5]{index=5}",
+      "Place 1 coin on this Chapel, then draw 2 cards for each coin on this Chapel.",
 
     occupied: false,
     activeDestinations: 0,
@@ -297,8 +294,7 @@ export const rawCards: Omit<
     workers: defaultPlayerCount,
     expansionName: "base",
     imageKey: "chipsweep",
-    description:
-      "When played and during Production, activate any 1 green Production card in your city.:contentReference[oaicite:6]{index=6}",
+    description: "Activate 1 green in your city.",
 
     occupied: null,
     activeDestinations: null,
@@ -326,7 +322,7 @@ export const rawCards: Omit<
     expansionName: "base",
     imageKey: "clocktower",
     description:
-      "When you play the Clock Tower, place 3 point tokens on it. Before you bring back your workers during a Prepare for Season action, remove 1 point token from the Clock Tower and activate one occupied basic or Forest location where you have a worker. (Any point tokens left on the Clock Tower at game’s end count towards your score.):contentReference[oaicite:7]{index=7}",
+      "When played, place 3 coins here. At the beginning of Preparing for Season, you may pay 1 coin from here to activate 1 of the Basic or Forest locations where you have a worker deployed.",
 
     occupied: false,
     activeDestinations: null,
@@ -362,7 +358,7 @@ export const rawCards: Omit<
     expansionName: "base",
     imageKey: "courthouse",
     description:
-      "Gain 1 twig, 1 resin, or 1 pebble every time you play a Construction into your city. (You do not gain a resource when playing this Courthouse.):contentReference[oaicite:8]{index=8}",
+      "Gain 1 twig or 1 resin or 1 pebble after you play a Construction.",
 
     occupied: false,
     activeDestinations: null,
@@ -390,7 +386,7 @@ export const rawCards: Omit<
     expansionName: "base",
     imageKey: "crane",
     description:
-      "When you play a Construction, you may discard this Crane from your city to decrease the cost of the played Construction by 3 of any resource. You do not gain the 3 resources. (Cannot be combined with other card-playing abilities.):contentReference[oaicite:9]{index=9}",
+      "When playing a Construction, you may discard this Crane from your city to play that Construction for 3 fewer wildcards.",
 
     occupied: false,
     activeDestinations: null,
@@ -417,8 +413,7 @@ export const rawCards: Omit<
     workers: defaultPlayerCount,
     expansionName: "base",
     imageKey: "doctor",
-    description:
-      "When played and during Production, you may pay up to 3 berries to gain 1 point token for each berry.:contentReference[oaicite:10]{index=10}",
+    description: "You may pay up to 3 berries to gain 1 coin each.",
 
     occupied: null,
     activeDestinations: null,
@@ -446,7 +441,7 @@ export const rawCards: Omit<
     expansionName: "base",
     imageKey: "dungeon",
     description:
-      "When you are playing a Construction or a Critter, you may place a Critter from your city beneath this Dungeon to decrease the cost of the played card by 3 of any resource. (The Critter under the Dungeon is no longer part of your city and is not worth any points.):contentReference[oaicite:11]{index=11}:contentReference[oaicite:12]{index=12}",
+      "When playing a Construction or Critter, you may place a Critter from your city face-down beneath this Dungeon to decrease the cost by 3 wildcards.",
 
     occupied: false,
     activeDestinations: null,
@@ -473,8 +468,7 @@ export const rawCards: Omit<
     workers: defaultPlayerCount,
     expansionName: "base",
     imageKey: "evertree",
-    description:
-      "At game end, worth 1 point for each purple Prosperity card in your city, including this Ever Tree. (Ever Tree can grant 1 of any Critter for free.):contentReference[oaicite:13]{index=13}",
+    description: "1 coin for each purple in your city.",
 
     occupied: false,
     activeDestinations: null,
@@ -501,8 +495,7 @@ export const rawCards: Omit<
     workers: defaultPlayerCount,
     expansionName: "base",
     imageKey: "fairgrounds",
-    description:
-      "When played and during Production, draw 2 cards.:contentReference[oaicite:14]{index=14}",
+    description: "Draw 2 cards.",
 
     occupied: false,
     activeDestinations: null,
@@ -529,8 +522,7 @@ export const rawCards: Omit<
     workers: defaultPlayerCount,
     expansionName: "base",
     imageKey: "farm",
-    description:
-      "When played and during Production, gain 1 berry.:contentReference[oaicite:15]{index=15}",
+    description: "Gain 1 berry.",
 
     occupied: false,
     activeDestinations: null,
@@ -557,8 +549,7 @@ export const rawCards: Omit<
     workers: defaultPlayerCount,
     expansionName: "base",
     imageKey: "fool",
-    description:
-      "The Fool is played into an empty spot in an opponent’s city. (It takes up a space and gives that opponent -2 points.):contentReference[oaicite:16]{index=16}:contentReference[oaicite:17]{index=17}",
+    description: "Play this Fool into an empty space in an opponent's city.",
 
     occupied: null,
     activeDestinations: null,
@@ -586,7 +577,7 @@ export const rawCards: Omit<
     expansionName: "base",
     imageKey: "generalstore",
     description:
-      "When played and during Production, gain 1 berry, or gain 2 berries if you have a Farm in your city (not 2 per Farm).:contentReference[oaicite:18]{index=18}",
+      "Gain 1 berry. If you have a Farm in your city, gain 1 additional berry.",
 
     occupied: false,
     activeDestinations: null,
@@ -613,8 +604,7 @@ export const rawCards: Omit<
     workers: defaultPlayerCount,
     expansionName: "base",
     imageKey: "historian",
-    description:
-      "Draw 1 card after you play a Critter or Construction—basically every time you play a card after you have this Historian.:contentReference[oaicite:19]{index=19}",
+    description: "Draw 1 card after you play a Critter or Construction.",
 
     occupied: null,
     activeDestinations: null,
@@ -642,7 +632,7 @@ export const rawCards: Omit<
     expansionName: "base",
     imageKey: "husband",
     description:
-      "Shares a space with a Wife, so combined they only take up 1 space in your city. If you have a Farm in your city and this Husband is paired with a Wife, then this card gives you 1 of any resource when played and during Production. (May only share a space with 1 Wife.):contentReference[oaicite:20]{index=20}",
+      "Gain 1 wildcard if paired with a Wife and you have at least 1 Farm in your city.",
 
     occupied: null,
     activeDestinations: null,
@@ -670,7 +660,7 @@ export const rawCards: Omit<
     expansionName: "base",
     imageKey: "inn",
     description:
-      "When you place a worker here, play a Critter or Construction from the Meadow for 3 fewer resources of your choice. (You gain 1 point token if an opponent visits your Inn.):contentReference[oaicite:21]{index=21}",
+      "Play a Critter or Construction from the Meadow for 3 fewer wildcards.",
 
     occupied: false,
     activeDestinations: 0,
@@ -698,7 +688,7 @@ export const rawCards: Omit<
     expansionName: "base",
     imageKey: "innkeeper",
     description:
-      "When you play a Critter, you may discard this Innkeeper from your city to decrease the cost of the played Critter by 3 berries. You do not gain those berries. (This card cannot be combined with any other card-playing abilities.):contentReference[oaicite:22]{index=22}",
+      "When playing a Critter, you may discard this Innkeeper from your city to decrease the cost by 3 berries.",
 
     occupied: null,
     activeDestinations: null,
@@ -726,7 +716,7 @@ export const rawCards: Omit<
     expansionName: "base",
     imageKey: "judge",
     description:
-      "When playing a Critter or Construction, you may replace 1 of any resource from the listed cost with 1 of any other resource you have.:contentReference[oaicite:23]{index=23}",
+      "When you play a Critter or Construction, you may replace 1 wildcard with 1 wildcard.",
 
     occupied: null,
     activeDestinations: null,
@@ -754,7 +744,7 @@ export const rawCards: Omit<
     expansionName: "base",
     imageKey: "king",
     description:
-      "At game end, worth 1 point for each basic Event, and 2 points for each special Event you have achieved.:contentReference[oaicite:24]{index=24}",
+      "1 coin for each basic Event you achieved. 2 coins for each special Event you achieved.",
 
     occupied: null,
     activeDestinations: null,
@@ -781,8 +771,7 @@ export const rawCards: Omit<
     workers: defaultPlayerCount,
     expansionName: "base",
     imageKey: "lookout",
-    description:
-      "When you place a worker here, copy any 1 basic or Forest location, even if it is occupied by one of your workers.:contentReference[oaicite:25]{index=25}",
+    description: "Copy any Basic or Forest location.",
 
     occupied: false,
     activeDestinations: 0,
@@ -809,8 +798,7 @@ export const rawCards: Omit<
     workers: defaultPlayerCount,
     expansionName: "base",
     imageKey: "mine",
-    description:
-      "When played and during Production, gain 1 pebble.:contentReference[oaicite:26]{index=26}",
+    description: "Gain 1 pebble.",
 
     occupied: false,
     activeDestinations: null,
@@ -837,8 +825,7 @@ export const rawCards: Omit<
     workers: defaultPlayerCount,
     expansionName: "base",
     imageKey: "minermole",
-    description:
-      "When played and during Production, you may copy any 1 green Production card in any opponent’s city.:contentReference[oaicite:27]{index=27}",
+    description: "Copy 1 green in an opponent's city.",
 
     occupied: null,
     activeDestinations: null,
@@ -865,8 +852,7 @@ export const rawCards: Omit<
     workers: defaultPlayerCount,
     expansionName: "base",
     imageKey: "monastery",
-    description:
-      "When you place a worker here, give 2 of any resources to an opponent and then gain 4 points. (Worker stays here permanently. Monastery can only have 2 workers, and the second spot is unlocked by having a Monk in your city.):contentReference[oaicite:28]{index=28}",
+    description: "Give 2 wildcards to an opponent and gain 4 coins.",
 
     occupied: false,
     activeDestinations: 0,
@@ -894,7 +880,7 @@ export const rawCards: Omit<
     expansionName: "base",
     imageKey: "monk",
     description:
-      "When played and during Production, you may give up to 2 berries to an opponent to gain 2 point tokens for each berry you give. (Also unlocks the 2nd Monastery room.):contentReference[oaicite:29]{index=29}",
+      "You may give up to 2 berries to an opponent to gain 2 coins each. Unlocks second Monastery.",
 
     occupied: null,
     activeDestinations: null,
@@ -921,8 +907,7 @@ export const rawCards: Omit<
     workers: defaultPlayerCount,
     expansionName: "base",
     imageKey: "palace",
-    description:
-      "At game end, worth 1 point for each Unique Construction in your city, including this Palace.:contentReference[oaicite:30]{index=30}",
+    description: "1 coin for each Unique Construction in your city.",
 
     occupied: false,
     activeDestinations: null,
@@ -950,7 +935,7 @@ export const rawCards: Omit<
     expansionName: "base",
     imageKey: "peddler",
     description:
-      "When played and during Production, you may trade up to 2 of your resources for 2 of any other resource. (Trade with the general supply, not other players.):contentReference[oaicite:31]{index=31}",
+      "You may pay up to 2 wildcards to gain an equal amount of 2 wildcards.",
 
     occupied: null,
     activeDestinations: null,
@@ -978,7 +963,7 @@ export const rawCards: Omit<
     expansionName: "base",
     imageKey: "postalpigeon",
     description:
-      "When played, reveal 2 cards from the deck. You may immediately play 1 of these worth up to 3 points for free. Discard the other.:contentReference[oaicite:32]{index=32}",
+      "Reveal 2 cards. You may play 1 worth up to 3 coins for free. Discard the other.",
 
     occupied: null,
     activeDestinations: null,
@@ -1006,7 +991,7 @@ export const rawCards: Omit<
     expansionName: "base",
     imageKey: "postoffice",
     description:
-      "When you place a worker here, give an opponent 2 cards from your hand and then discard any number of cards from your hand. Draw back up to your hand limit. You gain 1 point token if an opponent visits your Post Office.:contentReference[oaicite:33]{index=33}",
+      "Give an opponent 2 cards, then discard any number of cards and draw up to your hand limit.",
 
     occupied: false,
     activeDestinations: 0,
@@ -1033,8 +1018,7 @@ export const rawCards: Omit<
     workers: defaultPlayerCount,
     expansionName: "base",
     imageKey: "queen",
-    description:
-      "When you place a worker here, you may play any card from your hand or the Meadow cards worth up to 3 points for free. (Uses base point value of the card, not bonus points.):contentReference[oaicite:34]{index=34}",
+    description: "Play a card worth up to 3 coins for free.",
 
     occupied: null,
     activeDestinations: 0,
@@ -1062,7 +1046,7 @@ export const rawCards: Omit<
     expansionName: "base",
     imageKey: "ranger",
     description:
-      "When played, move any 1 of your deployed workers to a new location, following normal placement rules. Also unlocks the 2nd Dungeon cell.:contentReference[oaicite:35]{index=35}",
+      "Move 1 of your deployed workers to a new location. Unlocks second Dungeon.",
 
     occupied: null,
     activeDestinations: null,
@@ -1089,8 +1073,7 @@ export const rawCards: Omit<
     workers: defaultPlayerCount,
     expansionName: "base",
     imageKey: "resinrefinery",
-    description:
-      "When played and during Production, gain 1 resin.:contentReference[oaicite:36]{index=36}",
+    description: "Gain 1 resin.",
 
     occupied: false,
     activeDestinations: null,
@@ -1118,8 +1101,7 @@ export const rawCards: Omit<
     expansionName: "base",
     imageKey: "ruins",
     description:
-      "When played, discard a Construction from your city and place this card in that spot. Then gain back that Construction’s listed cost in resources, and draw 2 cards.:contentReference[oaicite:37]{index=37}",
-
+      "Discard a Construction from your city. Gain resources equal to that Construction's cost and draw 2 cards.",
     occupied: false,
     activeDestinations: null,
     maxDestinations: null,
@@ -1145,8 +1127,7 @@ export const rawCards: Omit<
     workers: defaultPlayerCount,
     expansionName: "base",
     imageKey: "school",
-    description:
-      "At game end, worth 1 point for each Common Critter in your city.:contentReference[oaicite:38]{index=38}",
+    description: "1 coin for each Common Critter in your city.",
 
     occupied: false,
     activeDestinations: null,
@@ -1174,7 +1155,7 @@ export const rawCards: Omit<
     expansionName: "base",
     imageKey: "shepherd",
     description:
-      "When played, gain 3 berries. Also gain 1 point token for each point token on your Chapel.:contentReference[oaicite:39]{index=39}",
+      "Gain 3 berries, then gain 1 coin for each coin on your Chapel.",
 
     occupied: null,
     activeDestinations: null,
@@ -1201,8 +1182,7 @@ export const rawCards: Omit<
     workers: defaultPlayerCount,
     expansionName: "base",
     imageKey: "shopkeeper",
-    description:
-      "Gain 1 berry after you play a Critter into your city. Do not gain a berry for playing this Shopkeeper.:contentReference[oaicite:40]{index=40}",
+    description: "Gain 1 berry after you play a Critter.",
     occupied: null,
     activeDestinations: null,
     maxDestinations: null,
@@ -1229,7 +1209,7 @@ export const rawCards: Omit<
     expansionName: "base",
     imageKey: "storehouse",
     description:
-      "When played and during Production, take from the supply and place either 3 twigs, 2 resin, 1 pebble, or 2 berries on this card. (Also works as a location to place a worker and take all of the resources on the card.):contentReference[oaicite:41]{index=41}:contentReference[oaicite:42]{index=42}",
+      "Place either 3 twigs, 2 resin, 1 pebble, or 2 berries on this Storehouse from the supply. Take all resources on this card.",
 
     occupied: false,
     activeDestinations: 0,
@@ -1264,8 +1244,7 @@ export const rawCards: Omit<
     workers: defaultPlayerCount,
     expansionName: "base",
     imageKey: "teacher",
-    description:
-      "When played and during Production, draw 2 cards. Keep 1 of them and give the other to any opponent.:contentReference[oaicite:43]{index=43}",
+    description: "Draw 2 cards, keep 1, and give the other to an opponent.",
 
     occupied: null,
     activeDestinations: null,
@@ -1292,8 +1271,7 @@ export const rawCards: Omit<
     workers: defaultPlayerCount,
     expansionName: "base",
     imageKey: "theater",
-    description:
-      "At game end, worth 1 point for each Unique Critter in your city.:contentReference[oaicite:44]{index=44}",
+    description: "1 coin for each Unique Critter in your city.",
 
     occupied: false,
     activeDestinations: null,
@@ -1320,8 +1298,7 @@ export const rawCards: Omit<
     workers: defaultPlayerCount,
     expansionName: "base",
     imageKey: "twigbarge",
-    description:
-      "When played and during Production, gain 2 twigs.:contentReference[oaicite:45]{index=45}",
+    description: "Gain 2 twigs.",
 
     occupied: false,
     activeDestinations: null,
@@ -1377,7 +1354,7 @@ export const rawCards: Omit<
     expansionName: "base",
     imageKey: "university",
     description:
-      "When you place a worker here, discard 1 Construction or Critter from your city and receive back its listed cost in resources, then gain 1 of any resource and 1 point. (If you discard a card with a permanent worker on it, place that worker on the University permanently.):contentReference[oaicite:46]{index=46}",
+      "Discard a Critter or Construction from your city. Gain resources equal to that card's cost, then gain 1 wildcard and gain 1 coin.",
 
     occupied: false,
     activeDestinations: 0,
@@ -1404,9 +1381,7 @@ export const rawCards: Omit<
     workers: defaultPlayerCount,
     expansionName: "base",
     imageKey: "wanderer",
-    description:
-      "When played, draw 3 cards. (Does not take up one of the 15 spots in your city.):contentReference[oaicite:47]{index=47}:contentReference[oaicite:48]{index=48}",
-
+    description: "Draw 3 cards.",
     occupied: null,
     activeDestinations: null,
     maxDestinations: null,
@@ -1432,9 +1407,7 @@ export const rawCards: Omit<
     workers: defaultPlayerCount,
     expansionName: "base",
     imageKey: "wife",
-    description:
-      "Shares a space with a Husband, so combined they only take up 1 space in your city. At game end, worth 3 points if paired with a Husband. (May only share a space with 1 Husband.):contentReference[oaicite:49]{index=49}",
-
+    description: "3 coins if paired with a Husband.",
     occupied: null,
     activeDestinations: null,
     maxDestinations: null,
@@ -1460,8 +1433,7 @@ export const rawCards: Omit<
     workers: defaultPlayerCount,
     expansionName: "base",
     imageKey: "woodcarver",
-    description:
-      "When played and during Production, you may pay up to 3 twigs to gain 1 point token for each twig paid.:contentReference[oaicite:50]{index=50}",
+    description: "You may pay up to 3 twigs to gain 1 coin each.",
 
     occupied: null,
     activeDestinations: null,
