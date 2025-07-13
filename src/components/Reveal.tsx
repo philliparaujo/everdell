@@ -46,7 +46,7 @@ function Reveal() {
 
   return (
     <>
-      {(revealDeck || revealDiscard || !revealEmpty) && (
+      {(revealDeck || revealDiscard) && !revealEmpty && (
         <>
           <hr />
           <div className="flex flex-col gap-2">
