@@ -1,21 +1,17 @@
 import { ReactNode } from "react";
 import { useGame } from "../engine/GameContext";
 import { Location, ResourceType } from "../engine/gameTypes";
-import {
-  canVisitLocation,
-  computeResourceCount,
-  isNotYourTurn,
-} from "../utils/gameLogic";
+import { canVisitLocation, isNotYourTurn } from "../utils/gameLogic";
 import { getPlayerColor, getPlayerId } from "../utils/identity";
 import { mapOverResources } from "../utils/loops";
-import { styleLocationBorderColor } from "../utils/tailwind";
-import { ResourceIcon } from "./Icons";
 import {
   renderPlacedCharacters,
   renderVisitButtons,
   renderVisitingWorkers,
 } from "../utils/react";
+import { styleLocationBorderColor } from "../utils/tailwind";
 import Hoverable from "./Hoverable";
+import { ResourceIcon } from "./Icons";
 import LocationInspect from "./LocationInspect";
 
 export function BaseLocationDisplay({
@@ -59,7 +55,7 @@ export function BaseLocationDisplay({
       </div>
 
       {storageChildren && (
-        <div className="text-[10px] w-full flex flex-wrap justify-evenly items-center bg-location-storage py-1">
+        <div className="w-full flex-shrink-0 flex flex-wrap justify-evenly items-center rounded-b bg-location-storage p-1">
           {storageChildren}
         </div>
       )}
@@ -116,7 +112,7 @@ function LocationDisplay({
           mapOverResources(
             location.storage,
             (key, val) => (
-              <div key={key} className="flex items-center gap-1">
+              <div key={key} className="flex items-center text-[10px]">
                 <ResourceIcon type={key as ResourceType} /> {val}
               </div>
             ),

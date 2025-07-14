@@ -2,6 +2,7 @@ import { powers } from "../assets/data/powers";
 import {
   canAchieveEvent,
   canAchieveSpecialEvent,
+  canAddResourcesToLocation,
   canMoveCardBelowInCity,
   canPlaceCharacterOnLocation,
   canPlayToOppositeCity,
@@ -1477,9 +1478,10 @@ export function addResourcesToLocation(
 
   if (index >= state.locations.length) return state;
   const location = state.locations[index];
-  if (location.storage === null) return state;
 
-  const updatedStorage: ResourceCount = { ...location.storage };
+  if (!canAddResourcesToLocation(state, location, playerColor)) return state;
+
+  const updatedStorage: ResourceCount = { ...location.storage!! };
 
   for (const key in resources) {
     if (Object.prototype.hasOwnProperty.call(resources, key)) {

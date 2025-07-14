@@ -23,7 +23,7 @@ import { countCharactersOnLocation } from "./loops";
 
 export function renderVisitingWorkers(location: Visitable): React.ReactNode {
   return (
-    <div className="flex h-6 content-center gap-2">
+    <div className="flex h-6 content-center gap-2 justify-evenly">
       {location.workers.Red > 0 && (
         <span className="flex items-center gap-1">
           <WorkerIcon playerColor={"Red"} /> {location.workers.Red}

@@ -97,6 +97,7 @@ const defaultPreviousState: GameState = {
   turn: "Red",
   previousState: null,
   activeExpansions: [],
+  powersEnabled: false,
 };
 
 export const defaultGameState: GameState = {

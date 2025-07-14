@@ -28,21 +28,25 @@ function PlayerStatus({ playerColor }: { playerColor: PlayerColor }) {
           {player.name || "Guest"}
         </strong>
         <Id id={player.id || "Not in game"} />
-        <div className="text-xs">
-          <strong>Power: </strong> {player.power?.name ?? "None"}
-        </div>
-        <Button
-          disabled={isNotYourTurn(game, storedId)}
-          onClick={() => nextPower(storedId, -1)}
-        >
-          Prev power
-        </Button>
-        <Button
-          disabled={isNotYourTurn(game, storedId)}
-          onClick={() => nextPower(storedId, 1)}
-        >
-          Next power
-        </Button>
+        {game.powersEnabled && (
+          <>
+            <div className="text-xs">
+              <strong>Power: </strong> {player.power?.name ?? "None"}
+            </div>
+            <Button
+              disabled={isNotYourTurn(game, storedId)}
+              onClick={() => nextPower(storedId, -1)}
+            >
+              Prev power
+            </Button>
+            <Button
+              disabled={isNotYourTurn(game, storedId)}
+              onClick={() => nextPower(storedId, 1)}
+            >
+              Next power
+            </Button>
+          </>
+        )}
       </div>
       <div className="flex justify-between">
         <div>

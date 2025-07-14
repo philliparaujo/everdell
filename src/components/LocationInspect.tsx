@@ -2,6 +2,7 @@ import { useGame } from "../engine/GameContext";
 import { defaultResources } from "../engine/gameDefaults";
 import { CharacterType, Location, ResourceType } from "../engine/gameTypes";
 import {
+  canAddResourcesToLocation,
   canPlaceCharacterOnLocation,
   canVisitLocation,
   isNotYourTurn,
@@ -41,6 +42,8 @@ function LocationInspect({
     playerColor && canVisitLocation(game, location, playerColor, 1);
   const canLeave =
     playerColor && canVisitLocation(game, location, playerColor, -1);
+  const canAddResource =
+    playerColor && canAddResourcesToLocation(game, location, playerColor);
 
   return (
     <Inspectable onClose={onClose}>
@@ -61,7 +64,9 @@ function LocationInspect({
             {mapOverResources(
               location.storage,
               (key, val) => {
-                return key === "cards" || key === "wildcards" ? (
+                return key === "cards" ||
+                  key === "wildcards" ||
+                  key === "coins" ? (
                   <></>
                 ) : (
                   <div key={key} className="flex gap-1 justify-center">
@@ -71,7 +76,7 @@ function LocationInspect({
                     </div>
                     <div className="flex">
                       <Button
-                        disabled={disabled}
+                        disabled={disabled || !canAddResource}
                         onClick={() =>
                           addResourcesToLocation(storedId, index, {
                             ...defaultResources,
@@ -82,7 +87,7 @@ function LocationInspect({
                         -
                       </Button>
                       <Button
-                        disabled={disabled}
+                        disabled={disabled || !canAddResource}
                         onClick={() =>
                           addResourcesToLocation(storedId, index, {
                             ...defaultResources,

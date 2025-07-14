@@ -1,5 +1,5 @@
 import { GameState, Player, PlayerColor } from "../engine/gameTypes";
-import { renderActiveExpansions } from "../utils/react";
+import { renderActiveExpansions, renderPowersEnabled } from "../utils/react";
 import Button from "./Button";
 import Id from "./Id";
 
@@ -69,7 +69,10 @@ function GameList({
               <Id id={id} />
             </div>
 
-            {renderActiveExpansions(game.activeExpansions)}
+            <div>
+              {renderActiveExpansions(game.activeExpansions)}
+              {renderPowersEnabled(game.powersEnabled)}
+            </div>
 
             <div className="flex justify-between min-h-[40px] mt-2">
               <GamePlayerDisplay

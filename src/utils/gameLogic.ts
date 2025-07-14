@@ -1,6 +1,7 @@
 import { events } from "../assets/data/events";
 import { journeys } from "../assets/data/journey";
 import { locations } from "../assets/data/locations";
+import { powers } from "../assets/data/powers";
 import { specialEvents } from "../assets/data/specialEvents";
 import {
   FIRST_PLAYER_HAND_SIZE,
@@ -16,6 +17,7 @@ import {
   defaultCharacterCount,
   defaultPlayer,
   defaultPlayerCount,
+  defaultResources,
 } from "../engine/gameDefaults";
 import {
   Card,
@@ -181,6 +183,7 @@ export function setupGame(
     ...location,
     workers: defaultPlayerCount,
     characters: powersEnabled ? defaultCharacterCount : null,
+    storage: powersEnabled ? defaultResources : null,
   }));
   const newEvents: Event[] = events.map((event) => ({
     ...event,
@@ -224,6 +227,7 @@ export function setupGame(
     turn: firstPlayer,
     previousState: null,
     activeExpansions: activeExpansions,
+    powersEnabled: powersEnabled,
   };
 
   const newState: GameState = {
@@ -294,6 +298,17 @@ export function canPlaceCharacterOnLocation(
     default:
       return false;
   }
+}
+
+export function canAddResourcesToLocation(
+  state: GameState,
+  location: Location,
+  playerColor: PlayerColor,
+): boolean {
+  return (
+    state.players[playerColor].power?.name === "Axolotls" &&
+    location.storage !== null
+  );
 }
 
 export function canVisitJourney(

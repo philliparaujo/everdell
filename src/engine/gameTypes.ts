@@ -168,4 +168,5 @@ export type GameState = {
   turn: PlayerColor;
   previousState: GameState | null;
   activeExpansions: ExpansionName[];
+  powersEnabled: boolean;
 };

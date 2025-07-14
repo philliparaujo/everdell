@@ -1,122 +1,114 @@
 import { Location } from "../../engine/gameTypes";
 
-export const locations: Omit<Location, "workers" | "characters">[] = [
-  {
-    exclusive: true,
-    resources: {
-      twigs: 3,
-      resin: 0,
-      pebbles: 0,
-      berries: 0,
-      coins: 0,
-      cards: 0,
-      wildcards: 0,
+export const locations: Omit<Location, "workers" | "characters" | "storage">[] =
+  [
+    {
+      exclusive: true,
+      resources: {
+        twigs: 3,
+        resin: 0,
+        pebbles: 0,
+        berries: 0,
+        coins: 0,
+        cards: 0,
+        wildcards: 0,
+      },
     },
-    storage: null,
-  },
-  {
-    exclusive: false,
-    resources: {
-      twigs: 2,
-      resin: 0,
-      pebbles: 0,
-      berries: 0,
-      coins: 0,
-      cards: 1,
-      wildcards: 0,
+    {
+      exclusive: false,
+      resources: {
+        twigs: 2,
+        resin: 0,
+        pebbles: 0,
+        berries: 0,
+        coins: 0,
+        cards: 1,
+        wildcards: 0,
+      },
     },
-    storage: null,
-  },
-  {
-    exclusive: true,
-    resources: {
-      twigs: 0,
-      resin: 2,
-      pebbles: 0,
-      berries: 0,
-      coins: 0,
-      cards: 0,
-      wildcards: 0,
+    {
+      exclusive: true,
+      resources: {
+        twigs: 0,
+        resin: 2,
+        pebbles: 0,
+        berries: 0,
+        coins: 0,
+        cards: 0,
+        wildcards: 0,
+      },
     },
-    storage: null,
-  },
-  {
-    exclusive: false,
-    resources: {
-      twigs: 0,
-      resin: 1,
-      pebbles: 0,
-      berries: 0,
-      coins: 0,
-      cards: 1,
-      wildcards: 0,
+    {
+      exclusive: false,
+      resources: {
+        twigs: 0,
+        resin: 1,
+        pebbles: 0,
+        berries: 0,
+        coins: 0,
+        cards: 1,
+        wildcards: 0,
+      },
     },
-    storage: null,
-  },
-  {
-    exclusive: false,
-    resources: {
-      twigs: 0,
-      resin: 0,
-      pebbles: 0,
-      berries: 0,
-      coins: 1,
-      cards: 2,
-      wildcards: 0,
+    {
+      exclusive: false,
+      resources: {
+        twigs: 0,
+        resin: 0,
+        pebbles: 0,
+        berries: 0,
+        coins: 1,
+        cards: 2,
+        wildcards: 0,
+      },
     },
-    storage: null,
-  },
-  {
-    exclusive: true,
-    resources: {
-      twigs: 0,
-      resin: 0,
-      pebbles: 1,
-      berries: 0,
-      coins: 0,
-      cards: 0,
-      wildcards: 0,
+    {
+      exclusive: true,
+      resources: {
+        twigs: 0,
+        resin: 0,
+        pebbles: 1,
+        berries: 0,
+        coins: 0,
+        cards: 0,
+        wildcards: 0,
+      },
     },
-    storage: null,
-  },
-  {
-    exclusive: true,
-    resources: {
-      twigs: 0,
-      resin: 0,
-      pebbles: 0,
-      berries: 1,
-      coins: 0,
-      cards: 1,
-      wildcards: 0,
+    {
+      exclusive: true,
+      resources: {
+        twigs: 0,
+        resin: 0,
+        pebbles: 0,
+        berries: 1,
+        coins: 0,
+        cards: 1,
+        wildcards: 0,
+      },
     },
-    storage: null,
-  },
-  {
-    exclusive: false,
-    resources: {
-      twigs: 0,
-      resin: 0,
-      pebbles: 0,
-      berries: 1,
-      coins: 0,
-      cards: 0,
-      wildcards: 0,
+    {
+      exclusive: false,
+      resources: {
+        twigs: 0,
+        resin: 0,
+        pebbles: 0,
+        berries: 1,
+        coins: 0,
+        cards: 0,
+        wildcards: 0,
+      },
     },
-    storage: null,
-  },
-  // Haven: Discard 2 cards -> 1 wildcard
-  {
-    exclusive: false,
-    resources: {
-      twigs: 0,
-      resin: 0,
-      pebbles: 0,
-      berries: 0,
-      coins: 0,
-      cards: 0,
-      wildcards: 0,
+    // Haven: Discard 2 cards -> 1 wildcard
+    {
+      exclusive: false,
+      resources: {
+        twigs: 0,
+        resin: 0,
+        pebbles: 0,
+        berries: 0,
+        coins: 0,
+        cards: 0,
+        wildcards: 0,
+      },
     },
-    storage: null,
-  },
-];
+  ];
