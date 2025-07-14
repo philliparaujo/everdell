@@ -12,9 +12,14 @@ import {
   RESOURCE_COUNT,
   SECOND_PLAYER_HAND_SIZE,
 } from "../engine/gameConstants";
-import { defaultPlayer, defaultPlayerCount } from "../engine/gameDefaults";
+import {
+  defaultCharacterCount,
+  defaultPlayer,
+  defaultPlayerCount,
+} from "../engine/gameDefaults";
 import {
   Card,
+  CharacterType,
   EffectType,
   Event,
   ExpansionName,
@@ -138,6 +143,7 @@ export function setupGame(
   firstPlayer: PlayerColor,
   cardFrequencies: Record<ExpansionName, Record<string, number>>,
   activeExpansions: ExpansionName[],
+  powersEnabled: boolean = false,
 ): GameState {
   // Shuffle deck
   const deck: Card[] = makeShuffledDeck(cardFrequencies);
@@ -174,6 +180,7 @@ export function setupGame(
   const newLocations: Location[] = locations.map((location) => ({
     ...location,
     workers: defaultPlayerCount,
+    characters: powersEnabled ? defaultCharacterCount : null,
   }));
   const newEvents: Event[] = events.map((event) => ({
     ...event,
@@ -263,6 +270,30 @@ export function canVisitLocation(
     return false;
 
   return true;
+}
+
+export function canPlaceCharacterOnLocation(
+  state: GameState,
+  location: Location,
+  playerColor: PlayerColor,
+  charactersVisiting: 1 | -1,
+  character: CharacterType,
+): boolean {
+  if (
+    location.characters !== null &&
+    charactersVisiting < 0 &&
+    location.characters[character] < Math.abs(charactersVisiting)
+  )
+    return false;
+
+  switch (character) {
+    case "Rat":
+      return state.players[playerColor].power?.name === "Rats";
+    case "Spider":
+      return state.players[playerColor].power?.name === "Spiders";
+    default:
+      return false;
+  }
 }
 
 export function canVisitJourney(

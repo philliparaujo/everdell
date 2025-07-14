@@ -1,6 +1,6 @@
 import { Location } from "../../engine/gameTypes";
 
-export const locations: Omit<Location, "workers">[] = [
+export const locations: Omit<Location, "workers" | "characters">[] = [
   {
     exclusive: true,
     resources: {
@@ -12,6 +12,7 @@ export const locations: Omit<Location, "workers">[] = [
       cards: 0,
       wildcards: 0,
     },
+    storage: null,
   },
   {
     exclusive: false,
@@ -24,6 +25,7 @@ export const locations: Omit<Location, "workers">[] = [
       cards: 1,
       wildcards: 0,
     },
+    storage: null,
   },
   {
     exclusive: true,
@@ -36,6 +38,7 @@ export const locations: Omit<Location, "workers">[] = [
       cards: 0,
       wildcards: 0,
     },
+    storage: null,
   },
   {
     exclusive: false,
@@ -48,6 +51,7 @@ export const locations: Omit<Location, "workers">[] = [
       cards: 1,
       wildcards: 0,
     },
+    storage: null,
   },
   {
     exclusive: false,
@@ -60,6 +64,7 @@ export const locations: Omit<Location, "workers">[] = [
       cards: 2,
       wildcards: 0,
     },
+    storage: null,
   },
   {
     exclusive: true,
@@ -72,6 +77,7 @@ export const locations: Omit<Location, "workers">[] = [
       cards: 0,
       wildcards: 0,
     },
+    storage: null,
   },
   {
     exclusive: true,
@@ -84,6 +90,7 @@ export const locations: Omit<Location, "workers">[] = [
       cards: 1,
       wildcards: 0,
     },
+    storage: null,
   },
   {
     exclusive: false,
@@ -96,8 +103,9 @@ export const locations: Omit<Location, "workers">[] = [
       cards: 0,
       wildcards: 0,
     },
+    storage: null,
   },
-  // Discard 2 cards -> 1 wildcard
+  // Haven: Discard 2 cards -> 1 wildcard
   {
     exclusive: false,
     resources: {
@@ -109,5 +117,6 @@ export const locations: Omit<Location, "workers">[] = [
       cards: 0,
       wildcards: 0,
     },
+    storage: null,
   },
 ];

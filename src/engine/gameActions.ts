@@ -1,7 +1,9 @@
+import { powers } from "../assets/data/powers";
 import {
   canAchieveEvent,
   canAchieveSpecialEvent,
   canMoveCardBelowInCity,
+  canPlaceCharacterOnLocation,
   canPlayToOppositeCity,
   canStealCard,
   canSwapHands,
@@ -26,8 +28,10 @@ import { defaultResources } from "./gameDefaults";
 import {
   Action,
   Card,
+  CharacterType,
   GameState,
   History,
+  Location,
   Player,
   PlayerColor,
   ResourceCount,
@@ -1414,6 +1418,127 @@ export function addResourcesToCardInCity(
   };
 
   if (!sanityCheck(newState)) return state;
+  return newState;
+}
+
+export function placeCharacterOnLocation(
+  state: GameState,
+  playerId: string | null,
+  index: number,
+  charactersVisiting: 1 | -1,
+  character: CharacterType,
+): GameState {
+  const playerColor = getPlayerColor(state, playerId);
+  if (playerColor !== state.turn) return state;
+
+  if (index >= state.locations.length) return state;
+  const location = state.locations[index];
+
+  if (
+    !canPlaceCharacterOnLocation(
+      state,
+      location,
+      playerColor,
+      charactersVisiting,
+      character,
+    )
+  )
+    return state;
+
+  const updatedLocation: Location = {
+    ...location,
+    ...(location.characters !== null && {
+      characters: {
+        ...location.characters,
+        [character]: location.characters[character] + charactersVisiting,
+      },
+    }),
+  };
+
+  const newState: GameState = {
+    ...state,
+    locations: state.locations.map((loc, i) =>
+      i === index ? updatedLocation : loc,
+    ),
+  };
+
+  if (!sanityCheck(newState)) return state;
+  return newState;
+}
+
+export function addResourcesToLocation(
+  state: GameState,
+  playerId: string | null,
+  index: number,
+  resources: ResourceCount,
+): GameState {
+  const playerColor = getPlayerColor(state, playerId);
+  if (playerColor !== state.turn) return state;
+
+  if (index >= state.locations.length) return state;
+  const location = state.locations[index];
+  if (location.storage === null) return state;
+
+  const updatedStorage: ResourceCount = { ...location.storage };
+
+  for (const key in resources) {
+    if (Object.prototype.hasOwnProperty.call(resources, key)) {
+      const typedKey = key as keyof ResourceCount;
+      updatedStorage[typedKey] += resources[typedKey];
+      updatedStorage[typedKey] = Math.max(0, updatedStorage[typedKey]);
+    }
+  }
+
+  const updatedLocation: Location = {
+    ...location,
+    storage: updatedStorage,
+  };
+
+  const updatedLocations = state.locations.map((l, i) =>
+    i === index ? updatedLocation : l,
+  );
+
+  const newState: GameState = {
+    ...state,
+    locations: updatedLocations,
+  };
+
+  if (!sanityCheck(newState)) return state;
+  return newState;
+}
+
+export function nextPower(
+  state: GameState,
+  playerId: string | null,
+  delta: 1 | -1,
+): GameState {
+  const playerColor = getPlayerColor(state, playerId);
+  if (playerColor !== state.turn) return state;
+
+  const player = state.players[playerColor];
+  const numPowers = powers.length;
+
+  const currentPowerIndex = powers.findIndex(
+    (power) => power.name === player.power?.name,
+  );
+  const newIndex = (currentPowerIndex + delta + numPowers) % numPowers;
+
+  const updatedPlayer: Player = {
+    ...player,
+    power: powers[newIndex],
+  };
+
+  const newState: GameState = {
+    ...state,
+    players: {
+      ...state.players,
+      [playerColor]: updatedPlayer,
+    },
+  };
+
+  if (!sanityCheck(newState)) {
+    return state;
+  }
   return newState;
 }
 

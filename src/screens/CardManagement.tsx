@@ -18,7 +18,7 @@ import {
   groupCardsByExpansion,
 } from "../utils/card";
 import { HOME_PATH } from "../utils/navigation";
-import { renderActiveExpansions } from "../utils/react";
+import { renderActiveExpansions, renderPowersEnabled } from "../utils/react";
 
 const ActiveCard = ({
   card,
@@ -157,8 +157,10 @@ const CardManagement: React.FC = () => {
   const {
     cardFrequencies,
     activeExpansions,
+    powersEnabled,
     updateCardFrequency,
     toggleExpansion,
+    togglePowersEnabled,
     resetToDefaults,
     isModified,
   } = useCardManagement();
@@ -221,6 +223,7 @@ const CardManagement: React.FC = () => {
               : "Using default card frequencies"
           }
           secondaryDisplay={renderActiveExpansions(activeExpansions)}
+          tertiaryDisplay={renderPowersEnabled(powersEnabled)}
           variant={isModified ? "warning" : "info"}
           visible={true}
         />
@@ -331,6 +334,12 @@ const CardManagement: React.FC = () => {
               disabled={!isModified}
             >
               Reset to Defaults
+            </Button>
+            <Button
+              variant={powersEnabled ? "danger" : "important"}
+              onClick={togglePowersEnabled}
+            >
+              {powersEnabled ? "Disable powers" : "Enable powers"}
             </Button>
             {EXPANSION_NAMES.map((expansion) => (
               <Button

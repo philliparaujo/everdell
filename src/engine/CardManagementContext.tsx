@@ -1,25 +1,32 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { DEFAULT_ACTIVE_EXPANSIONS } from "../assets/data/cards";
+import {
+  DEFAULT_ACTIVE_EXPANSIONS,
+  DEFAULT_POWERS_ENABLED,
+} from "../assets/data/cards";
 import { generateDefaultCardFrequencies, isAllDefault } from "../utils/card";
 import {
   clearActiveExpansions,
   clearCardFrequencies,
   getActiveExpansions,
   getCardFrequencies,
+  getPowersEnabled,
   storeActiveExpansions,
   storeCardFrequencies,
+  storePowersEnabled,
 } from "../utils/identity";
 import { ExpansionName } from "./gameTypes";
 
 interface CardManagementContextType {
   cardFrequencies: Record<ExpansionName, Record<string, number>>;
   activeExpansions: ExpansionName[];
+  powersEnabled: boolean;
   updateCardFrequency: (
     cardName: string,
     expansionName: ExpansionName,
     frequency: number,
   ) => void;
   toggleExpansion: (expansion: ExpansionName) => void;
+  togglePowersEnabled: () => void;
   resetToDefaults: () => void;
   isModified: boolean;
 }
@@ -46,6 +53,11 @@ export const CardManagementProvider = ({
     return savedExpansions || DEFAULT_ACTIVE_EXPANSIONS;
   });
 
+  const [powersEnabled, setPowersEnabled] = useState(() => {
+    const savedPowersEnabled = getPowersEnabled();
+    return savedPowersEnabled || DEFAULT_POWERS_ENABLED;
+  });
+
   const [isModified, setIsModified] = useState(false);
 
   // Save to local storage whenever frequencies change
@@ -57,6 +69,10 @@ export const CardManagementProvider = ({
   useEffect(() => {
     storeActiveExpansions(activeExpansions);
   }, [activeExpansions]);
+
+  useEffect(() => {
+    storePowersEnabled(powersEnabled);
+  }, [powersEnabled]);
 
   const updateCardFrequency = (
     cardName: string,
@@ -102,12 +118,17 @@ export const CardManagementProvider = ({
     );
   };
 
+  const togglePowersEnabled = () => {
+    setPowersEnabled((prev) => !prev);
+  };
+
   const resetToDefaults = () => {
     const defaultFrequencies = generateDefaultCardFrequencies(
       DEFAULT_ACTIVE_EXPANSIONS,
     );
     setCardFrequencies(defaultFrequencies);
     setActiveExpansions(DEFAULT_ACTIVE_EXPANSIONS);
+    setPowersEnabled(DEFAULT_POWERS_ENABLED);
     clearCardFrequencies();
     clearActiveExpansions();
   };
@@ -117,8 +138,10 @@ export const CardManagementProvider = ({
       value={{
         cardFrequencies,
         activeExpansions,
-        toggleExpansion,
+        powersEnabled,
         updateCardFrequency,
+        toggleExpansion,
+        togglePowersEnabled,
         resetToDefaults,
         isModified,
       }}

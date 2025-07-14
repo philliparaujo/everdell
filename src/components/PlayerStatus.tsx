@@ -1,15 +1,16 @@
 import { MAX_HAND_SIZE } from "../engine/gameConstants";
 import { useGame } from "../engine/GameContext";
 import { PlayerColor, ResourceType } from "../engine/gameTypes";
-import { computeMaxCitySize } from "../utils/gameLogic";
+import { computeMaxCitySize, isNotYourTurn } from "../utils/gameLogic";
 import { getPlayerId } from "../utils/identity";
 import { mapOverResources } from "../utils/loops";
 import { stylePlayerColor, styleSeasonColor } from "../utils/tailwind";
+import Button from "./Button";
 import { ResourceIcon, WorkerIcon } from "./Icons";
 import Id from "./Id";
 
 function PlayerStatus({ playerColor }: { playerColor: PlayerColor }) {
-  const { game } = useGame();
+  const { game, nextPower } = useGame();
 
   const storedId = getPlayerId();
   const player = game.players[playerColor];
@@ -27,6 +28,21 @@ function PlayerStatus({ playerColor }: { playerColor: PlayerColor }) {
           {player.name || "Guest"}
         </strong>
         <Id id={player.id || "Not in game"} />
+        <div className="text-xs">
+          <strong>Power: </strong> {player.power?.name ?? "None"}
+        </div>
+        <Button
+          disabled={isNotYourTurn(game, storedId)}
+          onClick={() => nextPower(storedId, -1)}
+        >
+          Prev power
+        </Button>
+        <Button
+          disabled={isNotYourTurn(game, storedId)}
+          onClick={() => nextPower(storedId, 1)}
+        >
+          Next power
+        </Button>
       </div>
       <div className="flex justify-between">
         <div>

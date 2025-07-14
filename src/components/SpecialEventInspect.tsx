@@ -97,7 +97,7 @@ function SpecialEventInspect({
         </div>
 
         {/* --- Visiting --- */}
-        <div className="flex flex-col items-center gap-2">
+        <div className="flex flex-col items-center h-6">
           {renderVisitButtons(
             disabled || !canVisit,
             disabled || !canLeave,

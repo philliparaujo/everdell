@@ -1,13 +1,25 @@
 import Button from "../components/Button";
-import { EffectTypeIcon, ResourceIcon, WorkerIcon } from "../components/Icons";
-import { EFFECT_ORDER, RESOURCE_ORDER } from "../engine/gameDefaults";
 import {
+  CharacterIcon,
+  EffectTypeIcon,
+  ResourceIcon,
+  WorkerIcon,
+} from "../components/Icons";
+import {
+  CHARACTER_TYPE_ORDER,
+  EFFECT_ORDER,
+  RESOURCE_ORDER,
+} from "../engine/gameDefaults";
+import {
+  CharacterType,
   EffectType,
   ExpansionName,
+  Location,
   ResourceType,
   Visitable,
 } from "../engine/gameTypes";
 import { formatExpansionName } from "./card";
+import { countCharactersOnLocation } from "./loops";
 
 export function renderVisitingWorkers(location: Visitable): React.ReactNode {
   return (
@@ -23,6 +35,25 @@ export function renderVisitingWorkers(location: Visitable): React.ReactNode {
         </span>
       )}
     </div>
+  );
+}
+
+export function renderPlacedCharacters(location: Location): React.ReactNode {
+  return (
+    location.characters &&
+    countCharactersOnLocation(location) > 0 && (
+      <div className="flex h-6 content-center gap-2">
+        {CHARACTER_TYPE_ORDER.map(
+          (character: CharacterType) =>
+            location.characters!![character] > 0 && (
+              <span className="flex items-center gap-1">
+                <CharacterIcon character={character} />{" "}
+                {location.characters!![character]}
+              </span>
+            ),
+        )}
+      </div>
+    )
   );
 }
 
@@ -104,6 +135,14 @@ export function renderActiveExpansions(
     <div className="text-sm flex gap-1">
       <p className="font-semibold">Active expansions: </p>
       <p>{activeExpansions.map(formatExpansionName).sort().join(", ")}</p>
+    </div>
+  );
+}
+
+export function renderPowersEnabled(powersEnabled: boolean): React.ReactNode {
+  return (
+    <div className="text-sm">
+      <p>{`Powers are ${powersEnabled ? "enabled" : "disabled"}`}</p>
     </div>
   );
 }

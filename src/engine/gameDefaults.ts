@@ -1,4 +1,6 @@
 import {
+  CharacterCount,
+  CharacterType,
   EffectType,
   GameState,
   Player,
@@ -11,6 +13,11 @@ import {
 export const defaultPlayerCount: PlayerCount = {
   Red: 0,
   Blue: 0,
+};
+
+export const defaultCharacterCount: CharacterCount = {
+  Rat: 0,
+  Spider: 0,
 };
 
 export const defaultEffectTypeCount: Record<EffectType, number> = {
@@ -46,6 +53,16 @@ export const defaultPlayer: Player = {
   workers: defaultWorkers,
   season: "Winter",
   legends: [],
+  power: null,
+  // {
+  //   name: "Rats",
+  //   description: "",
+  //   handLimit: 8,
+  //   startingHandSize: 5,
+  //   storage: null,
+  //   expansionName: "base",
+  //   imageKey: "",
+  // },
 
   discarding: false,
   playing: false,
@@ -104,3 +121,5 @@ export const EFFECT_ORDER: EffectType[] = [
   "Red",
   "Tan",
 ];
+
+export const CHARACTER_TYPE_ORDER: CharacterType[] = ["Rat", "Spider"];

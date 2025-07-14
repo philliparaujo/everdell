@@ -13,6 +13,9 @@ export type ResourceType =
   | "wildcards";
 export type ResourceCount = Record<ResourceType, number>;
 
+export type CharacterType = "Rat" | "Spider";
+export type CharacterCount = Record<CharacterType, number>;
+
 export type PlayerColor = "Red" | "Blue";
 export type PlayerCount = Record<PlayerColor, number>;
 
@@ -62,10 +65,24 @@ export type Card = {
   giving: boolean;
 };
 
+export type Power = {
+  name: string;
+  description: string;
+  handLimit: number | null;
+  startingHandSize: number | null;
+  storage: ResourceCount | null;
+
+  // Image path is assets/cards/expansionName/imageKey.jpg
+  expansionName: ExpansionName;
+  imageKey: string;
+};
+
 export type Location = {
   exclusive: boolean;
   resources: ResourceCount;
   workers: PlayerCount;
+  storage: ResourceCount | null; // Only for certain powers
+  characters: CharacterCount | null; // Only for certain powers
 };
 
 export type Journey = {
@@ -129,6 +146,7 @@ export type Player = {
   workers: Workers;
   season: Season;
   legends: Card[]; // Only in Legends expansion
+  power: Power | null; // Only with powers enabled
 
   discarding: boolean;
   playing: boolean;

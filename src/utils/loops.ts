@@ -1,11 +1,14 @@
 import {
+  CHARACTER_TYPE_ORDER,
   defaultResources,
   EFFECT_ORDER,
   RESOURCE_ORDER,
 } from "../engine/gameDefaults";
 import {
   Card,
+  CharacterType,
   EffectType,
+  Location,
   Player,
   ResourceCount,
   ResourceType,
@@ -54,6 +57,12 @@ export function mapOverEffectTypes(
   );
 }
 
+export function mapOverCharacters(
+  onMap: (key: CharacterType) => React.ReactNode,
+) {
+  return CHARACTER_TYPE_ORDER.map((key) => onMap(key));
+}
+
 export function computeResourceDelta(
   oldResources: ResourceCount,
   newResources: ResourceCount,
@@ -94,6 +103,15 @@ export function countEffectTypeOccurrences(
     (acc, curr) =>
       acc +
       (curr.effectType === effectType && curr.below !== "Dungeon" ? 1 : 0),
+    0,
+  );
+}
+
+export function countCharactersOnLocation(location: Location): number {
+  if (!location.characters) return 0;
+
+  return CHARACTER_TYPE_ORDER.reduce(
+    (acc, curr) => acc + Math.abs(location.characters!![curr]),
     0,
   );
 }

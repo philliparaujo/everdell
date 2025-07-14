@@ -20,11 +20,12 @@ import { db } from "../server/firebase";
 import { setupGame } from "../utils/gameLogic";
 import { getPlayerId, getPlayerName } from "../utils/identity";
 import { GAME_PATH, HOME_PATH } from "../utils/navigation";
-import { renderActiveExpansions } from "../utils/react";
+import { renderActiveExpansions, renderPowersEnabled } from "../utils/react";
 
 function Lobby() {
   const navigate = useNavigate();
-  const { cardFrequencies, isModified, activeExpansions } = useCardManagement();
+  const { cardFrequencies, isModified, activeExpansions, powersEnabled } =
+    useCardManagement();
   const [gameList, setGameList] = useState<{ id: string; game: GameState }[]>(
     [],
   );
@@ -40,6 +41,7 @@ function Lobby() {
       "Red",
       cardFrequencies,
       activeExpansions,
+      powersEnabled,
     );
     gameState.players.Red.id = playerId!;
     gameState.players.Red.name = name;
@@ -157,6 +159,7 @@ function Lobby() {
               : "Using default card frequencies"
           }
           secondaryDisplay={renderActiveExpansions(activeExpansions)}
+          tertiaryDisplay={renderPowersEnabled(powersEnabled)}
           variant={isModified ? "warning" : "info"}
           visible={true}
         />

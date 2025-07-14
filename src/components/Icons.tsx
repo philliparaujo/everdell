@@ -12,7 +12,14 @@ import resin from "../assets/transparent-icons/resin.png";
 import tantype from "../assets/transparent-icons/tantype.png";
 import twig from "../assets/transparent-icons/twig.png";
 import wildcard from "../assets/transparent-icons/wildcard.png";
-import { EffectType, PlayerColor, ResourceType } from "../engine/gameTypes";
+import rat from "../assets/transparent-icons/rat.png";
+import spider from "../assets/transparent-icons/spider.png";
+import {
+  CharacterType,
+  EffectType,
+  PlayerColor,
+  ResourceType,
+} from "../engine/gameTypes";
 
 // Icon mappings
 const effectTypeIcons: Record<EffectType, string> = {
@@ -36,6 +43,11 @@ const resourceIcons: Record<ResourceType, string> = {
 const workerIcons: Record<PlayerColor, string> = {
   Red: redworker,
   Blue: blueworker,
+};
+
+const characterIcons: Record<CharacterType, string> = {
+  Rat: rat,
+  Spider: spider,
 };
 
 // Icon components
@@ -64,6 +76,16 @@ export function WorkerIcon({ playerColor }: { playerColor: PlayerColor }) {
     <img
       src={workerIcons[playerColor]}
       alt={playerColor.toString()}
+      className="w-4 h-4 mx-0.5 align-middle"
+    />
+  );
+}
+
+export function CharacterIcon({ character }: { character: CharacterType }) {
+  return (
+    <img
+      src={characterIcons[character]}
+      alt={character.toString()}
       className="w-4 h-4 mx-0.5 align-middle"
     />
   );

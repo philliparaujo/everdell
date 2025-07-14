@@ -10,10 +10,10 @@ import {
   storePlayerName,
 } from "../utils/identity";
 import { CARD_MANAGEMENT_PATH, LOBBY_PATH } from "../utils/navigation";
-import { renderActiveExpansions } from "../utils/react";
+import { renderActiveExpansions, renderPowersEnabled } from "../utils/react";
 
 function Home() {
-  const { isModified, activeExpansions } = useCardManagement();
+  const { isModified, activeExpansions, powersEnabled } = useCardManagement();
 
   const [name, setName] = useState(() => {
     const storedName = getPlayerName();
@@ -57,6 +57,7 @@ function Home() {
             : "Using default card frequencies"
         }
         secondaryDisplay={renderActiveExpansions(activeExpansions)}
+        tertiaryDisplay={renderPowersEnabled(powersEnabled)}
         variant={isModified ? "warning" : "info"}
         visible={true}
       />

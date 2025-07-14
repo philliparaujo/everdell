@@ -1,17 +1,29 @@
 import { ReactNode } from "react";
 import { useGame } from "../engine/GameContext";
 import { Location, ResourceType } from "../engine/gameTypes";
-import { canVisitLocation, isNotYourTurn } from "../utils/gameLogic";
+import {
+  canVisitLocation,
+  computeResourceCount,
+  isNotYourTurn,
+} from "../utils/gameLogic";
 import { getPlayerColor, getPlayerId } from "../utils/identity";
 import { mapOverResources } from "../utils/loops";
 import { styleLocationBorderColor } from "../utils/tailwind";
 import { ResourceIcon } from "./Icons";
-import { renderVisitButtons, renderVisitingWorkers } from "../utils/react";
+import {
+  renderPlacedCharacters,
+  renderVisitButtons,
+  renderVisitingWorkers,
+} from "../utils/react";
+import Hoverable from "./Hoverable";
+import LocationInspect from "./LocationInspect";
 
 export function BaseLocationDisplay({
   buttonChildren,
   workerChildren,
   resourceChildren,
+  characterChildren = null,
+  storageChildren = null,
   titleChildren = null,
   exclusive = false,
   used = false,
@@ -20,6 +32,8 @@ export function BaseLocationDisplay({
   buttonChildren: ReactNode;
   workerChildren: ReactNode;
   resourceChildren: ReactNode;
+  characterChildren?: ReactNode;
+  storageChildren?: ReactNode;
   titleChildren?: ReactNode;
   exclusive?: boolean;
   used?: boolean;
@@ -32,16 +46,23 @@ export function BaseLocationDisplay({
         width: wide ? "150px" : "96px",
       }}
     >
-      <div className="flex-1 flex flex-col justify-center">
-        {buttonChildren}
-      </div>
+      <div className="flex flex-col justify-center">{buttonChildren}</div>
       {titleChildren && (
         <div className="text-[10px] pt-0.5">{titleChildren}</div>
       )}
       {workerChildren}
-      <div className="flex flex-wrap items-center gap-0.5">
-        {resourceChildren}
+      {characterChildren}
+      <div>
+        <div className="flex flex-wrap items-center gap-0.5">
+          {resourceChildren}
+        </div>
       </div>
+
+      {storageChildren && (
+        <div className="text-[10px] w-full flex flex-wrap justify-evenly items-center bg-location-storage py-1">
+          {storageChildren}
+        </div>
+      )}
     </div>
   );
 }
@@ -65,25 +86,46 @@ function LocationDisplay({
     playerColor && canVisitLocation(game, location, playerColor, -1);
 
   return (
-    <BaseLocationDisplay
-      exclusive={location.exclusive}
-      buttonChildren={renderVisitButtons(
-        disabled || !canVisit,
-        disabled || !canLeave,
-        () => visitLocation(storedId, index, 1),
-        () => visitLocation(storedId, index, -1),
+    <Hoverable
+      isInteractive={true}
+      onRightClick={(closeInspector) => (
+        <LocationInspect
+          location={location}
+          onClose={closeInspector}
+          index={index}
+        />
       )}
-      workerChildren={renderVisitingWorkers(location)}
-      resourceChildren={
-        <>
-          {mapOverResources(location.resources, (key, val) => (
-            <div key={key} className="flex items-center gap-1">
-              <ResourceIcon type={key as ResourceType} /> {val}
-            </div>
-          ))}
-        </>
-      }
-    />
+    >
+      <BaseLocationDisplay
+        exclusive={location.exclusive}
+        buttonChildren={renderVisitButtons(
+          disabled || !canVisit,
+          disabled || !canLeave,
+          () => visitLocation(storedId, index, 1),
+          () => visitLocation(storedId, index, -1),
+        )}
+        workerChildren={renderVisitingWorkers(location)}
+        characterChildren={renderPlacedCharacters(location)}
+        resourceChildren={mapOverResources(location.resources, (key, val) => (
+          <div key={key} className="flex items-center gap-1">
+            <ResourceIcon type={key as ResourceType} /> {val}
+          </div>
+        ))}
+        storageChildren={
+          location.storage &&
+          mapOverResources(
+            location.storage,
+            (key, val) => (
+              <div key={key} className="flex items-center gap-1">
+                <ResourceIcon type={key as ResourceType} /> {val}
+              </div>
+            ),
+            true,
+            () => null,
+          )
+        }
+      />
+    </Hoverable>
   );
 }
 
@@ -125,16 +167,16 @@ function LocationsDisplay() {
   const { game } = useGame();
 
   return (
-    <div className="flex gap-2">
+    <div className="flex gap-2 items-start">
       {game.locations
         .slice(0, game.locations.length - 1)
         .map((location: Location, index: number) => (
-          <LocationDisplay location={location} index={index} />
+          <LocationDisplay location={location} index={index} key={index} />
         ))}
 
-      <br />
-
-      <HavenDisplay />
+      <div className="ml-2">
+        <HavenDisplay />
+      </div>
     </div>
   );
 }

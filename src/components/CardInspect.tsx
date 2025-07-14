@@ -218,7 +218,7 @@ function CardInspect({
         {location === "city" &&
           card.maxDestinations != null &&
           cityColor != null && (
-            <div className="flex flex-col items-center text-center">
+            <div className="flex flex-col">
               {renderVisitButtons(
                 disabled || !canVisit,
                 disabled || !canLeave,

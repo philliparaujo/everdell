@@ -1,11 +1,13 @@
 function Alert({
   displayText,
   secondaryDisplay,
+  tertiaryDisplay,
   variant,
   visible = true,
 }: {
   displayText: string;
   secondaryDisplay?: React.ReactNode;
+  tertiaryDisplay?: React.ReactNode;
   variant: "info" | "warning" | "error";
   visible?: boolean;
 }) {
@@ -24,6 +26,7 @@ function Alert({
         {displayText}
       </p>
       {secondaryDisplay}
+      {tertiaryDisplay}
     </div>
   );
 }

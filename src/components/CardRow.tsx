@@ -61,7 +61,6 @@ function CardRow({
   const groupedCards: { card: Card; index: number }[][] =
     groupCardsByBelow(indexedCards);
   const sortedGroupedCards = sortGroupedCards(groupedCards);
-  console.log(sortedGroupedCards);
 
   const numGroupedCards = sortedGroupedCards.reduce(
     (acc, group) => acc + group.length,

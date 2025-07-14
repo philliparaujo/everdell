@@ -42,6 +42,7 @@ module.exports = {
         },
         location: {
           default: mediumBackground,
+          storage: lightBackground,
           exclusive: "#8A8A8A",
           used: "#DD8A8A",
         },

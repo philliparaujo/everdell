@@ -9,6 +9,8 @@ export const DEFAULT_ACTIVE_EXPANSIONS: ExpansionName[] = [
   // "rugwort",
 ];
 
+export const DEFAULT_POWERS_ENABLED: boolean = false;
+
 // Base card frequencies for all expansions
 export const BASE_CARD_FREQUENCIES: Record<
   ExpansionName,

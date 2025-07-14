@@ -1,7 +1,13 @@
 import { doc, getFirestore, onSnapshot, setDoc } from "firebase/firestore";
 import { createContext, useContext, useEffect, useState } from "react";
 import * as Actions from "./gameActions";
-import { Card, GameState, PlayerColor, ResourceCount } from "./gameTypes";
+import {
+  Card,
+  CharacterType,
+  GameState,
+  PlayerColor,
+  ResourceCount,
+} from "./gameTypes";
 
 let actionQueue = Promise.resolve();
 
@@ -83,6 +89,18 @@ interface GameContextType {
   addResourcesToCardInCity: (
     playerId: string | null,
     cityColor: PlayerColor,
+    index: number,
+    resources: ResourceCount,
+  ) => void;
+  placeCharacterOnLocation: (
+    playerId: string | null,
+    index: number,
+    charactersVisiting: 1 | -1,
+    character: CharacterType,
+  ) => void;
+  nextPower: (playerId: string | null, delta: 1 | -1) => void;
+  addResourcesToLocation: (
+    playerId: string | null,
     index: number,
     resources: ResourceCount,
   ) => void;
@@ -180,6 +198,12 @@ export const GameProvider = ({
       Actions.addResourcesToCardInCity,
       true,
     ),
+    placeCharacterOnLocation: wrapAction(
+      Actions.placeCharacterOnLocation,
+      true,
+    ),
+    nextPower: wrapAction(Actions.nextPower, true),
+    addResourcesToLocation: wrapAction(Actions.addResourcesToLocation, true),
 
     // Minor, frequent actions
     toggleCardDiscarding: wrapAction(Actions.toggleCardDiscarding, false),

@@ -87,7 +87,7 @@ function SpecialEventsDisplay() {
   const { game } = useGame();
 
   return (
-    <div className="flex gap-2 h-[102px] pr-1">
+    <div className="flex gap-2 pr-1">
       {game.specialEvents.map((specialEvent: SpecialEvent, index: number) => (
         <SpecialEventDisplay specialEvent={specialEvent} index={index} />
       ))}

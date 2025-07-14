@@ -4,6 +4,7 @@ const PLAYER_NAME_KEY = "playerName";
 const PLAYER_ID_KEY = "playerId";
 const CARD_FREQUENCIES_KEY = "cardFrequencies";
 const ACTIVE_EXPANSIONS_KEY = "activeExpansions";
+const POWERS_ENABLED_KEY = "powersEnabled";
 
 export function storePlayerName(name: string) {
   console.log("Storing", name);
@@ -23,6 +24,10 @@ export function storeCardFrequencies(
 
 export function storeActiveExpansions(expansions: ExpansionName[]) {
   localStorage.setItem(ACTIVE_EXPANSIONS_KEY, JSON.stringify(expansions));
+}
+
+export function storePowersEnabled(powersEnabled: boolean) {
+  localStorage.setItem(POWERS_ENABLED_KEY, JSON.stringify(powersEnabled));
 }
 
 export function clearCardFrequencies() {
@@ -58,6 +63,14 @@ export function getActiveExpansions(): ExpansionName[] | null {
     return JSON.parse(expansions);
   }
   return null;
+}
+
+export function getPowersEnabled(): boolean {
+  const powersEnabled = localStorage.getItem(POWERS_ENABLED_KEY);
+  if (powersEnabled) {
+    return JSON.parse(powersEnabled);
+  }
+  return false;
 }
 
 export function getPlayerColor(
