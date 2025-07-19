@@ -46,8 +46,8 @@ const workerIcons: Record<PlayerColor, string> = {
 };
 
 const characterIcons: Record<CharacterType, string> = {
-  Rat: rat,
-  Spider: spider,
+  rat: rat,
+  spider: spider,
 };
 
 // Icon components
@@ -56,7 +56,7 @@ export function EffectTypeIcon({ type }: { type: EffectType }) {
     <img
       src={effectTypeIcons[type]}
       alt={type.toString()}
-      className="w-4 h-4 mx-0.5 align-middle"
+      className="w-4 h-4 mx-0.5 align-middle inline-block"
     />
   );
 }
@@ -66,7 +66,7 @@ export function ResourceIcon({ type }: { type: ResourceType }) {
     <img
       src={resourceIcons[type]}
       alt={type.toString()}
-      className="w-4 h-4 mx-0.5 align-middle"
+      className="w-4 h-4 mx-0.5 align-middle inline-block"
     />
   );
 }
@@ -76,7 +76,7 @@ export function WorkerIcon({ playerColor }: { playerColor: PlayerColor }) {
     <img
       src={workerIcons[playerColor]}
       alt={playerColor.toString()}
-      className="w-4 h-4 mx-0.5 align-middle"
+      className="w-4 h-4 mx-0.5 align-middle inline-block"
     />
   );
 }
@@ -86,11 +86,17 @@ export function CharacterIcon({ character }: { character: CharacterType }) {
     <img
       src={characterIcons[character]}
       alt={character.toString()}
-      className="w-4 h-4 mx-0.5 align-middle"
+      className="w-4 h-4 mx-0.5 align-middle inline-block"
     />
   );
 }
 
 export function CustomResourceIcon({ path }: { path: string }) {
-  return <img src={path} alt={path} className="w-4 h-4 mx-0.5 align-middle" />;
+  return (
+    <img
+      src={path}
+      alt={path}
+      className="w-4 h-4 mx-0.5 align-middle inline-block"
+    />
+  );
 }

@@ -100,6 +100,11 @@ const EFFECT_ALIASES: Record<string, EffectType> = {
   tans: "Tan",
 };
 
+const CHARACTER_ALIASES: Record<string, CharacterType> = {
+  rat: "rat",
+  spider: "spider",
+};
+
 export function renderTextWithIcons(text: string): React.ReactNode[] {
   const parts = text.split(/(\s+|[.,;!?]+)/);
 
@@ -121,6 +126,10 @@ export function renderTextWithIcons(text: string): React.ReactNode[] {
 
     if (bare in EFFECT_ALIASES) {
       return <EffectTypeIcon key={idx} type={EFFECT_ALIASES[bare]} />;
+    }
+
+    if (bare in CHARACTER_ALIASES) {
+      return <CharacterIcon key={idx} character={CHARACTER_ALIASES[bare]} />;
     }
 
     // Plain text or delimeter

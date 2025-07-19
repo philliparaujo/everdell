@@ -330,9 +330,9 @@ export function canPlaceCharacterOnLocation(
     return false;
 
   switch (character) {
-    case "Rat":
+    case "rat":
       return state.players[playerColor].power?.name === "Rats";
-    case "Spider":
+    case "spider":
       return state.players[playerColor].power?.name === "Spiders";
     default:
       return false;

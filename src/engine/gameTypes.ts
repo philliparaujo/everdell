@@ -13,7 +13,7 @@ export type ResourceType =
   | "wildcards";
 export type ResourceCount = Record<ResourceType, number>;
 
-export type CharacterType = "Rat" | "Spider";
+export type CharacterType = "rat" | "spider";
 export type CharacterCount = Record<CharacterType, number>;
 
 export type PlayerColor = "Red" | "Blue";
@@ -67,6 +67,7 @@ export type Card = {
 
 export type Power = {
   name: string;
+  title: string;
   description: string;
   handLimit: number | null;
   startingHandSize: number | null;

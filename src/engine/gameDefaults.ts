@@ -16,8 +16,8 @@ export const defaultPlayerCount: PlayerCount = {
 };
 
 export const defaultCharacterCount: CharacterCount = {
-  Rat: 0,
-  Spider: 0,
+  rat: 0,
+  spider: 0,
 };
 
 export const defaultEffectTypeCount: Record<EffectType, number> = {
@@ -123,4 +123,4 @@ export const EFFECT_ORDER: EffectType[] = [
   "Tan",
 ];
 
-export const CHARACTER_TYPE_ORDER: CharacterType[] = ["Rat", "Spider"];
+export const CHARACTER_TYPE_ORDER: CharacterType[] = ["rat", "spider"];

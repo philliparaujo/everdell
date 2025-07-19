@@ -28,17 +28,20 @@ function PowerInspect({
           style={{ backgroundImage: `url(${imageSrc})` }}
         />
 
-        {/* --- Title --- */}
-        <h1 className="text-2xl font-bold capitalize">
-          {power.name.toLowerCase()}
-        </h1>
+        <div className="flex flex-col gap-1">
+          {/* --- Name --- */}
+          <h1 className="text-2xl font-bold">{power.name}</h1>
+
+          {/* --- Title --- */}
+          <h2 className="text-lg">{power.title}</h2>
+        </div>
 
         {/* --- Text Details --- */}
         <div className="flex flex-col gap-4 text-center">
           {/* Description */}
           <div className="flex flex-col gap-1">
             <strong>Description:</strong>
-            <p className="m-0 text-white/90 flex flex-wrap items-center justify-center gap-1">
+            <p className="text-center">
               {renderTextWithIcons(power.description)}
             </p>
           </div>
