@@ -1,6 +1,6 @@
-import { MAX_HAND_SIZE } from "../engine/gameConstants";
 import { useGame } from "../engine/GameContext";
 import { PlayerColor } from "../engine/gameTypes";
+import { computeMaxHandSize } from "../utils/gameLogic";
 import { getPlayerId } from "../utils/identity";
 import CardRow from "./CardRow";
 
@@ -17,7 +17,7 @@ function Hand({ color }: { color: PlayerColor }) {
   return (
     <CardRow
       cards={handOwner.hand}
-      maxLength={MAX_HAND_SIZE}
+      maxLength={computeMaxHandSize(game, color)}
       location="hand"
       cityColor={null}
       onLeftClick={(index, card) => {

@@ -21,6 +21,7 @@ import { setupGame } from "../utils/gameLogic";
 import { getPlayerId, getPlayerName } from "../utils/identity";
 import { GAME_PATH, HOME_PATH } from "../utils/navigation";
 import { renderActiveExpansions, renderPowersEnabled } from "../utils/react";
+import { powers } from "../assets/data/powers";
 
 function Lobby() {
   const navigate = useNavigate();
@@ -42,6 +43,7 @@ function Lobby() {
       cardFrequencies,
       activeExpansions,
       powersEnabled,
+      null,
     );
     gameState.players.Red.id = playerId!;
     gameState.players.Red.name = name;

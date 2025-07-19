@@ -1,7 +1,10 @@
-import { MAX_HAND_SIZE } from "../engine/gameConstants";
 import { useGame } from "../engine/GameContext";
 import { PlayerColor, ResourceType } from "../engine/gameTypes";
-import { computeMaxCitySize, isNotYourTurn } from "../utils/gameLogic";
+import {
+  computeMaxCitySize,
+  computeMaxHandSize,
+  isNotYourTurn,
+} from "../utils/gameLogic";
 import { getPlayerId } from "../utils/identity";
 import { mapOverResources } from "../utils/loops";
 import { stylePlayerColor, styleSeasonColor } from "../utils/tailwind";
@@ -62,7 +65,7 @@ function PlayerStatus({ playerColor }: { playerColor: PlayerColor }) {
         </div>
         <div className="flex flex-col items-end">
           <div>
-            Hand: {player.hand.length} / {MAX_HAND_SIZE}
+            Hand: {player.hand.length} / {computeMaxHandSize(game, playerColor)}
           </div>
           <div>
             City: {player.city.length - cardsUnderDungeon} /{" "}

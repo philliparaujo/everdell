@@ -1,7 +1,6 @@
 import { events } from "../assets/data/events";
 import { journeys } from "../assets/data/journey";
 import { locations } from "../assets/data/locations";
-import { powers } from "../assets/data/powers";
 import { specialEvents } from "../assets/data/specialEvents";
 import {
   FIRST_PLAYER_HAND_SIZE,
@@ -30,6 +29,7 @@ import {
   Location,
   Player,
   PlayerColor,
+  Power,
   ResourceCount,
   ResourceType,
   SpecialEvent,
@@ -95,6 +95,42 @@ export function computeMaxCitySize(city: Card[]) {
   );
 }
 
+export function computeMaxHandSize(
+  state: GameState,
+  playerColor: PlayerColor,
+): number {
+  const player = state.players[playerColor];
+  switch (player.power?.name) {
+    case "Butterflies":
+      return 12;
+    case "Starlings":
+      return 11;
+    case "Cardinals":
+      return 10;
+    case "Owls":
+      return 9;
+    default:
+      return MAX_HAND_SIZE;
+  }
+}
+
+export function computeStartingHandSize(
+  playerColor: PlayerColor,
+  power: Power | null,
+): number {
+  switch (power?.name) {
+    case "Butterflies":
+      return 12;
+  }
+
+  switch (playerColor) {
+    case "Red":
+      return FIRST_PLAYER_HAND_SIZE;
+    case "Blue":
+      return SECOND_PLAYER_HAND_SIZE;
+  }
+}
+
 export function computeResourceCount(state: GameState): ResourceCount {
   let baseCount = { ...RESOURCE_COUNT };
   for (const playerColor of Object.keys(state.players) as PlayerColor[]) {
@@ -121,7 +157,8 @@ export function sanityCheck(state: GameState): boolean {
   // Check player hand and city size
   for (const playerColor of Object.keys(state.players) as PlayerColor[]) {
     const player = state.players[playerColor];
-    if (player.hand.length > MAX_HAND_SIZE) return false;
+    if (player.hand.length > computeMaxHandSize(state, playerColor))
+      return false;
     if (player.city.length > computeMaxCitySize(player.city)) return false;
   }
 
@@ -146,14 +183,15 @@ export function setupGame(
   cardFrequencies: Record<ExpansionName, Record<string, number>>,
   activeExpansions: ExpansionName[],
   powersEnabled: boolean = false,
+  redPower: Power | null = null,
 ): GameState {
   // Shuffle deck
   const deck: Card[] = makeShuffledDeck(cardFrequencies);
 
   // Fill up meadow and deal cards
   const MEADOW_END = MAX_MEADOW_SIZE;
-  const FIRST_END = MEADOW_END + FIRST_PLAYER_HAND_SIZE;
-  const SECOND_END = FIRST_END + SECOND_PLAYER_HAND_SIZE;
+  const FIRST_END = MEADOW_END + computeStartingHandSize("Red", redPower);
+  const SECOND_END = FIRST_END + computeStartingHandSize("Blue", null);
 
   const meadow = deck.slice(0, MEADOW_END);
   const firstHand = deck.slice(MEADOW_END, FIRST_END);
@@ -207,6 +245,7 @@ export function setupGame(
         hand: firstPlayer === "Red" ? firstHand : secondHand,
         legends:
           firstPlayer === "Red" ? firstPlayerLegends : secondPlayerLegends,
+        power: redPower,
       },
       Blue: {
         ...defaultPlayer,

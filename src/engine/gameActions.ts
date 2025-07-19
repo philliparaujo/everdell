@@ -13,6 +13,7 @@ import {
   canVisitJourney,
   canVisitLocation,
   canVisitSpecialEvent,
+  computeMaxHandSize,
   isSafeToEndTurn,
   oppositePlayerOf,
   sanityCheck,
@@ -20,11 +21,7 @@ import {
 import { getPlayerColor } from "../utils/identity";
 import { countCardOccurrences, hasCards, sortCity } from "../utils/loops";
 import { partition } from "../utils/math";
-import {
-  MAX_HAND_SIZE,
-  MAX_MEADOW_SIZE,
-  MAX_REVEAL_SIZE,
-} from "./gameConstants";
+import { MAX_MEADOW_SIZE, MAX_REVEAL_SIZE } from "./gameConstants";
 import { defaultResources } from "./gameDefaults";
 import {
   Action,
@@ -274,7 +271,10 @@ export function drawCard(state: GameState, playerId: string | null): GameState {
   if (deck.length === 0) {
     return state;
   }
-  if (state.players[playerColor].hand.length >= MAX_HAND_SIZE) {
+  if (
+    state.players[playerColor].hand.length >=
+    computeMaxHandSize(state, playerColor)
+  ) {
     return state;
   }
 
