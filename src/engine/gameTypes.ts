@@ -168,6 +168,7 @@ export type GameState = {
   specialEvents: SpecialEvent[];
   turn: PlayerColor;
   previousState: GameState | null;
+  cardFrequencies: Record<ExpansionName, Record<string, number>> | null;
   activeExpansions: ExpansionName[];
   powersEnabled: boolean;
 };

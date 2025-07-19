@@ -19,7 +19,7 @@ import PowerInspect from "../components/PowerInspect";
 import { useCardManagement } from "../engine/CardManagementContext";
 import { GameState, PlayerColor } from "../engine/gameTypes";
 import { db } from "../server/firebase";
-import { setupGame } from "../utils/gameLogic";
+import { dealCards, setupGame } from "../utils/gameLogic";
 import { getPlayerId, getPlayerName } from "../utils/identity";
 import { nextOption } from "../utils/math";
 import { GAME_PATH, HOME_PATH } from "../utils/navigation";
@@ -97,12 +97,22 @@ function Lobby() {
     if (targetPlayer.id && targetPlayer.id !== playerId)
       return alert(`${color} player slot is already taken.`);
 
-    await updateDoc(gameRef, {
-      [`players.${color}.id`]: playerId,
-      [`players.${color}.name`]: name,
-      [`players.${color}.power`]:
-        selectedPowerIndex !== null ? powers[selectedPowerIndex] : null,
-    });
+    const tempState: GameState = {
+      ...game,
+      players: {
+        ...game.players,
+        [color]: {
+          ...game.players[color],
+          id: playerId,
+          name: name,
+          power:
+            selectedPowerIndex !== null ? powers[selectedPowerIndex] : null,
+        },
+      },
+    };
+
+    const newState: GameState = dealCards(tempState, "Red", "Blue");
+    await setDoc(doc(db, `games/${gameId}`), newState);
     navigate(`${GAME_PATH}/${gameId}`);
   };
 

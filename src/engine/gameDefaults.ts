@@ -1,4 +1,8 @@
 import {
+  BASE_CARD_FREQUENCIES,
+  DEFAULT_CARD_FREQUENCIES,
+} from "../assets/data/cards";
+import {
   CharacterCount,
   CharacterType,
   EffectType,
@@ -54,15 +58,6 @@ export const defaultPlayer: Player = {
   season: "Winter",
   legends: [],
   power: null,
-  // {
-  //   name: "Rats",
-  //   description: "",
-  //   handLimit: 8,
-  //   startingHandSize: 5,
-  //   storage: null,
-  //   expansionName: "base",
-  //   imageKey: "",
-  // },
 
   discarding: false,
   playing: false,
@@ -96,6 +91,7 @@ const defaultPreviousState: GameState = {
   specialEvents: [],
   turn: "Red",
   previousState: null,
+  cardFrequencies: null,
   activeExpansions: [],
   powersEnabled: false,
 };

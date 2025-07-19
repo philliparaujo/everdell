@@ -188,34 +188,6 @@ export function setupGame(
   // Shuffle deck
   const deck: Card[] = makeShuffledDeck(cardFrequencies);
 
-  // Fill up meadow and deal cards
-  const MEADOW_END = MAX_MEADOW_SIZE;
-  const FIRST_END = MEADOW_END + computeStartingHandSize("Red", redPower);
-  const SECOND_END = FIRST_END + computeStartingHandSize("Blue", null);
-
-  const meadow = deck.slice(0, MEADOW_END);
-  const firstHand = deck.slice(MEADOW_END, FIRST_END);
-  const secondHand = deck.slice(FIRST_END, SECOND_END);
-  const remainingDeck = deck.slice(SECOND_END);
-
-  // Deal Legends cards to players if Legends expansion is active
-  let firstPlayerLegends: Card[] = [];
-  let secondPlayerLegends: Card[] = [];
-  if (activeExpansions.includes("legends")) {
-    const { critters, constructions } = makeLegendsDecks(
-      cardFrequencies["legends"],
-    );
-    const legendsPerPlayer = MAX_LEGENDS_SIZE;
-    firstPlayerLegends = [
-      ...critters.slice(0, legendsPerPlayer / 2),
-      ...constructions.slice(0, legendsPerPlayer / 2),
-    ];
-    secondPlayerLegends = [
-      ...critters.slice(legendsPerPlayer / 2, legendsPerPlayer),
-      ...constructions.slice(legendsPerPlayer / 2, legendsPerPlayer),
-    ];
-  }
-
   // Set up remaining objects
   const newLocations: Location[] = locations.map((location) => ({
     ...location,
@@ -242,22 +214,16 @@ export function setupGame(
       Red: {
         ...defaultPlayer,
         color: "Red",
-        hand: firstPlayer === "Red" ? firstHand : secondHand,
-        legends:
-          firstPlayer === "Red" ? firstPlayerLegends : secondPlayerLegends,
         power: redPower,
       },
       Blue: {
         ...defaultPlayer,
         color: "Blue",
-        hand: firstPlayer === "Blue" ? firstHand : secondHand,
-        legends:
-          firstPlayer === "Blue" ? firstPlayerLegends : secondPlayerLegends,
       },
     },
-    deck: remainingDeck,
+    deck: deck,
     discard: [],
-    meadow: meadow,
+    meadow: [],
     reveal: [],
     locations: newLocations,
     journeys: journeys,
@@ -265,15 +231,80 @@ export function setupGame(
     specialEvents: newSpecialEvents,
     turn: firstPlayer,
     previousState: null,
+    cardFrequencies: cardFrequencies,
     activeExpansions: activeExpansions,
     powersEnabled: powersEnabled,
+  };
+
+  return tempState;
+}
+
+export function dealCards(
+  state: GameState,
+  firstPlayer: PlayerColor,
+  secondPlayer: PlayerColor,
+): GameState {
+  // Fill up meadow and deal cards
+  const deck = [...state.deck];
+
+  const MEADOW_END = MAX_MEADOW_SIZE;
+  const FIRST_END =
+    MEADOW_END +
+    computeStartingHandSize(firstPlayer, state.players[firstPlayer].power);
+  const SECOND_END =
+    FIRST_END +
+    computeStartingHandSize(secondPlayer, state.players[secondPlayer].power);
+
+  const meadow = deck.slice(0, MEADOW_END);
+  const firstHand = deck.slice(MEADOW_END, FIRST_END);
+  const secondHand = deck.slice(FIRST_END, SECOND_END);
+  const remainingDeck = deck.slice(SECOND_END);
+
+  // Deal Legends cards to players if Legends expansion is active
+  let firstPlayerLegends: Card[] = [];
+  let secondPlayerLegends: Card[] = [];
+  if (state.activeExpansions.includes("legends") && state.cardFrequencies) {
+    const { critters, constructions } = makeLegendsDecks(
+      state.cardFrequencies["legends"],
+    );
+    const legendsPerPlayer = MAX_LEGENDS_SIZE;
+    firstPlayerLegends = [
+      ...critters.slice(0, legendsPerPlayer / 2),
+      ...constructions.slice(0, legendsPerPlayer / 2),
+    ];
+    secondPlayerLegends = [
+      ...critters.slice(legendsPerPlayer / 2, legendsPerPlayer),
+      ...constructions.slice(legendsPerPlayer / 2, legendsPerPlayer),
+    ];
+  }
+
+  const tempState: GameState = {
+    ...state,
+    players: {
+      Red: {
+        ...state.players["Red"],
+        hand: firstPlayer === "Red" ? firstHand : secondHand,
+        legends:
+          firstPlayer === "Red" ? firstPlayerLegends : secondPlayerLegends,
+      },
+      Blue: {
+        ...state.players["Blue"],
+        hand: firstPlayer === "Blue" ? firstHand : secondHand,
+        legends:
+          firstPlayer === "Blue" ? firstPlayerLegends : secondPlayerLegends,
+      },
+    },
+    deck: remainingDeck,
+    meadow: meadow,
   };
 
   const newState: GameState = {
     ...tempState,
     previousState: structuredClone(tempState),
+    cardFrequencies: null,
   };
 
+  if (!sanityCheck(newState)) return state;
   return newState;
 }
 
