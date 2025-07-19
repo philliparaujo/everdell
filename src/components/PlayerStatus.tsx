@@ -9,8 +9,10 @@ import { getPlayerId } from "../utils/identity";
 import { mapOverResources } from "../utils/loops";
 import { stylePlayerColor, styleSeasonColor } from "../utils/tailwind";
 import Button from "./Button";
+import Hoverable from "./Hoverable";
 import { ResourceIcon, WorkerIcon } from "./Icons";
 import Id from "./Id";
+import PowerInspect from "./PowerInspect";
 
 function PlayerStatus({ playerColor }: { playerColor: PlayerColor }) {
   const { game, nextPower } = useGame();
@@ -23,6 +25,25 @@ function PlayerStatus({ playerColor }: { playerColor: PlayerColor }) {
     0,
   );
 
+  const renderPowerToggleButtons = () => {
+    return (
+      <>
+        <Button
+          disabled={isNotYourTurn(game, storedId)}
+          onClick={() => nextPower(storedId, -1)}
+        >
+          Prev power
+        </Button>
+        <Button
+          disabled={isNotYourTurn(game, storedId)}
+          onClick={() => nextPower(storedId, 1)}
+        >
+          Next power
+        </Button>
+      </>
+    );
+  };
+
   return (
     <div key={playerColor} className="flex flex-col gap-2">
       <div>
@@ -33,21 +54,26 @@ function PlayerStatus({ playerColor }: { playerColor: PlayerColor }) {
         <Id id={player.id || "Not in game"} />
         {game.powersEnabled && (
           <>
-            <div className="text-xs">
-              <strong>Power: </strong> {player.power?.name ?? "None"}
+            <div className="flex gap-2 text-xs">
+              <strong>Power: </strong>
+              {player.power ? (
+                <Hoverable
+                  isInteractive={true}
+                  onRightClick={(closeInspector) => (
+                    <PowerInspect
+                      power={player.power!!}
+                      onClose={closeInspector}
+                      renderPowerToggleButtons={renderPowerToggleButtons}
+                    />
+                  )}
+                >
+                  <div>{player.power.name}</div>
+                </Hoverable>
+              ) : (
+                "None"
+              )}
             </div>
-            <Button
-              disabled={isNotYourTurn(game, storedId)}
-              onClick={() => nextPower(storedId, -1)}
-            >
-              Prev power
-            </Button>
-            <Button
-              disabled={isNotYourTurn(game, storedId)}
-              onClick={() => nextPower(storedId, 1)}
-            >
-              Next power
-            </Button>
+            {renderPowerToggleButtons()}
           </>
         )}
       </div>

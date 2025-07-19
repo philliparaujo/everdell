@@ -1,16 +1,16 @@
-import { Power, ResourceType, ExpansionName } from "../../engine/gameTypes";
+import { Power } from "../../engine/gameTypes";
 import { defaultResources } from "../../engine/gameDefaults";
 
 export const powers: Power[] = [
   {
-    name: "Snakes",
+    name: "Snails",
     description:
       "During Setup, draw 3 cards and place them on this from the deck. You may play these cards as if they were in your hand.",
     handLimit: null,
     startingHandSize: null,
     storage: null,
     expansionName: "base",
-    imageKey: "",
+    imageKey: "architect",
   },
   {
     name: "Cats",
@@ -20,7 +20,7 @@ export const powers: Power[] = [
     startingHandSize: null,
     storage: null,
     expansionName: "base",
-    imageKey: "",
+    imageKey: "architect",
   },
   {
     name: "Honey Bees",
@@ -30,7 +30,7 @@ export const powers: Power[] = [
     startingHandSize: null,
     storage: null,
     expansionName: "base",
-    imageKey: "",
+    imageKey: "architect",
   },
   {
     name: "Bats",
@@ -40,7 +40,7 @@ export const powers: Power[] = [
     startingHandSize: null,
     storage: null,
     expansionName: "base",
-    imageKey: "",
+    imageKey: "historian",
   },
   {
     name: "Pigs",
@@ -50,7 +50,7 @@ export const powers: Power[] = [
     startingHandSize: null,
     storage: null,
     expansionName: "base",
-    imageKey: "",
+    imageKey: "architect",
   },
   {
     name: "Stoats",
@@ -60,7 +60,7 @@ export const powers: Power[] = [
     startingHandSize: null,
     storage: null,
     expansionName: "base",
-    imageKey: "",
+    imageKey: "monk",
   },
   {
     name: "Butterflies",
@@ -70,7 +70,7 @@ export const powers: Power[] = [
     startingHandSize: 5, // Assuming 2-3 players as a default
     storage: null,
     expansionName: "base",
-    imageKey: "",
+    imageKey: "architect",
   },
   {
     name: "Spiders",
@@ -79,7 +79,7 @@ export const powers: Power[] = [
     startingHandSize: null,
     storage: null,
     expansionName: "base",
-    imageKey: "",
+    imageKey: "architect",
   },
   {
     name: "Turtles",
@@ -89,7 +89,7 @@ export const powers: Power[] = [
     startingHandSize: null,
     storage: { ...defaultResources },
     expansionName: "base",
-    imageKey: "",
+    imageKey: "judge",
   },
   {
     name: "Squirrels",
@@ -99,7 +99,7 @@ export const powers: Power[] = [
     startingHandSize: null,
     storage: null,
     expansionName: "base",
-    imageKey: "",
+    imageKey: "woodcarver",
   },
   {
     name: "Mice",
@@ -109,7 +109,7 @@ export const powers: Power[] = [
     startingHandSize: null,
     storage: null,
     expansionName: "base",
-    imageKey: "",
+    imageKey: "wife",
   },
   {
     name: "Hedgehogs",
@@ -119,7 +119,7 @@ export const powers: Power[] = [
     startingHandSize: null,
     storage: null,
     expansionName: "base",
-    imageKey: "",
+    imageKey: "architect",
   },
   {
     name: "Foxes",
@@ -129,7 +129,7 @@ export const powers: Power[] = [
     startingHandSize: null,
     storage: null,
     expansionName: "base",
-    imageKey: "",
+    imageKey: "ranger",
   },
   {
     name: "Moles",
@@ -139,7 +139,7 @@ export const powers: Power[] = [
     startingHandSize: null,
     storage: null,
     expansionName: "base",
-    imageKey: "",
+    imageKey: "minermole",
   },
   {
     name: "Owls",
@@ -149,7 +149,7 @@ export const powers: Power[] = [
     startingHandSize: null,
     storage: null,
     expansionName: "base",
-    imageKey: "",
+    imageKey: "shepherd",
   },
   {
     name: "Lizards",
@@ -159,7 +159,7 @@ export const powers: Power[] = [
     startingHandSize: null,
     storage: null,
     expansionName: "base",
-    imageKey: "",
+    imageKey: "wanderer",
   },
   {
     name: "Toads",
@@ -169,7 +169,7 @@ export const powers: Power[] = [
     startingHandSize: null,
     storage: null,
     expansionName: "base",
-    imageKey: "",
+    imageKey: "bargetoad",
   },
   {
     name: "Otters",
@@ -179,7 +179,7 @@ export const powers: Power[] = [
     startingHandSize: null,
     storage: null,
     expansionName: "base",
-    imageKey: "",
+    imageKey: "architect",
   },
   {
     name: "Platypuses",
@@ -189,7 +189,7 @@ export const powers: Power[] = [
     startingHandSize: null,
     storage: { ...defaultResources },
     expansionName: "base",
-    imageKey: "",
+    imageKey: "architect",
   },
   {
     name: "Axolotls",
@@ -199,7 +199,7 @@ export const powers: Power[] = [
     startingHandSize: null,
     storage: null,
     expansionName: "base",
-    imageKey: "",
+    imageKey: "architect",
   },
   {
     name: "Cardinals",
@@ -209,7 +209,7 @@ export const powers: Power[] = [
     startingHandSize: null,
     storage: null,
     expansionName: "base",
-    imageKey: "",
+    imageKey: "architect",
   },
   {
     name: "Starlings",
@@ -219,7 +219,7 @@ export const powers: Power[] = [
     startingHandSize: null,
     storage: null,
     expansionName: "base",
-    imageKey: "",
+    imageKey: "architect",
   },
   {
     name: "Rats",
@@ -228,7 +228,7 @@ export const powers: Power[] = [
     handLimit: 10,
     startingHandSize: null,
     storage: null,
-    expansionName: "base",
-    imageKey: "",
+    expansionName: "rugwort",
+    imageKey: "rugworttherowdy",
   },
 ];
