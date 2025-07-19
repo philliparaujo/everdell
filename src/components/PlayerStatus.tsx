@@ -63,6 +63,7 @@ function PlayerStatus({ playerColor }: { playerColor: PlayerColor }) {
                     <PowerInspect
                       power={player.power!!}
                       onClose={closeInspector}
+                      inGame={true}
                       renderPowerToggleButtons={renderPowerToggleButtons}
                     />
                   )}

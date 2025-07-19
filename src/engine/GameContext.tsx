@@ -104,6 +104,10 @@ interface GameContextType {
     index: number,
     resources: ResourceCount,
   ) => void;
+  addResourcesToPower: (
+    playerId: string | null,
+    resources: ResourceCount,
+  ) => void;
   addResourcesToSelf: (
     playerId: string | null,
     resources: ResourceCount,
@@ -198,6 +202,7 @@ export const GameProvider = ({
       Actions.addResourcesToCardInCity,
       true,
     ),
+    addResourcesToPower: wrapAction(Actions.addResourcesToPower, true),
     placeCharacterOnLocation: wrapAction(
       Actions.placeCharacterOnLocation,
       true,

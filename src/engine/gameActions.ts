@@ -3,10 +3,10 @@ import {
   canAchieveEvent,
   canAchieveSpecialEvent,
   canAddResourcesToLocation,
+  canAddResourcesToPower,
   canMoveCardBelowInCity,
   canPlaceCharacterOnLocation,
   canPlayToOppositeCity,
-  canStealCard,
   canSwapHands,
   canVisitCardInCity,
   canVisitEvent,
@@ -32,6 +32,7 @@ import {
   Location,
   Player,
   PlayerColor,
+  Power,
   ResourceCount,
   Season,
 } from "./gameTypes";
@@ -1506,6 +1507,54 @@ export function addResourcesToLocation(
   };
 
   if (!sanityCheck(newState)) return state;
+  return newState;
+}
+
+export function addResourcesToPower(
+  state: GameState,
+  playerId: string | null,
+  resources: ResourceCount,
+): GameState {
+  const playerColor = getPlayerColor(state, playerId);
+  if (playerColor !== state.turn) return state;
+
+  const player = state.players[playerColor];
+  const power = player.power;
+  if (power === null) return state;
+
+  if (!canAddResourcesToPower(state, power, playerColor)) return state;
+
+  const updatedStorage: ResourceCount = { ...power.storage!! };
+
+  for (const key in resources) {
+    if (Object.prototype.hasOwnProperty.call(resources, key)) {
+      const typedKey = key as keyof ResourceCount;
+      updatedStorage[typedKey] += resources[typedKey];
+      updatedStorage[typedKey] = Math.max(0, updatedStorage[typedKey]);
+    }
+  }
+
+  const updatedPower: Power = {
+    ...power,
+    storage: updatedStorage,
+  };
+
+  const updatedPlayer: Player = {
+    ...player,
+    power: updatedPower,
+  };
+
+  const newState: GameState = {
+    ...state,
+    players: {
+      ...state.players,
+      [playerColor]: updatedPlayer,
+    },
+  };
+
+  if (!sanityCheck(newState)) {
+    return state;
+  }
   return newState;
 }
 

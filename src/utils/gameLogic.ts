@@ -350,6 +350,18 @@ export function canAddResourcesToLocation(
   );
 }
 
+export function canAddResourcesToPower(
+  state: GameState,
+  power: Power,
+  playerColor: PlayerColor,
+): boolean {
+  return (
+    (state.players[playerColor].power?.name === "Turtles" ||
+      state.players[playerColor].power?.name === "Platypuses") &&
+    power.storage !== null
+  );
+}
+
 export function canVisitJourney(
   state: GameState,
   journey: Journey,

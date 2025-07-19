@@ -252,6 +252,7 @@ function Lobby() {
         <PowerInspect
           power={powers[selectedPowerIndex]}
           onClose={closeInspect}
+          inGame={false}
           renderPowerToggleButtons={() => (
             <>
               <Button onClick={prevPower}>Prev power</Button>
