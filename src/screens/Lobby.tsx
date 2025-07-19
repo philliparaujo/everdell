@@ -10,18 +10,20 @@ import {
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
+import { powers } from "../assets/data/powers";
 import Alert from "../components/Alert";
 import Button from "../components/Button";
 import GameList from "../components/GameList";
 import Navigation from "../components/Navigation";
+import PowerInspect from "../components/PowerInspect";
 import { useCardManagement } from "../engine/CardManagementContext";
 import { GameState, PlayerColor } from "../engine/gameTypes";
 import { db } from "../server/firebase";
 import { setupGame } from "../utils/gameLogic";
 import { getPlayerId, getPlayerName } from "../utils/identity";
+import { nextOption } from "../utils/math";
 import { GAME_PATH, HOME_PATH } from "../utils/navigation";
 import { renderActiveExpansions, renderPowersEnabled } from "../utils/react";
-import { powers } from "../assets/data/powers";
 
 function Lobby() {
   const navigate = useNavigate();
@@ -35,6 +37,37 @@ function Lobby() {
 
   const isDisabled = !playerId;
 
+  const [joinParams, setJoinParams] = useState<{
+    gameId: string;
+    color: PlayerColor;
+  } | null>(null);
+  const [selectedPowerIndex, setSelectedPowerIndex] = useState<number | null>(
+    null,
+  );
+  const openStartInspect = () => {
+    setJoinParams(null);
+    setSelectedPowerIndex(0);
+  };
+  const openJoinInspect = (gameId: string, color: PlayerColor) => {
+    setJoinParams({ gameId, color });
+    setSelectedPowerIndex(0);
+  };
+  const closeInspect = () => {
+    setJoinParams(null);
+    setSelectedPowerIndex(null);
+  };
+
+  const prevPower = () => {
+    if (selectedPowerIndex !== null) {
+      setSelectedPowerIndex(nextOption(selectedPowerIndex, powers, -1));
+    }
+  };
+  const nextPower = () => {
+    if (selectedPowerIndex !== null) {
+      setSelectedPowerIndex(nextOption(selectedPowerIndex, powers, 1));
+    }
+  };
+
   const startGame = async () => {
     if (isDisabled) return;
     const gameId = uuidv4();
@@ -43,7 +76,7 @@ function Lobby() {
       cardFrequencies,
       activeExpansions,
       powersEnabled,
-      null,
+      selectedPowerIndex !== null ? powers[selectedPowerIndex] : null,
     );
     gameState.players.Red.id = playerId!;
     gameState.players.Red.name = name;
@@ -67,6 +100,8 @@ function Lobby() {
     await updateDoc(gameRef, {
       [`players.${color}.id`]: playerId,
       [`players.${color}.name`]: name,
+      [`players.${color}.power`]:
+        selectedPowerIndex !== null ? powers[selectedPowerIndex] : null,
     });
     navigate(`${GAME_PATH}/${gameId}`);
   };
@@ -170,7 +205,11 @@ function Lobby() {
         <h2 className="text-lg font-bold">Available Games</h2>
 
         <div className="flex gap-2">
-          <Button onClick={startGame} disabled={isDisabled} variant="important">
+          <Button
+            onClick={powersEnabled ? openStartInspect : startGame}
+            disabled={isDisabled}
+            variant="important"
+          >
             Start New Game
           </Button>
           <Button
@@ -189,11 +228,61 @@ function Lobby() {
       <GameList
         list={gameList}
         playerId={playerId}
-        onJoinGame={handleJoinGame}
+        onJoinGame={async (gameId, color) => {
+          if (isDisabled) return;
+
+          const gameRef = doc(db, "games", gameId);
+          const snapshot = await getDoc(gameRef);
+          const game = snapshot.data() as GameState;
+
+          if (!game) return alert("Game not found");
+
+          if (game.powersEnabled) {
+            openJoinInspect(gameId, color);
+          } else {
+            handleJoinGame(gameId, color);
+          }
+        }}
         onRejoinGame={handleRejoinGame}
         onSpectateGame={handleSpectateGame}
         onDeleteGame={handleDeleteGame}
       />
+
+      {selectedPowerIndex !== null && (
+        <PowerInspect
+          power={powers[selectedPowerIndex]}
+          onClose={closeInspect}
+          renderPowerToggleButtons={() => (
+            <>
+              <Button onClick={prevPower}>Prev power</Button>
+              <Button onClick={nextPower}>Next power</Button>
+            </>
+          )}
+          renderStartButton={() =>
+            joinParams ? (
+              <Button
+                onClick={() => {
+                  handleJoinGame(joinParams.gameId, joinParams.color);
+                  closeInspect();
+                }}
+                variant="important"
+              >
+                Join Game
+              </Button>
+            ) : (
+              <Button
+                onClick={() => {
+                  startGame();
+                  closeInspect();
+                }}
+                variant="important"
+              >
+                Start Game
+              </Button>
+            )
+          }
+        />
+      )}
     </div>
   );
 }

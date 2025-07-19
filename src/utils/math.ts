@@ -29,3 +29,8 @@ export function pickNRandom<T>(n: number, arr: T[]): T[] {
 
   return newArr.slice(0, n);
 }
+
+export function nextOption<T>(index: number, arr: T[], delta: 1 | -1): number {
+  const arrayLength = arr.length;
+  return (index + delta + arrayLength) % arrayLength;
+}

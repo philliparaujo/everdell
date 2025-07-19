@@ -1,18 +1,18 @@
-import { Power, ResourceType } from "../engine/gameTypes";
+import { Power } from "../engine/gameTypes";
 import { getCardPath } from "../utils/card";
-import Inspectable from "./Inspectable";
-import { ResourceIcon } from "./Icons";
-import { mapOverResources } from "../utils/loops";
 import { renderTextWithIcons } from "../utils/react";
+import Inspectable from "./Inspectable";
 
 function PowerInspect({
   power,
   onClose,
   renderPowerToggleButtons,
+  renderStartButton,
 }: {
   power: Power;
   onClose: () => void;
-  renderPowerToggleButtons: () => React.ReactNode;
+  renderPowerToggleButtons?: () => React.ReactNode;
+  renderStartButton?: () => React.ReactNode;
 }) {
   const imageSrc = require(
     `../${getCardPath(power.expansionName, power.imageKey)}`,
@@ -61,9 +61,17 @@ function PowerInspect({
             </div>
           )} */}
 
-          <div className="flex flex-row justify-center h-6">
-            {renderPowerToggleButtons()}
-          </div>
+          {renderPowerToggleButtons && (
+            <div className="flex flex-row justify-center h-6">
+              {renderPowerToggleButtons()}
+            </div>
+          )}
+
+          {renderStartButton && (
+            <div className="flex flex-row justify-center h-6">
+              {renderStartButton()}
+            </div>
+          )}
         </div>
       </div>
     </Inspectable>
