@@ -68,13 +68,23 @@ function PlayerStatus({ playerColor }: { playerColor: PlayerColor }) {
                     />
                   )}
                 >
-                  <div>{player.power.name}</div>
+                  <div className="flex">
+                    {player.power.name}
+                    {player.power.storage &&
+                      mapOverResources(player.power.storage, (key, val) => (
+                        <div
+                          key={key}
+                          className="flex items-center text-[10px]"
+                        >
+                          <ResourceIcon type={key as ResourceType} /> {val}
+                        </div>
+                      ))}
+                  </div>
                 </Hoverable>
               ) : (
                 "None"
               )}
             </div>
-            {renderPowerToggleButtons()}
           </>
         )}
       </div>

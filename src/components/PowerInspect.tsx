@@ -30,7 +30,7 @@ function PowerInspect({
   return (
     <Inspectable onClose={onClose}>
       {/* A single vertical column for all content */}
-      <div className="flex flex-1 flex-col overflow-y-auto w-[36rem] gap-6 items-center p-6">
+      <div className="flex flex-1 flex-col h-[36rem] overflow-y-auto w-[36rem] gap-6 items-center p-6">
         {/* --- Cropped Image Banner --- */}
         <div
           className="w-full h-52 bg-top bg-cover rounded-lg flex-shrink-0"
@@ -57,7 +57,9 @@ function PowerInspect({
 
           {/* Stored Resources */}
           {inGame && <PowerInspectInGame power={power} />}
+        </div>
 
+        <div className="mt-auto flex flex-col gap-2">
           {renderPowerToggleButtons && (
             <div className="flex flex-row justify-center h-6">
               {renderPowerToggleButtons()}

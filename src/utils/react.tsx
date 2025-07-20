@@ -150,8 +150,9 @@ export function renderActiveExpansions(
 
 export function renderPowersEnabled(powersEnabled: boolean): React.ReactNode {
   return (
-    <div className="text-sm">
-      <p>{`Powers are ${powersEnabled ? "enabled" : "disabled"}`}</p>
+    <div className="text-sm flex gap-1">
+      <p className="font-semibold">Powers:</p>
+      <p>{powersEnabled ? "Enabled" : "Disabled"}</p>
     </div>
   );
 }
