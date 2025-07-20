@@ -10,6 +10,7 @@ import {
   EffectType,
   Location,
   Player,
+  Power,
   ResourceCount,
   ResourceType,
   SpecialEvent,
@@ -95,6 +96,10 @@ export function hasCards(city: Card[], cardNames: string[]): boolean {
   return city.some(
     (card) => cardNames.includes(card.name) && card.below !== "Dungeon",
   );
+}
+
+export function hasPowers(power: Power | null, powerNames: string[]): boolean {
+  return powerNames.some((name) => name === power?.name);
 }
 
 export function countEffectTypeOccurrences(

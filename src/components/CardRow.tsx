@@ -1,3 +1,4 @@
+import { useGame } from "../engine/GameContext";
 import { Card, PlayerColor } from "../engine/gameTypes";
 import { groupCardsByBelow } from "../utils/card";
 import { computeMaxCitySize } from "../utils/gameLogic";
@@ -34,9 +35,11 @@ function CardRow({
   ) => void;
   isDropTarget?: boolean;
 }) {
-  const rowLength = maxLength ?? computeMaxCitySize(cards);
+  const { game } = useGame();
 
+  // Rendering everything but a city
   if (location !== "city" || !cityColor || !onDrop) {
+    const rowLength = maxLength ?? cards.length;
     return (
       <div className="flex overflow-y-hidden scrollbar-thin w-full pr-1 gap-1 rounded-[4px]">
         {Array.from({ length: rowLength }).map((_, index) => {
@@ -58,6 +61,8 @@ function CardRow({
       </div>
     );
   }
+
+  const rowLength = computeMaxCitySize(cards, game.players[cityColor].power);
 
   const indexedCards: { card: Card; index: number }[] = cards.map(
     (card, index) => ({

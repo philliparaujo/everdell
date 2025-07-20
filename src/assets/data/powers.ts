@@ -102,6 +102,39 @@ export const powers: Power[] = [
     imageKey: "architect",
   },
   {
+    name: "Owls",
+    title: "Wise",
+    description:
+      "Increase your hand limit by 1. After you place a worker and resolve the action, you may discard 1 card from your hand, and/or draw 1 card. You may keep this card or give it away to an opponent. Draw 2 cards if you give it away.",
+    handLimit: null,
+    startingHandSize: null,
+    storage: null,
+    expansionName: "base",
+    imageKey: "shepherd",
+  },
+  {
+    name: "Pigs",
+    title: "Master Farmers",
+    description:
+      "Begin the game with all Farm cards in a faceup stack in your area. At the beginning of each season, you may play the top Farm card for free (this does not count as your turn). Farms do not take up a space in your city. If an opponent plays a Farm, you gain 2 coins.",
+    handLimit: null,
+    startingHandSize: null,
+    storage: null,
+    expansionName: "base",
+    imageKey: "architect",
+  },
+  {
+    name: "Platypuses",
+    title: "Treasure Hunters",
+    description:
+      "At the beginning of the game, place 5 coins here. At any time on your turn, you may pay up to 1 of these coins to gain 1 wildcard and draw 1 card from the deck or the Meadow.",
+    handLimit: null,
+    startingHandSize: null,
+    storage: { ...defaultResources },
+    expansionName: "base",
+    imageKey: "architect",
+  },
+  {
     name: "Spiders",
     title: "Sneaky",
     description:
@@ -122,6 +155,17 @@ export const powers: Power[] = [
     storage: null,
     expansionName: "base",
     imageKey: "woodcarver",
+  },
+  {
+    name: "Starlings",
+    title: "Harmonious",
+    description:
+      "Increase your hand limit by 3. When you draw cards, you may draw from the deck or the Meadow. If you are required to 'reveal', they must be cards from the deck.",
+    handLimit: 10,
+    startingHandSize: null,
+    storage: null,
+    expansionName: "base",
+    imageKey: "architect",
   },
   {
     name: "Stoats",
@@ -168,39 +212,6 @@ export const powers: Power[] = [
     imageKey: "historian",
   },
   {
-    name: "WIP: Owls",
-    title: "Wise",
-    description:
-      "Increase your hand limit by 1. After you place a worker and resolve the action, you may discard 1 card from your hand, and/or draw 1 card. You may keep this card or give it away to an opponent. Draw 2 cards if you give it away.",
-    handLimit: null,
-    startingHandSize: null,
-    storage: null,
-    expansionName: "base",
-    imageKey: "shepherd",
-  },
-  {
-    name: "WIP: Pigs",
-    title: "Master Farmers",
-    description:
-      "Begin the game with all Farm cards in a faceup stack in your area. At the beginning of each season, you may play the top Farm card for free (this does not count as your turn). Farms do not take up a space in your city. If an opponent plays a Farm, you gain 2 coins.",
-    handLimit: null,
-    startingHandSize: null,
-    storage: null,
-    expansionName: "base",
-    imageKey: "architect",
-  },
-  {
-    name: "WIP: Platypuses",
-    title: "Treasure Hunters",
-    description:
-      "At the beginning of the game, place 5 coins here. At any time on your turn, you may pay up to 1 of these coins to gain 1 wildcard and draw 1 card from the deck or the Meadow.",
-    handLimit: null,
-    startingHandSize: null,
-    storage: { ...defaultResources },
-    expansionName: "base",
-    imageKey: "architect",
-  },
-  {
     name: "WIP: Rats",
     title: "Obnoxious",
     description:
@@ -217,17 +228,6 @@ export const powers: Power[] = [
     description:
       "During setup, draw 7 cards and place them in a facedown stack. When an opponent plays a green, you may give them a card from this stack to also activate the green for yourself.",
     handLimit: null,
-    startingHandSize: null,
-    storage: null,
-    expansionName: "base",
-    imageKey: "architect",
-  },
-  {
-    name: "WIP: Starlings",
-    title: "Harmonious",
-    description:
-      "Increase your hand limit by 3. When you draw cards, you may draw from the deck or the Meadow. If you are required to 'reveal', they must be cards from the deck.",
-    handLimit: 10,
     startingHandSize: null,
     storage: null,
     expansionName: "base",

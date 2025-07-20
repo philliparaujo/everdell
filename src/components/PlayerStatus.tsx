@@ -106,7 +106,7 @@ function PlayerStatus({ playerColor }: { playerColor: PlayerColor }) {
           </div>
           <div>
             City: {player.city.length - cardsUnderDungeon} /{" "}
-            {computeMaxCitySize(player.city) - cardsUnderDungeon}
+            {computeMaxCitySize(player.city, player.power) - cardsUnderDungeon}
           </div>
         </div>
       </div>

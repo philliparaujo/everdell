@@ -130,7 +130,7 @@ function Game() {
           </HalfSection>
 
           {isFarmStackEnabled(game) && (
-            <HalfSection title={`Farm Stack (${game.farmStack.length})`}>
+            <HalfSection title={`Farms (${game.farmStack.length})`}>
               <FarmStack />
             </HalfSection>
           )}

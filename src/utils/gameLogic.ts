@@ -41,6 +41,7 @@ import {
   countCardOccurrences,
   countEffectTypeOccurrences,
   hasCards,
+  hasPowers,
   isOnSpecialEvents,
 } from "./loops";
 import { partition, pickNRandom } from "./math";
@@ -69,7 +70,7 @@ export function isSafeToEndTurn(state: GameState): boolean {
   return meadowFull && notPerformingAction;
 }
 
-export function computeMaxCitySize(city: Card[]) {
+export function computeMaxCitySize(city: Card[], playerPower: Power | null) {
   const husbandWifePairs = Math.min(
     countCardOccurrences(city, "Husband"),
     countCardOccurrences(city, "Wife"),
@@ -84,6 +85,7 @@ export function computeMaxCitySize(city: Card[]) {
     (acc, curr) => acc + (curr.below === "Dungeon" ? 1 : 0),
     0,
   );
+  const farms = countCardOccurrences(city, "Farm");
 
   return (
     MAX_BASE_CITY_SIZE +
@@ -91,7 +93,8 @@ export function computeMaxCitySize(city: Card[]) {
     wanderers +
     Math.max(0, scurrbleChampions - 1) +
     legends +
-    cardsUnderDungeon
+    cardsUnderDungeon +
+    (hasPowers(playerPower, ["Pigs"]) ? farms : 0)
   );
 }
 
@@ -158,7 +161,8 @@ export function sanityCheck(state: GameState): boolean {
     const player = state.players[playerColor];
     if (player.hand.length > computeMaxHandSize(state, playerColor))
       return false;
-    if (player.city.length > computeMaxCitySize(player.city)) return false;
+    if (player.city.length > computeMaxCitySize(player.city, player.power))
+      return false;
   }
 
   // Check meadow and reveal size
@@ -339,8 +343,8 @@ function canVisitGeneric(
 }
 
 export function isFarmStackEnabled(state: GameState): boolean {
-  const firstIsPigs = state.players["Red"].power?.name === "Pigs";
-  const secondIsPigs = state.players["Blue"].power?.name === "Pigs";
+  const firstIsPigs = hasPowers(state.players["Red"].power, ["Pigs"]);
+  const secondIsPigs = hasPowers(state.players["Blue"].power, ["Pigs"]);
   return (firstIsPigs || secondIsPigs) && state.powersEnabled;
 }
 
@@ -358,7 +362,7 @@ export function canVisitLocation(
   if (workersVisiting > 0 && location.exclusive && workersOnLocation > 0) {
     // ... unless they have the Cats power
     if (
-      player.power?.name === "Cats" &&
+      hasPowers(player.power, ["Cats"]) &&
       workersOnLocation - location.workers[playerColor] > 0
     ) {
       return true;
@@ -385,9 +389,9 @@ export function canPlaceCharacterOnLocation(
 
   switch (character) {
     case "rat":
-      return state.players[playerColor].power?.name === "Rats";
+      return hasPowers(state.players[playerColor].power, ["Rats"]);
     case "spider":
-      return state.players[playerColor].power?.name === "Spiders";
+      return hasPowers(state.players[playerColor].power, ["Spiders"]);
     default:
       return false;
   }
@@ -399,7 +403,7 @@ export function canAddResourcesToLocation(
   playerColor: PlayerColor,
 ): boolean {
   return (
-    state.players[playerColor].power?.name === "Axolotls" &&
+    hasPowers(state.players[playerColor].power, ["Axolotls"]) &&
     location.storage !== null
   );
 }
@@ -410,8 +414,7 @@ export function canAddResourcesToPower(
   playerColor: PlayerColor,
 ): boolean {
   return (
-    (state.players[playerColor].power?.name === "Turtles" ||
-      state.players[playerColor].power?.name === "Platypuses") &&
+    hasPowers(state.players[playerColor].power, ["Platypuses", "Turtles"]) &&
     power.storage !== null
   );
 }
@@ -541,7 +544,7 @@ export function canVisitCardInCity(
   if (newWorkersOnCard > card.maxDestinations) {
     // ... unless they have the Cats power
     if (
-      player.power?.name === "Cats" &&
+      hasPowers(player.power, ["Cats"]) &&
       card.activeDestinations - card.workers[playerColor] > 0
     ) {
       return true;
@@ -559,6 +562,7 @@ function hasPermission(
   nonGreenCardsList: string[],
   givesOpponentPermissionList: string[],
   specialEventsList: string[],
+  powersList: string[],
 ): boolean {
   const player = state.players[playerColor];
   const oppositePlayer = state.players[oppositePlayerOf(playerColor)];
@@ -571,7 +575,8 @@ function hasPermission(
     hasCards(oppositePlayer.city, givesOpponentPermissionList) ||
     (hasCards(player.city, canCopyGreenCardsList) &&
       hasCards(oppositePlayer.city, greenCardsList)) ||
-    isOnSpecialEvents(player, specialEvents, specialEventsList)
+    isOnSpecialEvents(player, specialEvents, specialEventsList) ||
+    hasPowers(player.power, powersList)
   );
 }
 
@@ -587,6 +592,7 @@ export function canGiveToSelf(
     "A Brilliant Marketing Plan",
     "Ancient Scrolls Discovered",
   ];
+  const powersList: string[] = ["Platypuses", "Starlings"];
 
   return hasPermission(
     state,
@@ -595,6 +601,7 @@ export function canGiveToSelf(
     nonGreenCardsList,
     givesOpponentPermissionList,
     specialEventsList,
+    powersList,
   );
 }
 
@@ -607,6 +614,7 @@ export function canGiveToOpponent(
   const nonGreenCardsList: string[] = ["Post Office"];
   const givesOpponentPermissionList: string[] = ["Post Office"];
   const specialEventsList: string[] = [];
+  const powersList: string[] = ["Owls"];
 
   return hasPermission(
     state,
@@ -615,6 +623,7 @@ export function canGiveToOpponent(
     nonGreenCardsList,
     givesOpponentPermissionList,
     specialEventsList,
+    powersList,
   );
 }
 
@@ -627,6 +636,7 @@ export function canRevealDeck(
   const nonGreenCardsList: string[] = ["Cemetery", "Juggler"];
   const givesOpponentPermissionList: string[] = [];
   const specialEventsList: string[] = ["Ancient Scrolls Discovered"];
+  const powersList: string[] = [];
 
   return hasPermission(
     state,
@@ -635,6 +645,7 @@ export function canRevealDeck(
     nonGreenCardsList,
     givesOpponentPermissionList,
     specialEventsList,
+    powersList,
   );
 }
 
@@ -647,6 +658,7 @@ export function canRevealDiscard(
   const nonGreenCardsList: string[] = ["Cemetery"];
   const givesOpponentPermissionList: string[] = [];
   const specialEventsList: string[] = [];
+  const powersList: string[] = [];
 
   return hasPermission(
     state,
@@ -655,6 +667,7 @@ export function canRevealDiscard(
     nonGreenCardsList,
     givesOpponentPermissionList,
     specialEventsList,
+    powersList,
   );
 }
 
@@ -667,6 +680,7 @@ export function canGiveResources(
   const nonGreenCardsList: string[] = ["Monastery", "Shepherd"];
   const givesOpponentPermissionList: string[] = [];
   const specialEventsList: string[] = ["A Brilliant Marketing Plan"];
+  const powersList: string[] = [];
 
   return hasPermission(
     state,
@@ -675,6 +689,7 @@ export function canGiveResources(
     nonGreenCardsList,
     givesOpponentPermissionList,
     specialEventsList,
+    powersList,
   );
 }
 
@@ -687,6 +702,7 @@ export function canSwapHands(
   const nonGreenCardsList: string[] = ["Rugwort the Robber"];
   const givesOpponentPermissionList: string[] = [];
   const specialEventsList: string[] = [];
+  const powersList: string[] = [];
 
   return hasPermission(
     state,
@@ -695,6 +711,7 @@ export function canSwapHands(
     nonGreenCardsList,
     givesOpponentPermissionList,
     specialEventsList,
+    powersList,
   );
 }
 
@@ -707,6 +724,7 @@ export function canStealCard(
   const nonGreenCardsList: string[] = ["Rugwort the Rowdy"];
   const givesOpponentPermissionList: string[] = [];
   const specialEventsList: string[] = [];
+  const powersList: string[] = [];
 
   return hasPermission(
     state,
@@ -715,6 +733,7 @@ export function canStealCard(
     nonGreenCardsList,
     givesOpponentPermissionList,
     specialEventsList,
+    powersList,
   );
 }
 
