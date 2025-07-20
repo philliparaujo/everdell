@@ -118,9 +118,8 @@ export function computeStartingHandSize(
   playerColor: PlayerColor,
   power: Power | null,
 ): number {
-  switch (power?.name) {
-    case "Butterflies":
-      return 12;
+  if (power && power.startingHandSize !== null) {
+    return power.startingHandSize;
   }
 
   switch (playerColor) {
@@ -356,8 +355,16 @@ export function canVisitLocation(
 
   // Cannot visit exclusive location with a worker already on it
   const workersOnLocation = location.workers.Red + location.workers.Blue;
-  if (workersVisiting > 0 && location.exclusive && workersOnLocation > 0)
+  if (workersVisiting > 0 && location.exclusive && workersOnLocation > 0) {
+    // ... unless they have the Cats power
+    if (
+      player.power?.name === "Cats" &&
+      workersOnLocation - location.workers[playerColor] > 0
+    ) {
+      return true;
+    }
     return false;
+  }
 
   return true;
 }
@@ -531,7 +538,16 @@ export function canVisitCardInCity(
 
   // Cannot end with more workers on card than max destinations
   const newWorkersOnCard = card.activeDestinations + workersVisiting;
-  if (newWorkersOnCard > card.maxDestinations) return false;
+  if (newWorkersOnCard > card.maxDestinations) {
+    // ... unless they have the Cats power
+    if (
+      player.power?.name === "Cats" &&
+      card.activeDestinations - card.workers[playerColor] > 0
+    ) {
+      return true;
+    }
+    return false;
+  }
 
   return true;
 }

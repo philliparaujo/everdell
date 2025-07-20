@@ -36,6 +36,17 @@ export const powers: Power[] = [
     imageKey: "architect",
   },
   {
+    name: "Cats",
+    title: "Bossy",
+    description:
+      "You may send a worker to any basic location, forest location, or red already occupied by an opponent.",
+    handLimit: null,
+    startingHandSize: null,
+    storage: null,
+    expansionName: "base",
+    imageKey: "architect",
+  },
+  {
     name: "Hedgehogs",
     title: "Good Sniffers",
     description:
@@ -144,17 +155,6 @@ export const powers: Power[] = [
     storage: null,
     expansionName: "base",
     imageKey: "bargetoad",
-  },
-  {
-    name: "WIP*: Cats",
-    title: "Bossy",
-    description:
-      "You may send a worker to any basic location, forest location, or red already occupied by an opponent.",
-    handLimit: null,
-    startingHandSize: null,
-    storage: null,
-    expansionName: "base",
-    imageKey: "architect",
   },
   {
     name: "WIP: Bats",
