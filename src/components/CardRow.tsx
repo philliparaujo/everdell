@@ -15,7 +15,14 @@ function CardRow({
   isDropTarget = false,
 }: {
   cards: Card[];
-  location: "hand" | "city" | "meadow" | "reveal" | "discard" | "legends";
+  location:
+    | "hand"
+    | "city"
+    | "meadow"
+    | "reveal"
+    | "discard"
+    | "farmStack"
+    | "legends";
   cityColor: PlayerColor | null;
   onLeftClick: (index: number, card: Card | null) => void;
   maxLength?: number;

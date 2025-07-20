@@ -764,7 +764,14 @@ export function setGiving(
 function toggleCardAction(
   state: GameState,
   playerId: string | null,
-  location: "hand" | "city" | "meadow" | "reveal" | "discard" | "legends",
+  location:
+    | "hand"
+    | "city"
+    | "meadow"
+    | "reveal"
+    | "discard"
+    | "legends"
+    | "farmStack",
   index: number,
   action: Action,
   fromCityColor: PlayerColor | null = null,
@@ -792,6 +799,7 @@ function toggleCardAction(
     meadow: [...state.meadow],
     reveal: [...state.reveal],
     discard: [...state.discard],
+    farmStack: [...state.farmStack],
   };
 
   let cardToToggle: Card | undefined;
@@ -852,6 +860,14 @@ function toggleCardAction(
         [action]: !cardToToggle[action],
       };
     }
+  } else if (location === "farmStack") {
+    cardToToggle = state.farmStack[index];
+    if (cardToToggle) {
+      newState.farmStack[index] = {
+        ...cardToToggle,
+        [action]: !cardToToggle[action],
+      };
+    }
   }
 
   if (!sanityCheck(newState)) return state;
@@ -870,7 +886,14 @@ export function toggleCardDiscarding(
 export function toggleCardPlaying(
   state: GameState,
   playerId: string | null,
-  location: "hand" | "meadow" | "discard" | "reveal" | "legends" | "city",
+  location:
+    | "hand"
+    | "meadow"
+    | "discard"
+    | "reveal"
+    | "legends"
+    | "city"
+    | "farmStack",
   index: number,
   fromCityColor: PlayerColor | null,
 ): GameState {
@@ -951,7 +974,7 @@ function updateCardsBelow(
 export function playCard(
   state: GameState,
   playerId: string | null,
-  location: "hand" | "meadow" | "discard" | "reveal" | "legends",
+  location: "hand" | "meadow" | "discard" | "reveal" | "legends" | "farmStack",
   index: number,
 ): GameState {
   const playerColor = getPlayerColor(state, playerId);
@@ -1004,6 +1027,11 @@ export function playCard(
     newState.players[playerColor].legends = newState.players[
       playerColor
     ].legends.filter((_, i) => i !== index);
+  } else if (location === "farmStack") {
+    if (index > 0 || state.farmStack.length === 0) return state;
+    cardToPlay = state.farmStack[index];
+
+    newState.farmStack = newState.farmStack.filter((_, i) => i !== index);
   }
 
   if (!cardToPlay) return state;
@@ -1032,6 +1060,7 @@ export function playCard(
       playerColor,
       "playing",
       [cardToPlay],
+      [],
       [],
       [],
       [],
@@ -1130,6 +1159,7 @@ function updatedHistoryOnAction(
   revealAct: Card[],
   discardAct: Card[],
   legendsAct: Card[],
+  farmStackAct: Card[],
   oppositeCityAct: Card[],
 ): History {
   const history = state.players[playerColor].history;
@@ -1156,6 +1186,7 @@ function updatedHistoryOnAction(
           ...meadowAct,
           ...revealAct,
           ...legendsAct,
+          ...farmStackAct,
           ...oppositeCityAct,
         ],
       };
@@ -1197,6 +1228,10 @@ function actOnSelectedCards(
     state.players[playerColor].legends,
     (card) => !card[action],
   );
+  const [farmStackKeep, farmStackAct] = partition(
+    state.farmStack,
+    (card) => !card[action],
+  );
   const [oppositeCityKeep, oppositeCityAct] = partition(
     state.players[oppositePlayerOf(playerColor)].city,
     (card) => !card[action],
@@ -1212,6 +1247,7 @@ function actOnSelectedCards(
     revealAct,
     discardAct,
     legendsAct,
+    farmStackAct,
     oppositeCityAct,
   );
 
@@ -1236,6 +1272,7 @@ function actOnSelectedCards(
     meadow: meadowKeep,
     reveal: revealKeep,
     discard: discardKeep,
+    farmStack: farmStackKeep,
   };
 
   switch (action) {
@@ -1266,6 +1303,7 @@ function actOnSelectedCards(
         ...revealAct,
         ...discardAct,
         ...legendsAct,
+        ...farmStackAct,
         ...oppositeCityAct,
       ];
       const [otherPlayedCards, myCity] = partition(

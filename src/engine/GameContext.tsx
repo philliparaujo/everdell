@@ -25,14 +25,27 @@ interface GameContextType {
   ) => void;
   toggleCardPlaying: (
     playerId: string | null,
-    location: "hand" | "meadow" | "discard" | "reveal" | "legends" | "city",
+    location:
+      | "hand"
+      | "meadow"
+      | "discard"
+      | "reveal"
+      | "legends"
+      | "city"
+      | "farmStack",
     index: number,
     fromCityColor: PlayerColor | null,
   ) => void;
   playToOppositeCity: (playerId: string | null, index: number) => void;
   playCard: (
     playerId: string | null,
-    location: "hand" | "meadow" | "discard" | "reveal" | "legends",
+    location:
+      | "hand"
+      | "meadow"
+      | "discard"
+      | "reveal"
+      | "legends"
+      | "farmStack",
     index: number,
   ) => void;
   toggleCardGiving: (

@@ -28,6 +28,7 @@ function City({ color }: { color: PlayerColor }) {
         sourceLocation === "meadow" ||
         sourceLocation === "discard" ||
         sourceLocation === "reveal" ||
+        sourceLocation === "farmStack" ||
         sourceLocation === "legends"
       ) {
         playCard(
@@ -37,6 +38,7 @@ function City({ color }: { color: PlayerColor }) {
             | "meadow"
             | "discard"
             | "reveal"
+            | "farmStack"
             | "legends",
           sourceIndex,
         );

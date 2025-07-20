@@ -1,8 +1,4 @@
 import {
-  BASE_CARD_FREQUENCIES,
-  DEFAULT_CARD_FREQUENCIES,
-} from "../assets/data/cards";
-import {
   CharacterCount,
   CharacterType,
   EffectType,
@@ -85,6 +81,7 @@ const defaultPreviousState: GameState = {
   discard: [],
   meadow: [],
   reveal: [],
+  farmStack: [],
   locations: [],
   journeys: [],
   events: [],

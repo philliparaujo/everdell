@@ -19,7 +19,14 @@ function CardPreview({
   card: Card | null;
   index: number;
   onLeftClick?: () => void;
-  location: "hand" | "city" | "meadow" | "reveal" | "discard" | "legends";
+  location:
+    | "hand"
+    | "city"
+    | "meadow"
+    | "reveal"
+    | "discard"
+    | "farmStack"
+    | "legends";
   cityColor: PlayerColor | null;
   onDrop?: (
     droppedCard: Card,

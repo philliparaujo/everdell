@@ -162,12 +162,15 @@ export type GameState = {
   discard: Card[];
   meadow: Card[];
   reveal: Card[];
+  farmStack: Card[];
   locations: Location[];
   journeys: Journey[];
   events: Event[];
   specialEvents: SpecialEvent[];
   turn: PlayerColor;
+
   previousState: GameState | null;
+
   cardFrequencies: Record<ExpansionName, Record<string, number>> | null;
   activeExpansions: ExpansionName[];
   powersEnabled: boolean;

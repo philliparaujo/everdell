@@ -27,7 +27,14 @@ function CardInspect({
   index: number;
   cityColor: PlayerColor | null;
   onClose: () => void;
-  location: "hand" | "city" | "meadow" | "reveal" | "discard" | "legends";
+  location:
+    | "hand"
+    | "city"
+    | "meadow"
+    | "reveal"
+    | "discard"
+    | "farmStack"
+    | "legends";
 }) {
   const {
     game,

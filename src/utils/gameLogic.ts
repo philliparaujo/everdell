@@ -43,7 +43,7 @@ import {
   hasCards,
   isOnSpecialEvents,
 } from "./loops";
-import { pickNRandom } from "./math";
+import { partition, pickNRandom } from "./math";
 
 export function oppositePlayerOf(playerColor: PlayerColor): PlayerColor {
   return playerColor === "Red" ? "Blue" : "Red";
@@ -225,6 +225,7 @@ export function setupGame(
     discard: [],
     meadow: [],
     reveal: [],
+    farmStack: [],
     locations: newLocations,
     journeys: journeys,
     events: newEvents,
@@ -244,9 +245,17 @@ export function dealCards(
   firstPlayer: PlayerColor,
   secondPlayer: PlayerColor,
 ): GameState {
-  // Fill up meadow and deal cards
-  const deck = [...state.deck];
+  // Handle Pigs power: move all Farm cards into farmStack
+  let farmStack: Card[] = [];
+  let workingDeck = [...state.deck];
+  if (isFarmStackEnabled(state)) {
+    [farmStack, workingDeck] = partition(
+      workingDeck,
+      (card) => card.name === "Farm",
+    );
+  }
 
+  // Fill up meadow and deal cards
   const MEADOW_END = MAX_MEADOW_SIZE;
   const FIRST_END =
     MEADOW_END +
@@ -255,10 +264,10 @@ export function dealCards(
     FIRST_END +
     computeStartingHandSize(secondPlayer, state.players[secondPlayer].power);
 
-  const meadow = deck.slice(0, MEADOW_END);
-  const firstHand = deck.slice(MEADOW_END, FIRST_END);
-  const secondHand = deck.slice(FIRST_END, SECOND_END);
-  const remainingDeck = deck.slice(SECOND_END);
+  const meadow = workingDeck.slice(0, MEADOW_END);
+  const firstHand = workingDeck.slice(MEADOW_END, FIRST_END);
+  const secondHand = workingDeck.slice(FIRST_END, SECOND_END);
+  const remainingDeck = workingDeck.slice(SECOND_END);
 
   // Deal Legends cards to players if Legends expansion is active
   let firstPlayerLegends: Card[] = [];
@@ -296,6 +305,7 @@ export function dealCards(
     },
     deck: remainingDeck,
     meadow: meadow,
+    farmStack: farmStack,
   };
 
   const newState: GameState = {
@@ -327,6 +337,12 @@ function canVisitGeneric(
     return false;
 
   return true;
+}
+
+export function isFarmStackEnabled(state: GameState): boolean {
+  const firstIsPigs = state.players["Red"].power?.name === "Pigs";
+  const secondIsPigs = state.players["Blue"].power?.name === "Pigs";
+  return (firstIsPigs || secondIsPigs) && state.powersEnabled;
 }
 
 export function canVisitLocation(

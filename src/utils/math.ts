@@ -7,6 +7,7 @@ export const shuffleArray = (array: any[]) => {
   return newArray;
 };
 
+// Returns: [predicateFalse, predicateTrue]
 export function partition<T>(
   arr: T[],
   predicate: (item: T) => boolean,

@@ -11,10 +11,11 @@ import Meadow from "../components/Meadow";
 import Sidebar from "../components/Sidebar";
 import SpecialEventsDisplay from "../components/SpecialEventsDisplay";
 import { useGame } from "../engine/GameContext";
-import { oppositePlayerOf } from "../utils/gameLogic";
+import { isFarmStackEnabled, oppositePlayerOf } from "../utils/gameLogic";
 import { getPlayerColor, getPlayerId } from "../utils/identity";
 import { stylePlayerColor } from "../utils/tailwind";
 import { countCardValue } from "../utils/loops";
+import FarmStack from "../components/FarmStack";
 
 const HalfSection = ({
   title,
@@ -123,9 +124,17 @@ function Game() {
           </div>
         )}
 
-        <FullSection title="Meadow">
-          <Meadow />
-        </FullSection>
+        <div className="flex gap-8">
+          <HalfSection title="Meadow">
+            <Meadow />
+          </HalfSection>
+
+          {isFarmStackEnabled(game) && (
+            <HalfSection title={`Farm Stack (${game.farmStack.length})`}>
+              <FarmStack />
+            </HalfSection>
+          )}
+        </div>
 
         <FullSection
           title={

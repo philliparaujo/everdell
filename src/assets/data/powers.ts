@@ -3,7 +3,7 @@ import { defaultResources } from "../../engine/gameDefaults";
 
 export const powers: Power[] = [
   {
-    name: "Snails",
+    name: "WIP: Snails",
     title: "Steady",
     description:
       "During setup, draw 7 cards and place them in a facedown stack. When an opponent plays a green, you may give them a card from this stack to also activate the green for yourself.",
@@ -36,7 +36,7 @@ export const powers: Power[] = [
     imageKey: "architect",
   },
   {
-    name: "Bats",
+    name: "WIP: Bats",
     title: "Archivists",
     description:
       "Whenever you play a card, you may take 1 card from the Meadow and place it facedown in a stack by your city. You may play any card from this stack as though it were in your hand, the Meadow, or the Station.",
