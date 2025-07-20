@@ -19,7 +19,7 @@ export const powers: Power[] = [
     description:
       "Increase your hand limit by 4. Begin the game with 12 cards in your hand (11 cards if playing with 5 or 6 players). You are the first player.",
     handLimit: 10,
-    startingHandSize: 5, // Assuming 2-3 players as a default
+    startingHandSize: 12,
     storage: null,
     expansionName: "base",
     imageKey: "architect",
@@ -89,28 +89,6 @@ export const powers: Power[] = [
     storage: null,
     expansionName: "base",
     imageKey: "architect",
-  },
-  {
-    name: "Platypuses",
-    title: "Treasure Hunters",
-    description:
-      "At the beginning of the game, place 5 coins here. At any time on your turn, you may pay up to 1 of these coins to gain 1 wildcard and draw 1 card from the deck or the Meadow.",
-    handLimit: null,
-    startingHandSize: null,
-    storage: { ...defaultResources },
-    expansionName: "base",
-    imageKey: "architect",
-  },
-  {
-    name: "Rats",
-    title: "Obnoxious",
-    description:
-      "At the beginning of the game, place Rugwort rat on any Meadow card. Whenever that card is played, gain 1 wildcard that you do not already have, then move rat to a different Meadow card.",
-    handLimit: 10,
-    startingHandSize: null,
-    storage: null,
-    expansionName: "rugwort",
-    imageKey: "rugworttherowdy",
   },
   {
     name: "Spiders",
@@ -210,6 +188,28 @@ export const powers: Power[] = [
     storage: null,
     expansionName: "base",
     imageKey: "architect",
+  },
+  {
+    name: "WIP: Platypuses",
+    title: "Treasure Hunters",
+    description:
+      "At the beginning of the game, place 5 coins here. At any time on your turn, you may pay up to 1 of these coins to gain 1 wildcard and draw 1 card from the deck or the Meadow.",
+    handLimit: null,
+    startingHandSize: null,
+    storage: { ...defaultResources },
+    expansionName: "base",
+    imageKey: "architect",
+  },
+  {
+    name: "WIP: Rats",
+    title: "Obnoxious",
+    description:
+      "At the beginning of the game, place Rugwort rat on any Meadow card. Whenever that card is played, gain 1 wildcard that you do not already have, then move rat to a different Meadow card.",
+    handLimit: 10,
+    startingHandSize: null,
+    storage: null,
+    expansionName: "rugwort",
+    imageKey: "rugworttherowdy",
   },
   {
     name: "WIP: Snails",

@@ -189,15 +189,13 @@ const CardManagement: React.FC = () => {
       Object.values(frequencies).reduce((acc, frequency) => acc + frequency, 0),
     0,
   );
+  // Total copies of cards you’ve banned, based on their base frequency
   const totalBannedCards = bannedCards.reduce(
-    (acc, [expansionName, frequencies]) =>
-      acc +
-      Object.entries(frequencies).reduce(
-        (acc, [cardName, _]) =>
-          acc +
-          (DEFAULT_CARD_FREQUENCIES[expansionName as ExpansionName]?.[
-            cardName
-          ] ?? 1),
+    (sumExp, [expansionName, frequencies]) =>
+      sumExp +
+      Object.keys(frequencies).reduce(
+        (sumCard, cardName) =>
+          sumCard + (BASE_CARD_FREQUENCIES[expansionName]?.[cardName] ?? 1),
         0,
       ),
     0,

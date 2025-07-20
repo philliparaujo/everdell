@@ -48,7 +48,7 @@ export type Card = {
   cardNameFreeBonus: string | null; // For critters
   effectTypeFreeBonus: EffectType[] | null; // For Rugwort cards
 
-  // Some Legends cards can be placed below a card
+  // Some Legends cards can be placed below a card, critters below a Dungeon
   below: string | null;
 
   // Some cards can be visited by workers

@@ -92,7 +92,9 @@ export function countCardOccurrences(city: Card[], cardName: string): number {
 
 // True if any of the cards are on the list
 export function hasCards(city: Card[], cardNames: string[]): boolean {
-  return city.some((card) => cardNames.includes(card.name));
+  return city.some(
+    (card) => cardNames.includes(card.name) && card.below !== "Dungeon",
+  );
 }
 
 export function countEffectTypeOccurrences(

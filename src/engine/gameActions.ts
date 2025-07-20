@@ -1262,12 +1262,13 @@ function actOnSelectedCards(
         history: updatedHistory,
         legends: legendsKeep,
       },
-      ...(toColor !== null && {
-        [toColor]: {
-          ...state.players[toColor],
-          city: oppositeCityKeep,
-        },
-      }),
+      ...(toColor !== null &&
+        toColor !== playerColor && {
+          [toColor]: {
+            ...state.players[toColor],
+            city: oppositeCityKeep,
+          },
+        }),
     },
     meadow: meadowKeep,
     reveal: revealKeep,
