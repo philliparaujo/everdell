@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/everdell/static/css/main.b1d2e53e.css",
-    "main.js": "/everdell/static/js/main.b0c841b0.js",
+    "main.css": "/everdell/static/css/main.26ff8865.css",
+    "main.js": "/everdell/static/js/main.2e52947f.js",
     "static/media/rugworttheruler.jpg": "/everdell/static/media/rugworttheruler.970ec7f8dc86296a49ec.jpg",
     "static/media/rugworttherowdy.jpg": "/everdell/static/media/rugworttherowdy.08665194b82178f218b6.jpg",
     "static/media/juggler.jpg": "/everdell/static/media/juggler.e980bbc6ffc4129b9181.jpg",
@@ -13,8 +13,10 @@
     "static/media/towncrier.jpg": "/everdell/static/media/towncrier.eac466120df6fc9df2c6.jpg",
     "static/media/background.png": "/everdell/static/media/background.a40d28dce6a079aa06c0.png",
     "static/media/thegreenacorn.jpg": "/everdell/static/media/thegreenacorn.f584779db84a7f39a955.jpg",
+    "static/media/rat.png": "/everdell/static/media/rat.f3c1eeddf6b214832651.png",
     "static/media/fynnnobletail.jpg": "/everdell/static/media/fynnnobletail.4a915fc4aff6d6d21c67.jpg",
     "static/media/oleandersoperahouse.jpg": "/everdell/static/media/oleandersoperahouse.c34ee31cc6666b279263.jpg",
+    "static/media/spider.png": "/everdell/static/media/spider.3ceecf41b56dde094d01.png",
     "static/media/foresight.jpg": "/everdell/static/media/foresight.34f0c7828541992f3e35.jpg",
     "static/media/bridgeofthesky.jpg": "/everdell/static/media/bridgeofthesky.8a91e3e5de57baefb0b9.jpg",
     "static/media/silverscalespring.jpg": "/everdell/static/media/silverscalespring.ebeb2198c46b02b10c1f.jpg",
@@ -88,11 +90,11 @@
     "static/media/twig.png": "/everdell/static/media/twig.5305380c21de87a0bf10.png",
     "static/media/blueworker.PNG": "/everdell/static/media/blueworker.581774b3542fb04dc0e9.PNG",
     "index.html": "/everdell/index.html",
-    "main.b1d2e53e.css.map": "/everdell/static/css/main.b1d2e53e.css.map",
-    "main.b0c841b0.js.map": "/everdell/static/js/main.b0c841b0.js.map"
+    "main.26ff8865.css.map": "/everdell/static/css/main.26ff8865.css.map",
+    "main.2e52947f.js.map": "/everdell/static/js/main.2e52947f.js.map"
   },
   "entrypoints": [
-    "static/css/main.b1d2e53e.css",
-    "static/js/main.b0c841b0.js"
+    "static/css/main.26ff8865.css",
+    "static/js/main.2e52947f.js"
   ]
 }
