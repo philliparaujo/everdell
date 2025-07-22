@@ -111,6 +111,12 @@ interface GameContextType {
     charactersVisiting: 1 | -1,
     character: CharacterType,
   ) => void;
+  placeCharacterOnCardInMeadow: (
+    playerId: string | null,
+    index: number,
+    charactersVisiting: 1 | -1,
+    character: CharacterType,
+  ) => void;
   nextPower: (playerId: string | null, delta: 1 | -1) => void;
   addResourcesToLocation: (
     playerId: string | null,
@@ -218,6 +224,10 @@ export const GameProvider = ({
     addResourcesToPower: wrapAction(Actions.addResourcesToPower, true),
     placeCharacterOnLocation: wrapAction(
       Actions.placeCharacterOnLocation,
+      true,
+    ),
+    placeCharacterOnCardInMeadow: wrapAction(
+      Actions.placeCharacterOnCardInMeadow,
       true,
     ),
     nextPower: wrapAction(Actions.nextPower, true),

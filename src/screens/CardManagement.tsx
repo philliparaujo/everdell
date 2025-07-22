@@ -1,9 +1,5 @@
 import React, { useState } from "react";
-import {
-  BASE_CARD_FREQUENCIES,
-  DEFAULT_CARD_FREQUENCIES,
-  rawCards,
-} from "../assets/data/cards";
+import { BASE_CARD_FREQUENCIES, rawCards } from "../assets/data/cards";
 import Alert from "../components/Alert";
 import Button from "../components/Button";
 import Navigation from "../components/Navigation";

@@ -1,8 +1,5 @@
-import {
-  BASE_CARD_FREQUENCIES,
-  DEFAULT_CARD_FREQUENCIES,
-  rawCards,
-} from "../assets/data/cards";
+import { BASE_CARD_FREQUENCIES, rawCards } from "../assets/data/cards";
+import { defaultCharacterCount } from "../engine/gameDefaults";
 import { Card, ExpansionName } from "../engine/gameTypes";
 import { shuffleArray } from "./math";
 
@@ -37,11 +34,13 @@ export const findCard = (cardName: string): Card | undefined => {
     playing: false,
     giving: false,
     below: null,
+    characters: null,
   };
 };
 
 export const makeShuffledDeck = (
   cardFrequencies: Record<ExpansionName, Record<string, number>>,
+  powersEnabled: boolean,
 ): Card[] => {
   // Extract all card frequencies into a flat structure
   const flatCardFrequencies = Object.values(cardFrequencies).reduce(
@@ -49,7 +48,7 @@ export const makeShuffledDeck = (
     {} as Record<string, number>,
   );
 
-  const cards = rawCards.flatMap((card) => {
+  const cards: Card[] = rawCards.flatMap((card) => {
     // Skip legends cards
     if (card.expansionName === "legends") return [];
 
@@ -60,6 +59,7 @@ export const makeShuffledDeck = (
       playing: false,
       giving: false,
       below: null,
+      characters: powersEnabled ? defaultCharacterCount : null,
     }));
   });
 

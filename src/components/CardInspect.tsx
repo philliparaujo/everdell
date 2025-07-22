@@ -1,17 +1,27 @@
 import { useState } from "react";
 import { useGame } from "../engine/GameContext";
 import { defaultResources } from "../engine/gameDefaults";
-import { Card, PlayerColor, ResourceType } from "../engine/gameTypes";
+import {
+  Card,
+  CharacterType,
+  PlayerColor,
+  ResourceType,
+} from "../engine/gameTypes";
 import { formatExpansionName, getCardPath } from "../utils/card";
 import {
   canMoveCardBelowInCity,
+  canPlaceCharacterOnLocation,
   canPlayToOppositeCity,
   canVisitCardInCity,
   isNotYourTurn,
 } from "../utils/gameLogic";
 import { getPlayerColor, getPlayerId } from "../utils/identity";
-import { mapOverResources } from "../utils/loops";
-import { renderVisitButtons, renderVisitingWorkers } from "../utils/react";
+import { mapOverCharacters, mapOverResources } from "../utils/loops";
+import {
+  renderPlacedCharacters,
+  renderVisitButtons,
+  renderVisitingWorkers,
+} from "../utils/react";
 import Button from "./Button";
 import { ResourceIcon } from "./Icons";
 import Inspectable from "./Inspectable";
@@ -44,6 +54,7 @@ function CardInspect({
     moveCardBelowInCity,
     playToOppositeCity,
     playCard,
+    placeCharacterOnCardInMeadow,
   } = useGame();
 
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -235,6 +246,74 @@ function CardInspect({
               {card.workers && renderVisitingWorkers(card)}
             </div>
           )}
+
+        {location === "meadow" && card.characters && playerColor && (
+          <div className="flex flex-col items-center gap-2">
+            {mapOverCharacters((character: CharacterType) => {
+              if (
+                canPlaceCharacterOnLocation(
+                  game,
+                  card,
+                  playerColor,
+                  1,
+                  character,
+                )
+              ) {
+                return (
+                  <div>
+                    <Button
+                      disabled={
+                        disabled ||
+                        !canPlaceCharacterOnLocation(
+                          game,
+                          card,
+                          playerColor,
+                          1,
+                          character,
+                        )
+                      }
+                      onClick={() =>
+                        placeCharacterOnCardInMeadow(
+                          storedId,
+                          index,
+                          1,
+                          character,
+                        )
+                      }
+                    >
+                      {`Place ${character}`}
+                    </Button>
+                    <Button
+                      disabled={
+                        disabled ||
+                        !canPlaceCharacterOnLocation(
+                          game,
+                          card,
+                          playerColor,
+                          -1,
+                          character,
+                        )
+                      }
+                      onClick={() =>
+                        placeCharacterOnCardInMeadow(
+                          storedId,
+                          index,
+                          -1,
+                          character,
+                        )
+                      }
+                    >
+                      {`Remove`}
+                    </Button>
+                  </div>
+                );
+              } else {
+                return <></>;
+              }
+            })}
+            {renderPlacedCharacters(card)}
+          </div>
+        )}
       </div>
     </Inspectable>
   );

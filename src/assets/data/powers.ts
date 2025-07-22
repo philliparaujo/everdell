@@ -135,6 +135,17 @@ export const powers: Power[] = [
     imageKey: "architect",
   },
   {
+    name: "Rats",
+    title: "Obnoxious",
+    description:
+      "At the beginning of the game, place Rugwort rat on any Meadow card. Whenever that card is played, gain 1 wildcard that you do not already have, then move rat to a different Meadow card.",
+    handLimit: 10,
+    startingHandSize: null,
+    storage: null,
+    expansionName: "rugwort",
+    imageKey: "rugworttherowdy",
+  },
+  {
     name: "Spiders",
     title: "Sneaky",
     description:
@@ -210,17 +221,6 @@ export const powers: Power[] = [
     storage: null,
     expansionName: "base",
     imageKey: "historian",
-  },
-  {
-    name: "WIP: Rats",
-    title: "Obnoxious",
-    description:
-      "At the beginning of the game, place Rugwort rat on any Meadow card. Whenever that card is played, gain 1 wildcard that you do not already have, then move rat to a different Meadow card.",
-    handLimit: 10,
-    startingHandSize: null,
-    storage: null,
-    expansionName: "rugwort",
-    imageKey: "rugworttherowdy",
   },
   {
     name: "WIP: Snails",

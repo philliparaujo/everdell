@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { Card, PlayerColor, ResourceType } from "../engine/gameTypes";
 import { getCardPath } from "../utils/card";
-import { mapOverResources } from "../utils/loops";
+import { countCharactersOnLocation, mapOverResources } from "../utils/loops";
 import { styleCardPreviewBorderColor } from "../utils/tailwind";
 import CardInspect from "./CardInspect";
 import Hoverable from "./Hoverable";
 import { ResourceIcon, WorkerIcon } from "./Icons";
+import { renderPlacedCharacters } from "../utils/react";
 
 function CardPreview({
   card,
@@ -121,7 +122,10 @@ function CardPreview({
       <div
         className={`w-[100px] rounded text-center border-2 flex-none flex flex-col bg-card-preview ${styleCardPreviewBorderColor(!!card?.discarding, !!card?.playing, !!card?.giving)}`}
         style={{
-          height: storable ? "210px" : "170px",
+          height:
+            storable || (card && countCharactersOnLocation(card) > 0)
+              ? "210px"
+              : "170px",
         }}
         draggable={isDraggable}
         onDragStart={handleDragStart}
@@ -147,24 +151,25 @@ function CardPreview({
               </div>
             </div>
 
-            {storable && (
-              <div className="h-[40px] flex-shrink-0 flex flex-wrap justify-evenly items-center rounded-b bg-storage p-1">
+            {(storable || countCharactersOnLocation(card) > 0) && (
+              <div className="h-[40px] flex-shrink-0 flex flex-wrap justify-evenly items-center rounded-b bg-storage p-1 text-[10px]">
                 {card.storage &&
                   mapOverResources(card.storage, (key, val) => (
-                    <div key={key} className="flex items-center text-[10px]">
+                    <div key={key} className="flex items-center">
                       <ResourceIcon type={key as ResourceType} /> {val}
                     </div>
                   ))}
                 {card.workers.Red > 0 && (
-                  <div className="flex items-center text-[10px]">
+                  <div className="flex items-center">
                     <WorkerIcon playerColor={"Red"} /> {card.workers.Red}
                   </div>
                 )}
                 {card.workers.Blue > 0 && (
-                  <div className="flex items-center text-[10px]">
+                  <div className="flex items-center">
                     <WorkerIcon playerColor={"Blue"} /> {card.workers.Blue}
                   </div>
                 )}
+                {renderPlacedCharacters(card)}
               </div>
             )}
           </>

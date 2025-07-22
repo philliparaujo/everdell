@@ -101,7 +101,7 @@ export const DEFAULT_CARD_FREQUENCIES: Record<
 
 export const rawCards: Omit<
   Card,
-  "discarding" | "playing" | "giving" | "below"
+  "discarding" | "playing" | "giving" | "below" | "characters"
 >[] = [
   {
     name: "Architect",

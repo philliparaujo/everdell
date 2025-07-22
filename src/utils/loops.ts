@@ -114,7 +114,7 @@ export function countEffectTypeOccurrences(
   );
 }
 
-export function countCharactersOnLocation(location: Location): number {
+export function countCharactersOnLocation(location: Location | Card): number {
   if (!location.characters) return 0;
 
   return CHARACTER_TYPE_ORDER.reduce(

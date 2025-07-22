@@ -189,7 +189,7 @@ export function setupGame(
   redPower: Power | null = null,
 ): GameState {
   // Shuffle deck
-  const deck: Card[] = makeShuffledDeck(cardFrequencies);
+  const deck: Card[] = makeShuffledDeck(cardFrequencies, powersEnabled);
 
   // Set up remaining objects
   const newLocations: Location[] = locations.map((location) => ({
@@ -373,9 +373,13 @@ export function canVisitLocation(
   return true;
 }
 
+function isCard(location: Location | Card): location is Card {
+  return (location as Card).cardType !== undefined;
+}
+
 export function canPlaceCharacterOnLocation(
   state: GameState,
-  location: Location,
+  location: Location | Card,
   playerColor: PlayerColor,
   charactersVisiting: 1 | -1,
   character: CharacterType,
@@ -389,8 +393,10 @@ export function canPlaceCharacterOnLocation(
 
   switch (character) {
     case "rat":
+      if (!isCard(location)) return false;
       return hasPowers(state.players[playerColor].power, ["Rats"]);
     case "spider":
+      if (isCard(location)) return false;
       return hasPowers(state.players[playerColor].power, ["Spiders"]);
     default:
       return false;

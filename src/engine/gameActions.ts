@@ -1041,6 +1041,7 @@ export function playCard(
     discarding: false,
     giving: false,
     below: null,
+    characters: null,
   };
 
   // Determine which player's city to add the card to
@@ -1318,6 +1319,7 @@ function actOnSelectedCards(
         playing: false,
         discarding: false,
         giving: false,
+        characters: null,
       }));
 
       const newOppositeCity = sortCity([
@@ -1328,6 +1330,7 @@ function actOnSelectedCards(
         playing: false,
         discarding: false,
         giving: false,
+        characters: null,
       }));
 
       newState.players[playerColor] = {
@@ -1501,6 +1504,49 @@ export function placeCharacterOnLocation(
     locations: state.locations.map((loc, i) =>
       i === index ? updatedLocation : loc,
     ),
+  };
+
+  if (!sanityCheck(newState)) return state;
+  return newState;
+}
+
+export function placeCharacterOnCardInMeadow(
+  state: GameState,
+  playerId: string | null,
+  index: number,
+  charactersVisiting: 1 | -1,
+  character: CharacterType,
+): GameState {
+  const playerColor = getPlayerColor(state, playerId);
+  if (playerColor !== state.turn) return state;
+
+  if (index >= state.meadow.length) return state;
+  const card = state.meadow[index];
+
+  if (
+    !canPlaceCharacterOnLocation(
+      state,
+      card,
+      playerColor,
+      charactersVisiting,
+      character,
+    )
+  )
+    return state;
+
+  const updatedCard: Card = {
+    ...card,
+    ...(card.characters !== null && {
+      characters: {
+        ...card.characters,
+        [character]: card.characters[character] + charactersVisiting,
+      },
+    }),
+  };
+
+  const newState: GameState = {
+    ...state,
+    meadow: state.meadow.map((loc, i) => (i === index ? updatedCard : loc)),
   };
 
   if (!sanityCheck(newState)) return state;

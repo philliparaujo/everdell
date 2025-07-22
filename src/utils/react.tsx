@@ -11,6 +11,7 @@ import {
   RESOURCE_ORDER,
 } from "../engine/gameDefaults";
 import {
+  Card,
   CharacterType,
   EffectType,
   ExpansionName,
@@ -38,7 +39,9 @@ export function renderVisitingWorkers(location: Visitable): React.ReactNode {
   );
 }
 
-export function renderPlacedCharacters(location: Location): React.ReactNode {
+export function renderPlacedCharacters(
+  location: Location | Card,
+): React.ReactNode {
   return (
     location.characters &&
     countCharactersOnLocation(location) > 0 && (

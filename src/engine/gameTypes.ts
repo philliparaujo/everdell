@@ -59,6 +59,9 @@ export type Card = {
   // Some cards can store resources or coins on them
   storage: ResourceCount | null;
 
+  // Only for certain powers
+  characters: CharacterCount | null;
+
   // Actions
   discarding: boolean;
   playing: boolean;
