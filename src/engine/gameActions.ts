@@ -1,5 +1,6 @@
 import { powers } from "../assets/data/powers";
 import {
+  activeDestinationsLeftOnCard,
   canAchieveEvent,
   canAchieveSpecialEvent,
   canAddResourcesToLocation,
@@ -14,9 +15,11 @@ import {
   canVisitLocation,
   canVisitSpecialEvent,
   computeMaxHandSize,
+  isPermanentLocationCard,
   isSafeToEndTurn,
   oppositePlayerOf,
   sanityCheck,
+  workersLeftOnCard,
 } from "../utils/gameLogic";
 import { getPlayerColor } from "../utils/identity";
 import { countCardOccurrences, hasCards, sortCity } from "../utils/loops";
@@ -192,7 +195,9 @@ export function harvest(state: GameState, playerId: string | null): GameState {
   }
 
   const workersLost = player.city.reduce((acc, card) => {
-    return acc + (card.name === "Cemetery" ? card.workers[playerColor] : 0);
+    return (
+      acc + (isPermanentLocationCard(card) ? card.workers[playerColor] : 0)
+    );
   }, 0);
 
   const updatedPlayer: Player = {
@@ -204,12 +209,8 @@ export function harvest(state: GameState, playerId: string | null): GameState {
     },
     city: player.city.map((card) => ({
       ...card,
-      activeDestinations:
-        card.name === "Cemetery" ? card.workers[playerColor] : 0,
-      workers: {
-        ...card.workers,
-        [playerColor]: card.name === "Cemetery" ? card.workers[playerColor] : 0,
-      },
+      activeDestinations: activeDestinationsLeftOnCard(card, playerColor),
+      workers: workersLeftOnCard(card, playerColor),
     })),
   };
 
@@ -222,10 +223,8 @@ export function harvest(state: GameState, playerId: string | null): GameState {
         ...state.players[oppositePlayerOf(playerColor)],
         city: state.players[oppositePlayerOf(playerColor)].city.map((card) => ({
           ...card,
-          workers: {
-            ...card.workers,
-            [playerColor]: 0,
-          },
+          activeDestinations: activeDestinationsLeftOnCard(card, playerColor),
+          workers: workersLeftOnCard(card, playerColor),
         })),
       },
     },

@@ -29,11 +29,13 @@ import {
   Location,
   Player,
   PlayerColor,
+  PlayerCount,
   Power,
   ResourceCount,
   ResourceType,
   SpecialEvent,
   Visitable,
+  Workers,
 } from "../engine/gameTypes";
 import { makeLegendsDecks, makeShuffledDeck } from "./card";
 import { getPlayerColor } from "./identity";
@@ -559,6 +561,38 @@ export function canVisitCardInCity(
   }
 
   return true;
+}
+
+export function isPermanentLocationCard(card: Card): boolean {
+  return hasCards([card], ["Cemetery", "Monastery"]);
+}
+
+export function activeDestinationsLeftOnCard(
+  card: Card,
+  playerColor: PlayerColor,
+): number | null {
+  const prevActiveDestinations = card.activeDestinations;
+  if (isPermanentLocationCard(card)) {
+    return prevActiveDestinations;
+  }
+
+  const workersOnLocation = card.workers[playerColor];
+  if (prevActiveDestinations !== null) {
+    return prevActiveDestinations - workersOnLocation;
+  }
+
+  return null;
+}
+
+export function workersLeftOnCard(
+  card: Card,
+  playerColor: PlayerColor,
+): PlayerCount {
+  const prevWorkerCount = card.workers[playerColor];
+  return {
+    ...card.workers,
+    [playerColor]: isPermanentLocationCard(card) ? prevWorkerCount : 0,
+  };
 }
 
 function hasPermission(
