@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/everdell/static/css/main.26ff8865.css",
-    "main.js": "/everdell/static/js/main.b6a696b4.js",
+    "main.css": "/everdell/static/css/main.a179814c.css",
+    "main.js": "/everdell/static/js/main.55f5d9f4.js",
     "static/media/rugworttheruler.jpg": "/everdell/static/media/rugworttheruler.970ec7f8dc86296a49ec.jpg",
     "static/media/rugworttherowdy.jpg": "/everdell/static/media/rugworttherowdy.08665194b82178f218b6.jpg",
     "static/media/juggler.jpg": "/everdell/static/media/juggler.e980bbc6ffc4129b9181.jpg",
@@ -90,11 +90,11 @@
     "static/media/twig.png": "/everdell/static/media/twig.5305380c21de87a0bf10.png",
     "static/media/blueworker.PNG": "/everdell/static/media/blueworker.581774b3542fb04dc0e9.PNG",
     "index.html": "/everdell/index.html",
-    "main.26ff8865.css.map": "/everdell/static/css/main.26ff8865.css.map",
-    "main.b6a696b4.js.map": "/everdell/static/js/main.b6a696b4.js.map"
+    "main.a179814c.css.map": "/everdell/static/css/main.a179814c.css.map",
+    "main.55f5d9f4.js.map": "/everdell/static/js/main.55f5d9f4.js.map"
   },
   "entrypoints": [
-    "static/css/main.26ff8865.css",
-    "static/js/main.b6a696b4.js"
+    "static/css/main.a179814c.css",
+    "static/js/main.55f5d9f4.js"
   ]
 }
