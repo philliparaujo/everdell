@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/everdell/static/css/main.a179814c.css",
-    "main.js": "/everdell/static/js/main.55f5d9f4.js",
+    "main.js": "/everdell/static/js/main.f63c5555.js",
     "static/media/rugworttheruler.jpg": "/everdell/static/media/rugworttheruler.970ec7f8dc86296a49ec.jpg",
     "static/media/rugworttherowdy.jpg": "/everdell/static/media/rugworttherowdy.08665194b82178f218b6.jpg",
     "static/media/juggler.jpg": "/everdell/static/media/juggler.e980bbc6ffc4129b9181.jpg",
@@ -11,6 +11,8 @@
     "static/media/gazette.jpg": "/everdell/static/media/gazette.bbfde5641e4bbfed7d03.jpg",
     "static/media/rugworttherobber.jpg": "/everdell/static/media/rugworttherobber.d6381a20010ac268ed01.jpg",
     "static/media/towncrier.jpg": "/everdell/static/media/towncrier.eac466120df6fc9df2c6.jpg",
+    "static/media/5.PNG": "/everdell/static/media/5.5a89ca186038fa7d4da8.PNG",
+    "static/media/4.PNG": "/everdell/static/media/4.16a9254a5659d5dd4122.PNG",
     "static/media/background.png": "/everdell/static/media/background.a40d28dce6a079aa06c0.png",
     "static/media/thegreenacorn.jpg": "/everdell/static/media/thegreenacorn.f584779db84a7f39a955.jpg",
     "static/media/rat.png": "/everdell/static/media/rat.f3c1eeddf6b214832651.png",
@@ -24,6 +26,9 @@
     "static/media/cirruswindfall.jpg": "/everdell/static/media/cirruswindfall.355c583e9b5e37c1ce10.jpg",
     "static/media/mcgregorsmarket.jpg": "/everdell/static/media/mcgregorsmarket.b2f11b2500503c7360b7.jpg",
     "static/media/poe.jpg": "/everdell/static/media/poe.02b6c5f5c8b816fca895.jpg",
+    "static/media/1.PNG": "/everdell/static/media/1.d82d4cb5d40611f3fc4f.PNG",
+    "static/media/3.PNG": "/everdell/static/media/3.f11637c053fd097fd204.PNG",
+    "static/media/2.PNG": "/everdell/static/media/2.9ed25f53701d415302c2.PNG",
     "static/media/cardback.png": "/everdell/static/media/cardback.997d29a3915450c27cab.png",
     "static/media/icon.png": "/everdell/static/media/icon.2a5002c6e3285f5f0f63.png",
     "static/media/postoffice.jpg": "/everdell/static/media/postoffice.864beee783c293333622.jpg",
@@ -91,10 +96,10 @@
     "static/media/blueworker.PNG": "/everdell/static/media/blueworker.581774b3542fb04dc0e9.PNG",
     "index.html": "/everdell/index.html",
     "main.a179814c.css.map": "/everdell/static/css/main.a179814c.css.map",
-    "main.55f5d9f4.js.map": "/everdell/static/js/main.55f5d9f4.js.map"
+    "main.f63c5555.js.map": "/everdell/static/js/main.f63c5555.js.map"
   },
   "entrypoints": [
     "static/css/main.a179814c.css",
-    "static/js/main.55f5d9f4.js"
+    "static/js/main.f63c5555.js"
   ]
 }
