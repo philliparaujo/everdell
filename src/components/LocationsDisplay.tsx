@@ -48,7 +48,7 @@ export function BaseLocationDisplay({
       )}
       {workerChildren}
       {characterChildren}
-      <div>
+      <div className="mt-auto">
         <div className="flex flex-wrap items-center gap-0.5">
           {resourceChildren}
         </div>

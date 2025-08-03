@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useGame } from "../engine/GameContext";
 import { defaultResources } from "../engine/gameDefaults";
 import { Power, ResourceType } from "../engine/gameTypes";
@@ -5,35 +6,39 @@ import { getCardPath } from "../utils/card";
 import { canAddResourcesToPower, isNotYourTurn } from "../utils/gameLogic";
 import { getPlayerColor, getPlayerId } from "../utils/identity";
 import { mapOverResources } from "../utils/loops";
-import { renderTextWithIcons } from "../utils/react";
+import { renderNumberList, renderTextWithIcons } from "../utils/react";
 import Button from "./Button";
 import { ResourceIcon } from "./Icons";
 import Inspectable from "./Inspectable";
+import { powers } from "../assets/data/powers";
 
 function PowerInspect({
   power,
   onClose,
   inGame,
+  index = null,
   renderPowerToggleButtons,
   renderStartButton,
 }: {
   power: Power;
   onClose: () => void;
   inGame: boolean;
+  index?: number | null;
   renderPowerToggleButtons?: () => React.ReactNode;
   renderStartButton?: () => React.ReactNode;
 }) {
-  const imageSrc = require(
-    `../${getCardPath(power.expansionName, power.imageKey)}`,
-  );
+  const [randomIndexes, setRandomIndexes] = useState<number[]>([]);
 
   return (
     <Inspectable onClose={onClose}>
       {/* A single vertical column for all content */}
-      <div className="flex flex-1 flex-col h-[24rem] overflow-y-auto w-[36rem] gap-6 items-center p-6">
+      <div className="flex flex-1 flex-col h-[30rem] overflow-y-auto w-[36rem] gap-6 items-center p-6">
         <div className="flex flex-col gap-1">
           {/* --- Name --- */}
-          <h1 className="text-2xl font-bold">{power.name}</h1>
+          <h1 className="text-2xl font-bold">
+            {index !== null && `${index + 1}. `}
+            {power.name}
+          </h1>
 
           {/* --- Title --- */}
           <h2 className="text-lg">{power.title}</h2>
@@ -54,6 +59,37 @@ function PowerInspect({
         </div>
 
         <div className="mt-auto flex flex-col gap-2">
+          {!inGame && renderNumberList(randomIndexes)}
+          {!inGame && (
+            <div>
+              <Button
+                variant={"rare"}
+                disabled={false}
+                onClick={() => {
+                  const maxNumber = powers.length;
+
+                  if (maxNumber < 2) {
+                    setRandomIndexes([]);
+                    return;
+                  }
+
+                  let num1 = Math.floor(Math.random() * maxNumber) + 1;
+                  let num2 = Math.floor(Math.random() * maxNumber) + 1;
+                  while (num1 === num2) {
+                    num2 = Math.floor(Math.random() * maxNumber) + 1;
+                  }
+
+                  setRandomIndexes([
+                    Math.min(num1, num2),
+                    Math.max(num1, num2),
+                  ]);
+                }}
+              >
+                Random powers
+              </Button>
+            </div>
+          )}
+
           {renderPowerToggleButtons && (
             <div className="flex flex-row justify-center h-6">
               {renderPowerToggleButtons()}

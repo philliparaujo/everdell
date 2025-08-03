@@ -1,46 +1,42 @@
-# Getting Started with Create React App
+# Everdell
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Demo
 
-## Available Scripts
+See the app live: https://philliparaujo.github.io/everdell/#/home
 
-In the project directory, you can run:
+Screenshots: https://imgur.com/a/PCErn4L
 
-### `npm start`
+## Description
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+[Everdell](https://rules.dized.com/game/0GI6_zUiQh2U27DV_13LJw/everdell) is a 1-4 player board game where you construct a city filled with woodland creatures to earn as many victory points as possible. Each turn you can either gather resources, play a card with resources, or prepare for the next season. The game ends once you have no more actions in the last season, autumn.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+This project is specifically a 2-player implementation of Everdell. It includes the base expansion, a few smaller card expansions, and player power expansions. To start play, visit the app link, set your username, and either create/join a game.
 
-### `npm test`
+## Project Structure
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+The frontend was made with [React](https://react.dev/) and [Tailwind](https://tailwindcss.com/), and the server is hosted on [Firebase](https://firebase.google.com/docs/firestore). Local settings like username, player ID, and card preferences are saved using `localStorage` and `sessionStorage`.
 
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+- `assets`
+  - `cards`: Card images grouped by expansion
+  - `data`: Raw information about game elements, like cards and locations
+  - `icons`: Screenshots of Everdell icons, like resources and colors
+  - `images`: Non-card images
+  - `screenshots`: For the screenshot gallery on this README
+  - `transparent-icons`: Everdell icons with their backgrounds removed
+- `components`: Reusable React components, like buttons, cards, and sidebar
+- `engine`: Definition of custom types, game constants, and in-game actions
+- `screens`
+  - `CardManagement`: Set active expansions and card frequencies
+  - `Game`: In-game screen
+  - `Home`: Set your name and player ID
+  - `Lobby`: Create, join, and view games
+- `server`: Handle firebase logic
+- `utils`
+  - `card`: For card frequencies and filename paths
+  - `gameLogic`: Many important helpers regarding Everdell game logic
+  - `identity`: For `localStorage` and `sessionStorage`
+  - `loops`: For working with lists like cards or resources
+  - `math`: Generic math helpers
+  - `navigation`: Constants for route names corresponding to screens
+  - `react`: Helpers that return `ReactNode`
+  - `tailwind`: Helpers that return Tailwind className strings

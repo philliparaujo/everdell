@@ -261,6 +261,7 @@ function Lobby() {
       {selectedPowerIndex !== null && (
         <PowerInspect
           power={powers[selectedPowerIndex]}
+          index={selectedPowerIndex}
           onClose={closeInspect}
           inGame={false}
           renderPowerToggleButtons={() => (

@@ -211,28 +211,28 @@ export const powers: Power[] = [
     expansionName: "base",
     imageKey: "bargetoad",
   },
-  {
-    name: "WIP: Bats",
-    title: "Archivists",
-    description:
-      "Whenever you play a card, you may take 1 card from the Meadow and place it facedown in a stack by your city. You may play any card from this stack as though it were in your hand, the Meadow, or the Station.",
-    handLimit: null,
-    startingHandSize: null,
-    storage: null,
-    expansionName: "base",
-    imageKey: "historian",
-  },
-  {
-    name: "WIP: Snails",
-    title: "Steady",
-    description:
-      "During setup, draw 7 cards and place them in a facedown stack. When an opponent plays a green, you may give them a card from this stack to also activate the green for yourself.",
-    handLimit: null,
-    startingHandSize: null,
-    storage: null,
-    expansionName: "base",
-    imageKey: "architect",
-  },
+  // {
+  //   name: "WIP: Bats",
+  //   title: "Archivists",
+  //   description:
+  //     "Whenever you play a card, you may take 1 card from the Meadow and place it facedown in a stack by your city. You may play any card from this stack as though it were in your hand, the Meadow, or the Station.",
+  //   handLimit: null,
+  //   startingHandSize: null,
+  //   storage: null,
+  //   expansionName: "base",
+  //   imageKey: "historian",
+  // },
+  // {
+  //   name: "WIP: Snails",
+  //   title: "Steady",
+  //   description:
+  //     "During setup, draw 7 cards and place them in a facedown stack. When an opponent plays a green, you may give them a card from this stack to also activate the green for yourself.",
+  //   handLimit: null,
+  //   startingHandSize: null,
+  //   storage: null,
+  //   expansionName: "base",
+  //   imageKey: "architect",
+  // },
   // {
   //   name: "Foxes",
   //   title: "Trackers",

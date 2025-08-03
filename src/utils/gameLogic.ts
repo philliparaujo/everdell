@@ -35,7 +35,6 @@ import {
   ResourceType,
   SpecialEvent,
   Visitable,
-  Workers,
 } from "../engine/gameTypes";
 import { makeLegendsDecks, makeShuffledDeck } from "./card";
 import { getPlayerColor } from "./identity";

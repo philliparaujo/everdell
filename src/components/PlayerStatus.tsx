@@ -1,21 +1,16 @@
 import { useGame } from "../engine/GameContext";
 import { PlayerColor, ResourceType } from "../engine/gameTypes";
-import {
-  computeMaxCitySize,
-  computeMaxHandSize,
-  isNotYourTurn,
-} from "../utils/gameLogic";
+import { computeMaxCitySize, computeMaxHandSize } from "../utils/gameLogic";
 import { getPlayerId } from "../utils/identity";
 import { mapOverResources } from "../utils/loops";
 import { stylePlayerColor, styleSeasonColor } from "../utils/tailwind";
-import Button from "./Button";
 import Hoverable from "./Hoverable";
 import { ResourceIcon, WorkerIcon } from "./Icons";
 import Id from "./Id";
 import PowerInspect from "./PowerInspect";
 
 function PlayerStatus({ playerColor }: { playerColor: PlayerColor }) {
-  const { game, nextPower } = useGame();
+  const { game } = useGame();
 
   const storedId = getPlayerId();
   const player = game.players[playerColor];
@@ -24,25 +19,6 @@ function PlayerStatus({ playerColor }: { playerColor: PlayerColor }) {
     (acc, curr) => acc + (curr.below === "Dungeon" ? 1 : 0),
     0,
   );
-
-  const renderPowerToggleButtons = () => {
-    return (
-      <>
-        <Button
-          disabled={isNotYourTurn(game, storedId)}
-          onClick={() => nextPower(storedId, -1)}
-        >
-          Prev power
-        </Button>
-        <Button
-          disabled={isNotYourTurn(game, storedId)}
-          onClick={() => nextPower(storedId, 1)}
-        >
-          Next power
-        </Button>
-      </>
-    );
-  };
 
   return (
     <div key={playerColor} className="flex flex-col gap-2">
@@ -64,7 +40,6 @@ function PlayerStatus({ playerColor }: { playerColor: PlayerColor }) {
                       power={player.power!!}
                       onClose={closeInspector}
                       inGame={true}
-                      renderPowerToggleButtons={renderPowerToggleButtons}
                     />
                   )}
                 >

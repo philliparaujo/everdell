@@ -85,6 +85,10 @@ export function renderVisitButtons(
   );
 }
 
+export function renderNumberList(numbers: number[]): React.ReactNode {
+  return numbers.join(", ");
+}
+
 // Handle singular and plural words
 const RESOURCE_ALIASES: Record<string, ResourceType> = {
   twig: "twigs",
